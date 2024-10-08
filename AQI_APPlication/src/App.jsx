@@ -2,9 +2,7 @@ import React from "react";
 import Navbar from "./Component/Navbars/Navbar";
 import Routers from "./Route/Routers";
 import { BrowserRouter } from "react-router-dom"; // Import BrowserRouter
-import Footer from "./Component/pages/footer";
-
-
+import Footer from "./Component/pages/footer/Footer";
 function App() {
   return (
     <BrowserRouter> {/* Wrap your components with BrowserRouter */}
