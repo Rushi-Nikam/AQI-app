@@ -29,8 +29,8 @@ const SideCard = ({ location = "Mumbai" }) => {
     <main
       className={`sm:w-[320px] w-full  bg-white lg:mr-8 max-w-xl h-[400px] p-6 rounded-lg shadow-lg transition-transform cursor-pointer`}
       
-      onMouseEnter={()=>setIsClicked(true)} // Toggle click state on click
-      onMouseLeave={()=>setIsClicked(false)} // Toggle click state on click
+      onMouseEnter={()=>setIsClicked(true)}
+      onMouseLeave={()=>setIsClicked(false)} 
     >
       <div className="text-black text-center mb-4">
         <h1 className="text-xl font-bold">{location} Location</h1>
@@ -50,13 +50,13 @@ const SideCard = ({ location = "Mumbai" }) => {
           <div>
 
    
-        <h1 className="font-bold mr-[490px]">gases responsible for AQI Index </h1>
- <div className="flex">
+ <div className="flex ml-[80px]">
        <div>
+        <h1 className="font-bold mx-auto">gases responsible for AQI Index </h1>
 
           <Gases />
        </div>
-       <div className="mt-[-45px]">
+       <div className="mt-[-60px]">
 
           <Pre/> {/* Display Gases component when clicked */}
        </div>
