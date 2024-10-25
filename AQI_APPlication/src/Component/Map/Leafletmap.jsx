@@ -49,7 +49,7 @@ const Leafletmap = () => {
   };
 
   return (
-    <MapContainer className="h-[55vh] w-[960px]" center={[18.5913, 73.7389]} zoom={13}>
+    <MapContainer className="h-[55vh] w-full lg:w-[960px] z-50 overflow-hidden" center={[18.5913, 73.7389]} zoom={13}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"

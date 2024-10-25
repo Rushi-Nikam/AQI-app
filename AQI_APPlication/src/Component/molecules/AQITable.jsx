@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const AQITable = () => {
+const AQITable = ({isDarkMode}) => {
   // Data for Pune localities with AQI and gases values, sorted from highest to lowest AQI
   const cityData = [
     { locality: 'Hadapsar', aqi: 200, so2: 0.035, co: 7.0, no2: 0.075, pm25: 60, pm10: 85, o3: 0.100 },
@@ -25,7 +25,7 @@ const AQITable = () => {
       <h2 className="text-2xl font-bold mb-4">Pune City AQI and Gases Data (High to Low AQI)</h2>
       <table className="table-auto w-full border-collapse">
         <thead>
-          <tr className="bg-gray-200">
+          <tr className={`${isDarkMode?` bg-gray-500`:`bg-gray-200`}`}>
             <th className="border px-4 py-2">Locality</th>
             <th className="border px-4 py-2">AQI</th>
             <th className="border px-4 py-2">SO₂ (ppm)</th>

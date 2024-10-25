@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Circle = ({ aqiValue = 200, maxAqi = 500 }) => {
+const Circle = ({ aqiValue = 200, maxAqi = 500, isDarkMode }) => {
   // Function to determine stroke color and text based on AQI value
   const getStrokeColorAndText = (aqi) => {
     if (aqi <= 50) return { color: 'rgb(76, 175, 80)', text: 'Good' }; // Good (Green)
@@ -21,16 +21,15 @@ const Circle = ({ aqiValue = 200, maxAqi = 500 }) => {
   const strokeDashoffset = circumference * (1 - percentage); // Offset to create the effect of filling
 
   return (
-    <div className="flex flex-col  items-center justify-center">
+    <div className="flex flex-col items-center justify-center">
       {/* SVG Circle */}
       <svg width="200" height="220"> {/* Increase width and height */}
         <circle
           cx="100" // Center x position (updated to match larger size)
           cy="100" // Center y position (updated to match larger size)
           r={radius}
-          stroke="black" // Remaining border color
+          stroke={isDarkMode ? 'rgba(255, 255, 255, 0.25)' : 'rgba(69, 63, 63, 0.25)'} // Remaining border color
           strokeWidth="12" // Adjust stroke width if needed
-          strokeOpacity="0.25" // Set the opacity for the stroke
           fill="transparent"
         />
 
@@ -51,7 +50,7 @@ const Circle = ({ aqiValue = 200, maxAqi = 500 }) => {
           x="100" // Center x position (adjusted)
           y="105" // Center y position (adjusted for larger circle)
           textAnchor="middle" // Center the text
-          fill="black" // Text color
+          fill={isDarkMode ? 'white' : '#111830'} // Text color based on dark mode
           fontSize="22" // Increased font size
           fontWeight="bold" // Font weight
         >
@@ -60,7 +59,9 @@ const Circle = ({ aqiValue = 200, maxAqi = 500 }) => {
       </svg>
 
       {/* Text outside the Circle */}
-      <div className="text-xl mt-2">{text}</div> {/* Adjust margin if necessary */}
+      <div className={`text-xl mt-2 ${isDarkMode ? 'text-white' : '#111830'}`}>
+        {text}
+      </div> {/* Adjust margin if necessary */}
     </div>
   );
 };

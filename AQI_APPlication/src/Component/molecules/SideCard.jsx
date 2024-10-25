@@ -3,7 +3,7 @@ import Circle from "./Circle";
 import Gases from "./Gases"; // Assuming Gases component is in the same folder
 import Pre from "./Pre";
 
-const SideCard = ({ location = "Mumbai" }) => {
+const SideCard = ({ location = "Mumbai",isDarkMode }) => {
   const [isClicked, setIsClicked] = useState(false); // Track click state
 
   const gases = [
@@ -27,20 +27,20 @@ const SideCard = ({ location = "Mumbai" }) => {
 
   return (
     <main
-      className={`sm:w-[320px] w-full  bg-white lg:mr-8 max-w-xl h-[400px] p-6 rounded-lg shadow-lg transition-transform cursor-pointer`}
+      className={`sm:w-[320px] w-full   lg:mr-8 max-w-xl h-[400px] p-6 rounded-lg shadow-lg transition-transform cursor-pointer ${isDarkMode?`bg-[#111830]`:`bg-white`} ${isDarkMode?`text-white`:`text-[#111830]`}`}
       
       onMouseEnter={()=>setIsClicked(true)}
       onMouseLeave={()=>setIsClicked(false)} 
     >
-      <div className="text-black text-center mb-4">
+      <div className={`text-black text-center mb-4 ${isDarkMode?`text-white`:`text-[#111830]`}`}>
         <h1 className="text-xl font-bold">{location} Location</h1>
         <p className="text-sm">Maharashtra, India</p>
       </div>
 
-      <div className="flex flex-col sm:flex-row text-white justify-center sm:items-start">
+      <div className={`flex flex-col sm:flex-row  justify-center sm:items-start ${isDarkMode?`text-white`:`text-[#111830]`}`}>
         <div className="flex text-black flex-col items-center sm:mt-0">
-          <div className="text-xl font-semibold">Air Quality Index</div>
-          <Circle aqiValue={aqiValue} />
+          <div className={`text-xl font-semibold ${isDarkMode?`text-white`:`text-[#111830]`}`}>Air Quality Index</div>
+          <Circle aqiValue={aqiValue} isDarkMode={isDarkMode} />
         </div>
       </div>
 

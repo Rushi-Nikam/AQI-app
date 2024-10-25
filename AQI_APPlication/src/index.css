@@ -24,3 +24,12 @@
     font-weight: 900;
     font-size: 1.5rem;    
 }
+
+/* Custom styles for dark mode */
+html {
+  @apply bg-gray-100; /* Light mode background */
+}
+
+.dark {
+  @apply bg-gray-900; /* Dark mode background */
+}
