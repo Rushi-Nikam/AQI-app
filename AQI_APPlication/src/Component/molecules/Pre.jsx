@@ -55,9 +55,8 @@ const Pre = () => {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-4">
         {precautionsData.map((levelData, index) => (
           <div
-            key={index}
-            className={`p-2 rounded-lg shadow-lg text-white w-full h-auto ${levelData.color}`}
-          >
+          key={index}
+          className={`p-2 rounded-lg shadow-lg text-white w-full h-auto ${levelData.color}`}>  
             <h2 className="text-sm font-bold">{levelData.level}</h2>
             <p className="text-xs mt-1">AQI: {levelData.aqiRange}</p>
             <p className="text-xs mt-1">{levelData.description}</p>
@@ -69,12 +68,12 @@ const Pre = () => {
             </ul>
             
             {/* Link to detailed precautions page */}
-            <Link
+            {/* <Link
               to={`/detailed-precautions/${levelData.level}`} // Modify the URL as needed
-              className="text-xs mt-2 underline text-white focus:outline-none"
+              className="text-xs mt-2 underline text-white focus:outline-none cursor-pointer"
             >
               View More
-            </Link>
+            </Link> */}
           </div>
         ))}
       </div>

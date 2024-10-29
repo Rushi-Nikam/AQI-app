@@ -29,8 +29,9 @@ const SideCard = ({ location = "Mumbai",isDarkMode }) => {
     <main
       className={`sm:w-[320px] w-full   lg:mr-8 max-w-xl h-[400px] p-6 rounded-lg shadow-lg transition-transform cursor-pointer ${isDarkMode?`bg-[#111830]`:`bg-white`} ${isDarkMode?`text-white`:`text-[#111830]`}`}
       
-      onMouseEnter={()=>setIsClicked(true)}
-      onMouseLeave={()=>setIsClicked(false)} 
+      // onMouseEnter={()=>setIsClicked(true)}
+      // onMouseLeave={()=>setIsClicked(false)} 
+      onClick={()=>setIsClicked(!isClicked)}
     >
       <div className={`text-black text-center mb-4 ${isDarkMode?`text-white`:`text-[#111830]`}`}>
         <h1 className="text-xl font-bold">{location} Location</h1>

@@ -28,13 +28,14 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
   }, [isDarkMode]); // Add isDarkMode as a dependency
 
   return (
-    <header className={`flex flex-col lg:flex-row items-center justify-between w-full px-6 py-2 sticky top-0 z-[60] ${bgColor}`}>
+    <header className={`flex flex-col lg:flex-row items-center   w-full px-6 py-2 sticky top-0 z-[60] ${bgColor}`}>
       {/* Logo and Mobile Menu Toggle */}
-      <div className="flex justify-between w-full">
+      <div className="flex justify-between   w-full">
         <Link to="/" className='text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-green-500 to-purple-500'>
           AQI
         </Link>
-
+     
+  
         <div className="block lg:hidden">
           <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             {isMobileMenuOpen ? <HiX className='text-3xl' /> : <HiMenu className='text-3xl' />}

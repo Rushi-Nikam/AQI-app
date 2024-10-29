@@ -28,12 +28,12 @@ const AQITable = ({isDarkMode}) => {
           <tr className={`${isDarkMode?` bg-gray-500`:`bg-gray-200`}`}>
             <th className="border px-4 py-2">Locality</th>
             <th className="border px-4 py-2">AQI</th>
-            <th className="border px-4 py-2">SO₂ (ppm)</th>
-            <th className="border px-4 py-2">CO (ppm)</th>
-            <th className="border px-4 py-2">NO₂ (ppm)</th>
+            <th className="border px-4 py-2">SO₂ (µg/m³)</th>
+            <th className="border px-4 py-2">CO (µg/m³)</th>
+            <th className="border px-4 py-2">NO₂ (µg/m³)</th>
             <th className="border px-4 py-2">PM2.5 (µg/m³)</th>
             <th className="border px-4 py-2">PM10 (µg/m³)</th>
-            <th className="border px-4 py-2">O₃ (ppm)</th>
+            <th className="border px-4 py-2">O₃ (µg/m³)</th>
           </tr>
         </thead>
         <tbody>

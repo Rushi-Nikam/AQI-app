@@ -15,8 +15,9 @@ const HomePage = ({ isDarkMode }) => { // Receive the dark mode state as a prop
       <div className="flex lg:flex lg:mx-20 my-4 gap-12">
         <div 
           className="flex justify-start"
-          onMouseEnter={() => setIsHovered(true)} 
-          onMouseLeave={() => setIsHovered(false)} 
+          // onMouseEnter={() => setIsHovered(true)} 
+          // onMouseLeave={() => setIsHovered(false)} 
+          onClick={()=>setIsHovered(!isHovered)}
         >
           <SideCard location={"Pune"} isDarkMode={isDarkMode} />
         </div>
