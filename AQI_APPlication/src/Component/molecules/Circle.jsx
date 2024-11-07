@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Circle = ({ aqiValue = 200, maxAqi = 500, isDarkMode }) => {
+const Circle = ({ aqiValue = 50, maxAqi = 500, isDarkMode }) => {
   // Function to determine stroke color and text based on AQI value
   const getStrokeColorAndText = (aqi) => {
     if (aqi <= 50) return { color: 'rgb(76, 175, 80)', text: 'Good' }; // Good (Green)

@@ -6,9 +6,9 @@ import { Icon } from 'leaflet';
 const Leafletmap = () => {
   const [markers, setMarkers] = useState([
     { geocode: [18.6492, 73.7707], popup: "Nigdi", aqiValue: null, backgroundColor: "#00e400" },
-    { geocode: [18.6011, 73.7641], popup: "Wakad", aqiValue: null, backgroundColor: "#ff7e00" },
-    { geocode: [18.5913, 73.7389], popup: "Hinjawadi", aqiValue: null, backgroundColor: "#ff0000" },
-    { geocode: [18.7167, 73.7678], popup: "Dehu", aqiValue: null, backgroundColor: "#7e0023" },
+    { geocode: [18.6011, 73.7641], popup: "Wakad", aqiValue: 105, backgroundColor: "#ff7e00" },
+    { geocode: [18.5913, 73.7389], popup: "Hinjawadi", aqiValue: 103, backgroundColor: "#ff0000" },
+    { geocode: [18.7167, 73.7678], popup: "Dehu", aqiValue: 102, backgroundColor: "#7e0023" },
   ]);
   useEffect(() => {
     const fetchAQIData = async () => {
