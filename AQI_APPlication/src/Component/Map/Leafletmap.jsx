@@ -1,36 +1,51 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Icon } from 'leaflet';
 
 const Leafletmap = () => {
-  const markers = [
-    {
-      geocode: [18.6492, 73.7707],
-      popup: "Nigdi",
-      aqiValue: 50,
-      backgroundColor: "#00e400" // Green for good AQI
-    },
-    {
-      geocode: [18.6011, 73.7641],
-      popup: "Wakad",
-      aqiValue: 150,
-      backgroundColor: "#ff7e00" // Orange for unhealthy for sensitive groups
-    },
-    {
-      geocode: [18.5913, 73.7389],
-      popup: "Hinjawadi",
-      aqiValue: 200,
-      backgroundColor: "#ff0000" // Red for unhealthy
-    },
-    {
-      geocode: [18.7167, 73.7678],
-      popup: "Dehu",
-      aqiValue: 300,
-      backgroundColor: "#7e0023" // Maroon for hazardous
-    },
-  ];
+  const [markers, setMarkers] = useState([
+    { geocode: [18.6492, 73.7707], popup: "Nigdi", aqiValue: null, backgroundColor: "#00e400" },
+    { geocode: [18.6011, 73.7641], popup: "Wakad", aqiValue: null, backgroundColor: "#ff7e00" },
+    { geocode: [18.5913, 73.7389], popup: "Hinjawadi", aqiValue: null, backgroundColor: "#ff0000" },
+    { geocode: [18.7167, 73.7678], popup: "Dehu", aqiValue: null, backgroundColor: "#7e0023" },
+  ]);
+  useEffect(() => {
+    const fetchAQIData = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/aqi'); // Replace with your API endpoint
+        const data = await response.json();
 
+        const updatedMarkers = markers.map((marker) => {
+          const cityData = data.find((item) => item.locality.toLowerCase() === marker.popup.toLowerCase());
+          if (cityData) {
+            const aqiValue = cityData.aqi;
+            return {
+              ...marker,
+              aqiValue,
+              backgroundColor: getColorFromAQI(aqiValue),
+            };
+          }
+          return marker;
+        });
+
+        setMarkers(updatedMarkers);
+      } catch (error) {
+        console.error('Error fetching AQI data:', error);
+      }
+    };
+
+    fetchAQIData();
+  }, [markers]);
+
+  const getColorFromAQI = (aqiValue) => {
+    if (aqiValue <= 50) return "#00e400"; // Good
+    if (aqiValue <= 100) return "#ffff00"; // Moderate
+    if (aqiValue <= 150) return "#ffcc00"; // Unhealthy for sensitive groups
+    if (aqiValue <= 200) return "#ff7e00"; // Unhealthy
+    if (aqiValue <= 300) return "#ff0000"; // Very Unhealthy
+    return "#7e0023"; // Hazardous
+  };
   const createCustomIcon = (aqiValue, backgroundColor) => {
     const svgIcon = `
       <svg width="33" height="44" viewBox="0 0 35 45" xmlns="http://www.w3.org/2000/svg">
