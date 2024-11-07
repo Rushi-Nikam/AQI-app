@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import About from '../About';
-import AQIdata from '../../molecules/AQIdata';
+
 
 const Footer = () => {
   return (

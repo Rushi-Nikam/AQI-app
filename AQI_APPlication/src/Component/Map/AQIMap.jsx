@@ -69,8 +69,8 @@ const AQIMap = () => {
   };
 
   return (
-    <div>
-      <MapContainer center={[18.5204, 73.8567]} zoom={12} style={{ width: '100%', height: '500px' }}>
+    <div className='flex flex-col '>
+      <MapContainer className='z-50' center={[18.5204, 73.8567]} zoom={12} style={{ width: '100%', height: '500px' }}>
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
         {markers.map((marker, index) => (
           <Marker
