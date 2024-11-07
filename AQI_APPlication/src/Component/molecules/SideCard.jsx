@@ -7,20 +7,22 @@ const SideCard = ({ location = "Mumbai",isDarkMode }) => {
   const [isClicked, setIsClicked] = useState(false); // Track click state
 
   const gases = [
-    { name: "SO₂", label: "Sulfur Dioxide", unit: "ppm", value: 0.005, max: 0.5 },
-    { name: "CO", label: "Carbon Monoxide", unit: "ppm", value: 1.5, max: 9 },
-    { name: "NO₂", label: "Nitrogen Dioxide", unit: "ppm", value: 0.002, max: 0.1 },
-    { name: "PM2.5", label: "Fine Particles (PM2.5)", unit: "µg/m³", value: 35, max: 25 },
-    { name: "PM10", label: "Coarse Particles (PM10)", unit: "µg/m³", value: 50, max: 50 },
-    { name: "O₃", label: "Ozone", unit: "ppm", value: 0.07, max: 0.08 },
+    { name: "SO₂", label: "Sulfur Dioxide", unit: "µg/m³", value: 0.005, range: { low: 0, high: 0.5 }, index: { low: 0, high: 50 } },
+    { name: "CO", label: "Carbon Monoxide", unit: "µg/m³", value: 1.5, range: { low: 0, high: 9 }, index: { low: 0, high: 50 } },
+    { name: "NO₂", label: "Nitrogen Dioxide", unit: "µg/m³", value: 0.002, range: { low: 0, high: 0.1 }, index: { low: 0, high: 50 } },
+    { name: "PM2.5", label: "Fine Particles (PM2.5)", unit: "µg/m³", value: 35, range: { low: 12.1, high: 35.4 }, index: { low: 51, high: 100 } },
+    { name: "PM10", label: "Coarse Particles (PM10)", unit: "µg/m³", value: 50, range: { low: 0, high: 50 }, index: { low: 0, high: 50 } },
+    { name: "O₃", label: "Ozone", unit: "µg/m³", value: 0.07, range: { low: 0, high: 0.08 }, index: { low: 0, high: 50 } },
   ];
 
   const calculateAQI = () => {
-    let totalWeightedValue = 0;
-    gases.forEach((gas) => {
-      totalWeightedValue += (gas.value / gas.max) * 100;
+    let aqiValues = gases.map((gas) => {
+      const { low, high } = gas.range;
+      const { low: indexLow, high: indexHigh } = gas.index;
+      return ((indexHigh - indexLow) / (high - low)) * (gas.value - low) + indexLow;
     });
-    return Math.round(totalWeightedValue / gases.length);
+
+    return Math.round(aqiValues.reduce((acc, cur) => acc + cur, 0) / gases.length);
   };
 
   const aqiValue = calculateAQI();
@@ -47,13 +49,13 @@ const SideCard = ({ location = "Mumbai",isDarkMode }) => {
 
       {/* Conditionally show gas values on click */}
       {isClicked && (
-        <div className="flex flex-col w-[600px] mt-[-420px] ml-[500px] text-center justify-center items-center">
+        <div className="flex flex-col w-[600px] mt-[-410px] ml-[500px] text-center justify-center items-center">
           <div>
 
    
  <div className="flex ml-[80px]">
        <div>
-        <h1 className="font-bold mx-auto">gases responsible for AQI Index </h1>
+        <h1 className="font-bold mx-auto lg:mt-[15px]">gases responsible for AQI Index </h1>
 
           <Gases />
        </div>
@@ -62,6 +64,18 @@ const SideCard = ({ location = "Mumbai",isDarkMode }) => {
           <Pre/> {/* Display Gases component when clicked */}
        </div>
         </div>
+ {/* <div className="flex ml-[80px]">
+       <div>
+        <h1 className="font-bold mx-auto lg:mt-[15px]">gases responsible for AQI Index </h1>
+
+          <Gases />
+       </div>
+       <div className="mt-[-60px]">
+
+          <Pre/> Display Gases component when clicked 
+       </div>
+        </div> */}
+
         </div>
         </div>
        
