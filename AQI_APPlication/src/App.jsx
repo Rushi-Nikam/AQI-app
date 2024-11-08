@@ -16,7 +16,7 @@ function App() {
   }, [isDarkMode]);
 
   return (
-    <BrowserRouter> {/* Wrap your components with BrowserRouter */}
+    <BrowserRouter > {/* Wrap your components with BrowserRouter */}
       <div className={`flex flex-col min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'}`}>
         <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
         <main className="flex-grow relative p-4">

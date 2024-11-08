@@ -21,7 +21,7 @@ const HomePage = ({ isDarkMode }) => { // Receive the dark mode state as a prop
   return (
     <div className={`py-4 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
       <h1 className={`font-serif text-2xl font-bold mb-5 text-center lg:text-left ${isDarkMode ? 'text-white' : 'text-black'}`}>
-        India AQI Status | Live Air Quality and Pollution Data
+        Pune AQI Status | Live Air Quality and Pollution Data
       </h1>
       <div className="flex lg:flex lg:mx-20 my-4 gap-12">
         <div 
@@ -45,7 +45,7 @@ const HomePage = ({ isDarkMode }) => { // Receive the dark mode state as a prop
         <div className={`lg:w-1/2 overflow-auto max-h-[400px] ${isDarkMode ? 'bg-gray-700' : 'bg-white'}`}>
         <Suspense fallback={"is loading"}> <AQITable  isDarkMode={isDarkMode} /></Suspense>
          
-        </div>
+        </div>  
 
         {/* AQI Card */}
         <div className={`lg:w-1/3 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>

@@ -63,6 +63,19 @@ app.get('/api/gases', async (req, res) => {
     res.status(500).json({ error: 'An error occurred while fetching gases data' });
   }
 });
+// Endpoint to get AQI data for a specific locality
+app.get('/api/aqi/:locality', async (req, res) => {
+  try {
+    const localityData = await AQI.findOne({ locality: req.params.locality });
+    if (!localityData) {
+      return res.status(404).json({ error: 'Locality not found' });
+    }
+    res.json(localityData);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while fetching locality data' });
+  }
+});
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
