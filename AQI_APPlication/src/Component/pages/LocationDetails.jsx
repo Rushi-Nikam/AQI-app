@@ -58,7 +58,7 @@ const LocalityDetail = ({ isDarkMode }) => {
             <p>(AQI-IN)</p>
           </div>
         </div>
-        <div className="text-center bg-yellow-300 w-52 px-5 py-2 rounded-full">
+        <div className="text-center bg-yellow-300 w-52 px-5 py-2 rounded-full cursor-pointer">
           <p>{aqi >= 500 ? "Hazardous" : aqi >= 300 ? " Very Unhealthy" : aqi >= 200 ? "Unhealthy":aqi >= 150 ? "Unhealthy ": aqi >= 100 ? "moderate": "normal" }</p>
         </div>
         {/* Display AQI category image */}
