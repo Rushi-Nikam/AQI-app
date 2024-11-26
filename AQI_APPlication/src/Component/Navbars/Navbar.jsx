@@ -38,8 +38,8 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
 
         {/* Existing Map Links */}
         <div className='flex gap-10 lg:mr-[200px] justify-center items-center text-center'><div>
-        <Link to='/map' className='flex justify-center items-center gap-1'>
-          Map {location.pathname === '/map' ? <FaChevronUp /> : <FaChevronDown />}
+        <Link to='/map-aqi' className='flex justify-center items-center gap-1'>
+          Map {location.pathname === '/map-aqi' ? <FaChevronUp /> : <FaChevronDown />}
         </Link>
         </div>
         {/* <div>

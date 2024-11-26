@@ -9,9 +9,9 @@ const Circle = ({ aqiValue = 50, maxAqi = 500, isDarkMode }) => {
   const getStrokeColorAndText = (aqi) => {
     if (aqi <= 50) return { color: 'rgb(76, 175, 80)', text: 'Good' }; // Good (Green)
     else if (aqi <= 100) return { color: 'rgb(255, 235, 59)', text: 'Moderate' }; // Moderate (Yellow)
-    else if (aqi <= 150) return { color: 'rgb(255, 152, 0)', text: 'Unhealthy for Sensitive Groups' }; // Unhealthy for Sensitive Groups (Orange)
-    else if (aqi <= 200) return { color: 'rgb(244, 67, 54)', text: 'Unhealthy' }; // Unhealthy (Red)
-    else if (aqi <= 300) return { color: 'rgb(156, 39, 176)', text: 'Very Unhealthy' }; // Very Unhealthy (Purple)
+    else if (aqi <= 200) return { color: 'rgb(255, 152, 0)', text: 'Unhealthy for Sensitive Groups' }; // Unhealthy for Sensitive Groups (Orange)
+    else if (aqi <= 300) return { color: 'rgb(244, 67, 54)', text: 'Unhealthy' }; // Unhealthy (Red)
+    else if (aqi <= 400) return { color: 'rgb(156, 39, 176)', text: 'Very Unhealthy' }; // Very Unhealthy (Purple)
     else return { color: 'rgb(139, 0, 0)', text: 'Hazardous' }; // Hazardous (Maroon)
   };
 

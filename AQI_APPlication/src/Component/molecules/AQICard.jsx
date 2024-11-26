@@ -5,10 +5,10 @@ const AQICard = ({ isDarkMode }) => {
   const aqiLevels = [
     { range: '0-50', category: 'Good', color: 'bg-green-500' },
     { range: '51-100', category: 'Moderate', color: 'bg-yellow-400' },
-    { range: '101-150', category: 'Unhealthy for Sensitive Groups', color: 'bg-orange-400' },
-    { range: '151-200', category: 'Unhealthy', color: 'bg-red-500' },
-    { range: '201-300', category: 'Very Unhealthy', color: 'bg-purple-600' },
-    { range: '301-500', category: 'Hazardous', color: 'bg-rose-700' },
+    { range: '101-200', category: 'Unhealthy for Sensitive Groups', color: 'bg-orange-400' },
+    { range: '201-300', category: 'Unhealthy', color: 'bg-red-500' },
+    { range: '301-400', category: 'Very Unhealthy', color: 'bg-purple-600' },
+    { range: '401-500', category: 'Hazardous', color: 'bg-rose-700' },
   ];
 
   return (

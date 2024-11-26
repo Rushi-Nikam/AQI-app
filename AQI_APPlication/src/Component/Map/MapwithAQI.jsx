@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { Icon } from 'leaflet';
-import 'leaflet-control-geocoder'; // For geocoder control
-import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
+import 'leaflet-control-geocoder'; 
+import 'leaflet-control-geocoder/dist/Control.Geocoder.css'; // Import CSS
+
 
 const getColorFromAQI = (aqiValue) => {
   if (aqiValue <= 50) return "#00e400"; // Good
@@ -14,6 +15,7 @@ const getColorFromAQI = (aqiValue) => {
   return "#7e0023"; // Hazardous
 };
 
+
 const createCustomIcon = (aqiValue, backgroundColor) => {
   const svgIcon = `
     <svg width="33" height="44" viewBox="0 0 35 45" xmlns="http://www.w3.org/2000/svg">
@@ -21,41 +23,13 @@ const createCustomIcon = (aqiValue, backgroundColor) => {
       <text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="16" fill="#ffffff" font-family="Arial">${aqiValue}</text>
     </svg>
   `;
-
   return new Icon({
     iconUrl: `data:image/svg+xml;base64,${btoa(svgIcon)}`,
     iconSize: [38, 38],
   });
 };
 
-// Search Control Component
-const SearchControl = () => {
-  const map = useMap();
 
-  useEffect(() => {
-    if (!map) return;
-
-    // Initialize Geocoder
-    const geocoder = L.Control.Geocoder.nominatim();
-    const geocoderControl = L.Control.geocoder({
-      position: 'topright',
-      placeholder: 'Search for location...',
-      geocoder,
-    })
-      .on('markgeocode', (e) => {
-        const { center } = e.geocode;
-        L.marker(center).addTo(map).bindPopup(e.geocode.name).openPopup();
-        map.setView(center, 13);
-      })
-      .addTo(map);
-
-    return () => map.removeControl(geocoderControl);
-  }, [map]);
-
-  return null;
-};
-
-// Live Location Component
 const LiveLocation = () => {
   const map = useMap();
   const [locationMarker, setLocationMarker] = useState(null);
@@ -74,7 +48,7 @@ const LiveLocation = () => {
       } else {
         const marker = L.marker(latLng).addTo(map).bindPopup('You are here');
         setLocationMarker(marker);
-        marker.openPopup(); // Open popup initially
+        marker.openPopup(); 
       }
 
       if (locationCircle) {
@@ -105,7 +79,37 @@ const LiveLocation = () => {
   return null;
 };
 
-const Leafletmap = () => {
+// Search Control component
+const SearchControl = () => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!map) return;
+
+    // Geocoder integration
+    const geocoder = L.Control.Geocoder.nominatim();
+    const geocoderControl = L.Control.geocoder({
+      position: 'topright',
+      placeholder: 'Search for location...',
+      geocoder,
+    })
+      .on('markgeocode', (e) => {
+        const { center } = e.geocode;
+        L.marker(center)
+          .addTo(map)
+          .bindPopup(e.geocode.name)
+          .openPopup();
+        map.setView(center, 13);
+      })
+      .addTo(map);
+
+    return () => map.removeControl(geocoderControl);
+  }, [map]);
+
+  return null;
+};
+
+const MapwithAQI = () => {
   const [markers, setMarkers] = useState([
     { geocode: [18.6492, 73.7707], popup: "Nigdi", aqiValue: null, backgroundColor: "#00e400" },
     { geocode: [18.6011, 73.7641], popup: "Wakad", aqiValue: 105, backgroundColor: "#ff7e00" },
@@ -143,13 +147,13 @@ const Leafletmap = () => {
 
   return (
     <MapContainer
-      className="h-[55vh] w-full lg:w-[960px] z-50 overflow-hidden"
       center={[18.5913, 73.7389]}
       zoom={13}
+      style={{ height: '100vh', width: '100%' }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <SearchControl />
       <LiveLocation />
@@ -170,4 +174,4 @@ const Leafletmap = () => {
   );
 };
 
-export default Leafletmap;
+export default MapwithAQI;

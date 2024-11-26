@@ -10,6 +10,7 @@ import About from '../Component/pages/About';
 import AQIdata from '../Component/molecules/AQIdata';
 import CityDetails from '../Component/molecules/CityDetails';
 import AQITable from '../Component/molecules/AQITable';
+import MapwithAQI from '../Component/Map/MapwithAQI';
 
 const Routers = ({ isDarkMode, setIsDarkMode }) => {
   return (
@@ -18,6 +19,7 @@ const Routers = ({ isDarkMode, setIsDarkMode }) => {
       <Route path='/about' element={<About isDarkMode={isDarkMode} />} />
       <Route path='/aqi-info' element={<AQIdata isDarkMode={isDarkMode} />} />
       <Route path='/map' element={<MapII isDarkMode={isDarkMode} />} />
+      <Route path='/map-aqi' element={<MapwithAQI  />} />
       <Route path='/aqi-map' element={<AQIMap isDarkMode={isDarkMode}/>} />
       <Route path='/leaflet-map' element={<Leafletmap isDarkMode={isDarkMode} />} />
       <Route path="/locality/:name" element={<LocalityDetail isDarkMode={isDarkMode} />} />

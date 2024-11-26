@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
+import { ImCross } from "react-icons/im";
 
 const aqiQA = [
   { question: "What is the AQI?", answer: "AQI is a scale that measures and reports air pollution levels." },
@@ -16,7 +17,6 @@ const aqiQA = [
 
 const Questions = () => {
   const [activeIndex, setActiveIndex] = useState(null);
-
   const toggleAnswer = (index) => {
     setActiveIndex((prevIndex) => (prevIndex === index ? null : index));
   };
@@ -31,7 +31,7 @@ const Questions = () => {
               className="text-blue-500 hover:text-blue-700"
               onClick={() => toggleAnswer(index)}
             >
-              <FaPlus />
+             {activeIndex !== index ? <FaPlus /> : <ImCross />}  
             </button>
           </div>
           {activeIndex === index && (
