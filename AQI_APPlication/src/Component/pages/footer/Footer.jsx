@@ -9,7 +9,7 @@ const Footer = () => {
         <p className="text-xl text-gray-500">
           &copy; {new Date().getFullYear()} AQI All Rights Reserved.
         </p>
-        <div className="mt-2 flex justify-center">
+        {/* <div className="mt-2 flex justify-center">
           <Link to={'/about'} className="text-gray-400 hover:text-white mx-2">
            About
           </Link>
@@ -20,7 +20,7 @@ const Footer = () => {
            Map
           </Link>
         
-        </div>
+        </div> */}
       </div>
     </footer>
   );

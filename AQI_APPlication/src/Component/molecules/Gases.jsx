@@ -1,6 +1,10 @@
+
+
 import React, { useEffect, useState } from 'react';
+import GasCard from './GasCard';
 
 const Gases = () => {
+  const [value, setValue] = useState([]);
   const [gases, setGases] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,6 +26,23 @@ const Gases = () => {
 
     fetchGases();
   }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://192.168.165.5:8000/api/get-data/');
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        const latestAQIValue = data.length > 0 ? Math.round(data[data.length - 1].value) : 'N/A';
+        setValue(latestAQIValue);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching AQI data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
 
   if (loading) {
     return <div>Loading...</div>;
@@ -52,6 +73,11 @@ const Gases = () => {
         </div>
       ))}
     </div>
+    // <div className='grid  grid-rows-1 w-[350px] bg-red-400 h-[400px]'>
+    //   <GasCard/>
+    //   <GasCard/>
+    //   <GasCard/>
+    // </div>
   );
 };
 

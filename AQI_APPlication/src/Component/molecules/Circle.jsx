@@ -65,7 +65,8 @@ const Circle = ({ aqiValue = 50, maxAqi = 500, isDarkMode }) => {
       {/* Text outside the Circle */}
       <div className={`text-xl mt-2 ${isDarkMode ? 'text-white' : '#111830'}`}>
         {text}
-      </div> {/* Adjust margin if necessary */}
+      </div> 
+     {/* <p className='text-2xl font-bold'>CO</p>  */}
     </div>
   );
 };

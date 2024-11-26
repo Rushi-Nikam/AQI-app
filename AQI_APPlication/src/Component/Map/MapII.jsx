@@ -1,20 +1,57 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import * as L from "leaflet";
+import 'leaflet/dist/leaflet.css';
+import 'leaflet-control-geocoder';
+
+const SearchControl = () => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!map) return;
+
+    const geocoder = L.Control.Geocoder.nominatim();
+    const geocoderControl = L.Control.geocoder({
+      position: 'topright',
+      placeholder: 'Search for location...',
+      geocoder,
+    })
+      .on('markgeocode', (e) => {
+        const { center } = e.geocode;
+        L.marker(center)
+          .addTo(map)
+          .bindPopup(e.geocode.name)
+          .openPopup();
+        map.setView(center, 13);
+      })
+      .addTo(map);
+
+    return () => map.removeControl(geocoderControl);
+  }, [map]);
+
+  return null;
+};
 
 const MapII = () => {
-  return (
-    <div className='flex justify-center my-10 '>
-       <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3781.2913669155932!2d73.75010007465421!3d18.605960066561355!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2b97c138deee7%3A0x5548eed7fc280ee5!2sBhumkar%20Chowk!5e0!3m2!1sen!2sin!4v1728290726535!5m2!1sen!2sin"
-        width="1100"
-        height="450"
-        style={{ border: 0 }}
-        allowFullScreen=""
-        loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"
-        title="Bhumkar Chowk Location"
-      ></iframe>
-    </div>
-  )
-}
+  const [markers, setMarkers] = useState([
+    { position: [18.5204, 73.8567], popup: 'Pune' },
+  ]);
 
-export default MapII
+  return (
+    <MapContainer center={[18.5204, 73.8567]} zoom={13} style={{ height: '100vh', width: '100%' }}>
+        <TileLayer
+      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    />
+
+      <SearchControl />
+      {markers.map((marker, index) => (
+        <Marker key={index} position={marker.position}>
+          <Popup>{marker.popup}</Popup>
+        </Marker>
+      ))}
+    </MapContainer>
+  );
+};
+
+export default MapII;

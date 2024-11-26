@@ -50,7 +50,7 @@ const precautionsData = [
 
 const Pre = () => {
   return (
-    <div className="p-4 w-[700px] max-w-[800px] mx-auto">
+    <div className="p-4 w-[600px] max-w-[800px] mx-auto">
       <h1 className="text-xl font-bold text-center mb-4">Precautions for AQI Levels</h1>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-4">
         {precautionsData.map((levelData, index) => (

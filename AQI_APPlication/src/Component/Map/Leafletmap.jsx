@@ -3,6 +3,7 @@ import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Icon } from 'leaflet';
 
+
 const Leafletmap = () => {
   const [markers, setMarkers] = useState([
     { geocode: [18.6492, 73.7707], popup: "Nigdi", aqiValue: null, backgroundColor: "#00e400" },

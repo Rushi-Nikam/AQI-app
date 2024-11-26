@@ -6,6 +6,8 @@ import Gases from "../molecules/Gases"
 const SideCard = ({ location = "Mumbai", isDarkMode }) => {
   const [gases, setGases] = useState([]); // State to store the gases data
   const [isClicked, setIsClicked] = useState(false); // Track click state
+  const [citydata , setCitydata]= useState([]);
+  const [loading,setloading] = useState(true);
 
   useEffect(() => {
     // Fetch the gas data from the API when the component mounts
@@ -24,6 +26,26 @@ const SideCard = ({ location = "Mumbai", isDarkMode }) => {
 
     fetchGases(); // Call the fetch function when the component mounts
   }, []); // Empty dependency array ensures this runs only once after the initial render
+  useEffect(() => {
+    // Fetch city data from the backend
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://192.168.168.5:8000/api/get-data/");
+        if (!response.ok) throw new Error("Network response was not ok");
+        const data = await response.json();
+        // Get the AQI of the latest data entry
+        const latestAQIValue = data.length > 0 ? Math.round(data[data.length - 1].value) : "N/A";
+
+        setCitydata(latestAQIValue);
+        setloading(false);
+        // setLatestAQI(latestAQIValue); // Set the latest AQI
+      } catch (error) {
+        console.error("Error fetching AQI data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const calculateAQI = () => {
     const aqiValues = gases.map((gas) => {
@@ -53,7 +75,8 @@ const SideCard = ({ location = "Mumbai", isDarkMode }) => {
         <div className="flex text-black flex-col items-center sm:mt-0">
           <div className={`text-xl font-semibold ${isDarkMode ? "text-white" : "text-[#111830]"}`}>Air Quality Index</div>
           {/* Add Circle component here to visualize the AQI value */}
-          <Circle aqiValue={aqiValue} isDarkMode={isDarkMode}/>
+          {/* <div>{loading?`Loading.....`: <Circle aqiValue={ aqiValue || citydata} isDarkMode={isDarkMode}/>}</div> */}
+          <Circle aqiValue={ aqiValue || citydata} isDarkMode={isDarkMode}/>
         </div>
       </div>
 
@@ -63,16 +86,10 @@ const SideCard = ({ location = "Mumbai", isDarkMode }) => {
           <div className="flex ml-[80px]">
             <div>
               <h1 className="font-bold mx-auto lg:mt-[15px]">Gases responsible for AQI Index</h1>
-              {/* Map through gases data and display */}
-              {/* {gases.map((gas) => (
-                <div key={gas.name}>
-                  <p>{gas.label}: {gas.value} {gas.unit}</p>
-                </div>
-              ))} */}
               <Gases/>
             </div>
             <div className="mt-[-60px]">
-              {/* Display Pre component when clicked */}
+              
               <Pre/>
             </div>
           </div>

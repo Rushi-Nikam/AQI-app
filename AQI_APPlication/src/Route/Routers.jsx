@@ -8,6 +8,8 @@ import Leafletmap from '../Component/Map/Leafletmap';
 import AQIMap from '../Component/Map/AQIMap';
 import About from '../Component/pages/About';
 import AQIdata from '../Component/molecules/AQIdata';
+import CityDetails from '../Component/molecules/CityDetails';
+import AQITable from '../Component/molecules/AQITable';
 
 const Routers = ({ isDarkMode, setIsDarkMode }) => {
   return (
@@ -19,6 +21,8 @@ const Routers = ({ isDarkMode, setIsDarkMode }) => {
       <Route path='/aqi-map' element={<AQIMap isDarkMode={isDarkMode}/>} />
       <Route path='/leaflet-map' element={<Leafletmap isDarkMode={isDarkMode} />} />
       <Route path="/locality/:name" element={<LocalityDetail isDarkMode={isDarkMode} />} />
+      <Route path="/aqi-table" element={<AQITable isDarkMode={isDarkMode} />} />
+      <Route path="/city/:name" element={<CityDetails isDarkMode={isDarkMode} />} />
       <Route path="/detailed-precautions/:level" element={<DetailedPrecaution isDarkMode={isDarkMode} />} />
       {/* 404 page */}
       {/* <Route path="*" element={<NotFound />} /> */}

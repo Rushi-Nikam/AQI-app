@@ -1,20 +1,16 @@
 import React from 'react';
 
-const Search = ({ items }) => {
+const Search = ({ searchTerm, setSearchTerm }) => {
   return (
-    <>
-      <header className="flex justify-center items-center p-4 ">
-        <div className="w-full max-w-md">
-          <input
-            type="text"
-            name="search-form"
-            id="search-form"
-            placeholder="Search..."
-            className="w-full px-4 py-2 border-2 border-gray-300 rounded-full focus:outline-none focus:border-blue-500 transition duration-300"
-          />
-        </div>
-      </header>
-    </>
+    <div className="mb-4 p-5 ">
+      <input
+        type="text"
+        placeholder="Search locality..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
+      />
+    </div>
   );
 };
 
