@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { Icon } from 'leaflet';
+import * as L from 'leaflet';
 import 'leaflet-control-geocoder'; 
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css'; // Import CSS
 
