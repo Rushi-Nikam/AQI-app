@@ -31,8 +31,7 @@ const GasesTable = ({ isDarkMode }) => {
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         const latestAQIValue = data.length > 0 ? Math.round(data[data.length - 1].value) : 'N/A';
-        const sensor = data.Sensor_data;
-        // setValue(latestAQIValue);
+        const sensor = data;
         setValue(sensor);
         setLoading(false);
       } catch (error) {
@@ -73,16 +72,16 @@ const GasesTable = ({ isDarkMode }) => {
                   isDarkMode ? 'bg-gray-600 text-[#82909d]' : 'bg-blue-600 text-white'
                 }`}
               >
-                {gas.name}
+                {value.humidity}
               </div>
-              <div className="text-2xl">{gas.label}</div>
+              <div className="text-2xl">{value.temperature}</div>
               <div
                 className={`text-xl flex flex-col justify-center items-end text-right ${
                   isDarkMode ? 'bg-gray-700 text-white' : 'bg-[#f7f7fc] text-gray-700'
                 }`}
               >
-                {`${gas.value}`}
-                <div>{gas.unit}</div>
+                {`${value.mq7}`}
+                <div>{value.mq135}</div>
               </div>
             </div>
 

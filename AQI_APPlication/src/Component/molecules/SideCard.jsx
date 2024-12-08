@@ -46,7 +46,7 @@ const SideCard = ({ location = "Mumbai", isDarkMode }) => {
       // }
   
         const latestAQIValue = sensorData.length > 0 ? Math.round(data[data.length -1].value) : "N/A";
-        const sensor = sensorData.Sensor_data;
+        const sensor = sensorData.humidity;
         // const sensor = sensorData
         setCitydata(sensor);
         // setCitydata(latestAQIValue)

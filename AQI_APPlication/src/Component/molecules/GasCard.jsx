@@ -1,6 +1,6 @@
 import React from 'react'
 
-const GasCard = () => {
+const GasCard = ({title:humidity,v}) => {
   return (
     <div>
       <div className="grid lg:rid-cols-1 bg-white sm:grid-cols-2  w-[350px] h-[400px] rounded-lg">
