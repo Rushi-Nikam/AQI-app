@@ -37,9 +37,9 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
         </Link>
 
         {/* Existing Map Links */}
-        <div className='flex gap-10 lg:mr-[200px] justify-center items-center text-center'><div>
-        <Link to='/map-aqi' className='flex justify-center items-center gap-1'>
-          Map {location.pathname === '/map-aqi' ? <FaChevronUp /> : <FaChevronDown />}
+        <div className='block sm:hidden gap-10 lg:mr-[200px] justify-center items-center text-center sm:visible '><div>
+        <Link to='/map-choro' className='flex justify-center items-center gap-1'>
+          Map {location.pathname === '/map-choro' ? <FaChevronUp /> : <FaChevronDown />}
         </Link>
         </div>
         {/* <div>
@@ -82,6 +82,9 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
           <Link to="/" className="text-3xl">
             {/* <IoIosNotificationsOutline /> */}
           </Link>
+          <Link to='/map-choro' className='flex justify-center items-center gap-1'>
+          Map {location.pathname === '/map-choro' ? <FaChevronUp /> : <FaChevronDown />}
+        </Link>
           <div onClick={() => setIsDarkMode(!isDarkMode)} className="text-2xl text-black cursor-pointer">
             {isDarkMode ? <FaRegMoon /> : <IoSunnyOutline />}
           </div>

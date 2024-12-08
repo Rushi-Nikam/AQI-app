@@ -84,63 +84,68 @@ const PollutantDivTable = ({isDarkMode}) => {
   };
 
   return (
-    <div  className={` w-full p-6 rounded-lg shadow-lg`}>
+    <div className={`w-full p-6 rounded-lg shadow-lg`}>
       {/* Buttons for pollutant selection */}
-      <div className={`${isDarkMode ? 'bg-gray-600 text-white' : 'bg-white text-gray-800'} flex gap-[70px] justify-center text-xl bg-[#e7eef4] rounded-2xl  items-center mb-6`}>
-        {Object.keys(pollutantData).map((pollutant) =>(
+      <div className={`${isDarkMode ? 'bg-gray-600 text-white' : 'bg-white text-gray-800'} flex gap-4 sm:gap-2 md:gap-8 lg:gap-[60px]  justify-center text-xl text-wrap lg:text-2xl sm:text-[2px] bg-[#e7eef4] rounded-2xl items-center  mb-6`}>
+        {Object.keys(pollutantData).map((pollutant) => (
           <button
             key={pollutant}
             onClick={() => handleButtonClick(pollutant)}
-            className={`px-4 py-2  rounded-2xl w-[150px] ${
+            className={`px-4 py-2 text-xs lg:text-xl  rounded-2xl w-[60px] lg:w-[150px] md:w-[120px] sm:w-[20px] ${
               selectedPollutant === pollutant
-              ? isDarkMode
-                ? 'bg-blue-700 text-white'
-                : 'bg-blue-500 text-white'
-              : isDarkMode
-              ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-500'
-          }`}
+                ? isDarkMode
+                  ? 'bg-blue-700 text-white'
+                  : 'bg-blue-500 text-white'
+                : isDarkMode
+                ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-500'
+            }`}
           >
             {pollutant}
           </button>
         ))}
       </div>
 
-      {/* Div-based table */}
-      <div className="flex w-[1100px] lg:ml-[140px] flex-col justify-center m-auto gap-y-4">
-  {/* Table rows */}
-{/* Table rows */}
-{data.map((item, index) => (
-  <div
-    key={index}
-    className={`flex items-center p-4 rounded-lg transition relative h-20 ${
-      isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-100'
-    }`}
-  >
-   <div className='flex'>
-   <div className="flex-1 p-4 ">
-      <div>{item.range}</div>
-      <div className={` p-4 ${getMessageColor(item.message)} w-[10px] flex justify-center items-center`}>
+     
+      <div className=" lg:w-[960px] flex flex-col justify-center m-auto gap-y-4">
+      
+        {data.map((item, index) => (
+          <div
+            key={index}
+            className={`flex flex-col sm:flex-row sm:items-center sm:h-[120px] p-4 rounded-lg transition relative ${
+              isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-200 hover:bg-gray-100'
+            }`}
+          >
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
+              {/* Range and Message */}
+              <div className="flex-2 m-auto p-4">
+                <div className='flex lg: lg:flex-col gap-3 lg:gap-0'>
+                <div>{item.range}</div>
+                <div className={`p-2 ${getMessageColor(item.message)} w-[10px] flex justify-center items-center`}>
+                </div>
+                <div className='flex mx-auto justify-center items-center'>
+
+                <div>{item.message}</div>
+                </div>
+                </div>
+              
+              </div>
+
+              {/* Description */}
+              <div>
+                
+              </div>
+              <div className="flex-1 p-4 lg:justify-center  m-auto sm:text-center">
+              {item.description} </div>
+
+              {/* Image */}
+              <div className="w-[60px] sm:[40px] sm:w-[120px] lg:w-[80px] mx-auto sm:mx-0 mt-4 sm:mt-0">
+                <img src={item.image} alt={item.message} className="w-full h-auto" />
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
-      <div>{item.message}</div>
-    </div>
-   </div>
-   
-<div className='flex-1 p-4 justify-center'>
-<div  >{item.description}</div>
-</div>
-   
-
-    {/* Added margin-left to create spacing between description and image */}
-    <div className="absolute ml-[1100px] lg:ml-[970px]">
-      <img src={item.image} alt={item.message} className="w-20 h-32 m-auto" />
-    </div>
-  </div>
-))}
-
-</div>
-
-
     </div>
   );
 };

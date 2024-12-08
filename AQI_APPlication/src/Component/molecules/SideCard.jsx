@@ -6,7 +6,7 @@ import Gases from "../molecules/Gases"
 const SideCard = ({ location = "Mumbai", isDarkMode }) => {
   const [gases, setGases] = useState([]); // State to store the gases data
   const [isClicked, setIsClicked] = useState(false); // Track click state
-  const [citydata , setCitydata]= useState([]);
+  const [citydata , setCitydata]= useState();
   const [loading,setloading] = useState(true);
 
   useEffect(() => {
@@ -30,15 +30,29 @@ const SideCard = ({ location = "Mumbai", isDarkMode }) => {
     // Fetch city data from the backend
     const fetchData = async () => {
       try {
-        const response = await fetch("http://192.168.168.5:8000/api/get-data/");
+        const response = await fetch("http://192.168.40.191:8000/aqi_values/get-data/");
         if (!response.ok) throw new Error("Network response was not ok");
-        const data = await response.json();
-        // Get the AQI of the latest data entry
-        const latestAQIValue = data.length > 0 ? Math.round(data[data.length - 1].value) : "N/A";
-
-        setCitydata(latestAQIValue);
+        const sensorData = await response.json();
+      //   if (sensorData.Sensor_data && sensorData.Sensor_data.length > 0) {
+      //     const firstValue = sensorData.Sensor_data[0].value; // Accessing 'value' from the first element
+      //     console.log("First value:", firstValue);
+      //     setCitydata(firstValue); // Update state with the fetched value
+      //   } else {
+      //     console.warn("Sensor_data array is empty or undefined.");
+      //   }
+      //   setloading(false);
+      // } catch (error) {
+      //   console.error("Error fetching sensor data:", error);
+      // }
+  
+        const latestAQIValue = sensorData.length > 0 ? Math.round(data[data.length -1].value) : "N/A";
+        const sensor = sensorData.Sensor_data;
+        // const sensor = sensorData
+        setCitydata(sensor);
+        // setCitydata(latestAQIValue)
         setloading(false);
-        // setLatestAQI(latestAQIValue); // Set the latest AQI
+        console.log(sensorData);  
+  
       } catch (error) {
         console.error("Error fetching AQI data:", error);
       }
@@ -59,12 +73,19 @@ const SideCard = ({ location = "Mumbai", isDarkMode }) => {
     return Math.round(aqiValues.reduce((acc, cur) => acc + cur, 0) / aqiValues.length);
   };
 
-  const aqiValue = calculateAQI(); // Calculate the AQI value
+  // const aqiValue = calculateAQI(); // Calculate the AQI value
+   // Calculate the AQI value
+   const aqiValue =45;
 
   return (
+    // <main
+    //   className={`sm:w-[320px] w-full lg:mr-8 max-w-xl h-[400px] p-6 rounded-lg shadow-lg transition-transform cursor-pointer ${isDarkMode ? "bg-[#111830]" : "bg-white"} ${isDarkMode ? "text-white" : "text-[#111830]"}`}
+    //   onClick={() => setIsClicked(!isClicked)}
+    // >
     <main
       className={`sm:w-[320px] w-full lg:mr-8 max-w-xl h-[400px] p-6 rounded-lg shadow-lg transition-transform cursor-pointer ${isDarkMode ? "bg-[#111830]" : "bg-white"} ${isDarkMode ? "text-white" : "text-[#111830]"}`}
-      onClick={() => setIsClicked(!isClicked)}
+    
+     
     >
       <div className={`text-black text-center mb-4 ${isDarkMode ? "text-white" : "text-[#111830]"}`}>
         <h1 className="text-xl font-bold">{location} Location</h1>
@@ -76,12 +97,13 @@ const SideCard = ({ location = "Mumbai", isDarkMode }) => {
           <div className={`text-xl font-semibold ${isDarkMode ? "text-white" : "text-[#111830]"}`}>Air Quality Index</div>
           {/* Add Circle component here to visualize the AQI value */}
           {/* <div>{loading?`Loading.....`: <Circle aqiValue={ aqiValue || citydata} isDarkMode={isDarkMode}/>}</div> */}
-          <Circle aqiValue={ aqiValue || citydata} isDarkMode={isDarkMode}/>
+          <Circle  aqiValue={citydata} isDarkMode={isDarkMode}/>
+          {/* <Circle aqiValue={ aqiValue || citydata} isDarkMode={isDarkMode}/> */}
         </div>
       </div>
 
       {/* Conditionally show gas values on click */}
-      {isClicked && (
+      {/* {isClicked && (
         <div className="flex flex-col w-[600px] mt-[-410px] ml-[500px] text-center justify-center items-center">
           <div className="flex ml-[80px]">
             <div>
@@ -94,7 +116,7 @@ const SideCard = ({ location = "Mumbai", isDarkMode }) => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </main>
   );
 };

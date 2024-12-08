@@ -4,6 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import 'leaflet-control-geocoder'; // For geocoder control
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
+import * as d3 from 'd3';
 
 const getColorFromAQI = (aqiValue) => {
   if (aqiValue <= 50) return "#00e400"; // Good
@@ -15,15 +16,45 @@ const getColorFromAQI = (aqiValue) => {
 };
 
 const createCustomIcon = (aqiValue, backgroundColor) => {
-  const svgIcon = `
-    <svg width="33" height="44" viewBox="0 0 35 45" xmlns="http://www.w3.org/2000/svg">
-      <path d="M28.205 3.217H6.777c-2.367 0-4.286 1.87-4.286 4.179v19.847c0 2.308 1.919 4.179 4.286 4.179h5.357l5.337 13.58 5.377-13.58h5.357c2.366 0 4.285-1.87 4.285-4.179V7.396c0-2.308-1.919-4.179-4.285-4.179" fill="${backgroundColor}"></path>
-      <text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="16" fill="#ffffff" font-family="Arial">${aqiValue}</text>
-    </svg>
-  `;
+  // Create a simple circle SVG
+  const svgWidth = 38;
+  const svgHeight = 38;
+  const radius = 18; // Fixed radius for simplicity
 
+  // Set up the SVG structure
+  const svg = d3.create('svg')
+    .attr('width', svgWidth)
+    .attr('height', svgHeight)
+    .attr('viewBox', '0 0 38 38')
+    .attr('xmlns', 'http://www.w3.org/2000/svg');
+
+  // Add a circle with dynamic size and color based on AQI
+  svg.append('circle')
+    .attr('cx', svgWidth / 2)
+    .attr('cy', svgHeight / 2)
+    .attr('r', radius) // Fixed circle radius
+    .attr('fill', backgroundColor) // Set background color based on AQI
+    .attr('stroke', '#ffffff')
+    .attr('stroke-width', 2);
+
+  // Add text to represent AQI value, adjusted dynamically based on the value
+  svg.append('text')
+    .attr('x', '50%')
+    .attr('y', '50%')
+    .attr('text-anchor', 'middle')
+    .attr('dy', '.3em') // Adjust vertical alignment
+    .attr('font-size', 12) // Fixed font size
+    .attr('fill', '#ffffff')
+    .attr('font-family', 'Arial')
+    .text(aqiValue);
+
+  // Convert the D3-created SVG to a data URL
+  const svgData = svg.node().outerHTML;
+  const svgUrl = `data:image/svg+xml;base64,${btoa(svgData)}`;
+
+  // Return the Leaflet icon with the generated SVG circle
   return new Icon({
-    iconUrl: `data:image/svg+xml;base64,${btoa(svgIcon)}`,
+    iconUrl: svgUrl,
     iconSize: [38, 38],
   });
 };
@@ -160,8 +191,8 @@ const Leafletmap = () => {
           icon={createCustomIcon(marker.aqiValue, marker.backgroundColor)}
         >
           <Popup>
-            <div style={{ backgroundColor: marker.backgroundColor, padding: '5px', borderRadius: '5px', color: 'white' }}>
-              {marker.popup}: AQI {marker.aqiValue}
+            <div style={{  padding: '5px', borderRadius: '5px', color: 'Black' }}>
+              {marker.popup},Maharashtra
             </div>
           </Popup>
         </Marker>

@@ -22,21 +22,21 @@ const Questions = () => {
   };
 
   return (
-    <div className="flex flex-col m-auto justify-center items-start w-[1200px] max-w-5xl">
+    <div className="flex flex-col items-start mx-auto p-4 max-w-5xl">
       {aqiQA.map((item, index) => (
         <div key={index} className="w-full mb-4">
           <div className="flex items-center justify-between bg-gray-200 p-4 rounded shadow">
-            <p className="font-semibold">{item.question}</p>
+            <p className="font-semibold text-base sm:text-lg">{item.question}</p>
             <button
               className="text-blue-500 hover:text-blue-700"
               onClick={() => toggleAnswer(index)}
             >
-             {activeIndex !== index ? <FaPlus /> : <ImCross />}  
+              {activeIndex !== index ? <FaPlus /> : <ImCross />}
             </button>
           </div>
           {activeIndex === index && (
             <div className="bg-gray-100 p-4 rounded-b shadow-inner mt-2">
-              <p>{item.answer}</p>
+              <p className="text-sm sm:text-base">{item.answer}</p>
             </div>
           )}
         </div>
