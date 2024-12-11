@@ -15,33 +15,37 @@ const aqiQA = [
   { question: "How can AQI be improved?", answer: "AQI can be improved by reducing emissions from vehicles, industries, and adopting cleaner energy sources." }
 ];
 
-const Questions = () => {
+const Questions = ({isDarkMode}) => {
   const [activeIndex, setActiveIndex] = useState(null);
   const toggleAnswer = (index) => {
     setActiveIndex((prevIndex) => (prevIndex === index ? null : index));
   };
 
   return (
-    <div className="flex flex-col items-start mx-auto p-4 max-w-5xl">
-      {aqiQA.map((item, index) => (
-        <div key={index} className="w-full mb-4">
-          <div className="flex items-center justify-between bg-gray-200 p-4 rounded shadow">
-            <p className="font-semibold text-base sm:text-lg">{item.question}</p>
-            <button
-              className="text-blue-500 hover:text-blue-700"
-              onClick={() => toggleAnswer(index)}
-            >
-              {activeIndex !== index ? <FaPlus /> : <ImCross />}
-            </button>
-          </div>
-          {activeIndex === index && (
-            <div className="bg-gray-100 p-4 rounded-b shadow-inner mt-2">
-              <p className="text-sm sm:text-base">{item.answer}</p>
-            </div>
-          )}
+    <div className={`flex flex-col items-start mx-auto p-4 max-w-5xl ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
+  <div className={`text-4xl flex mx-auto mb-10`}>
+    <h1>FAQ</h1>
+  </div>
+  {aqiQA.map((item, index) => (
+    <div key={index} className="w-full mb-4">
+      <div className={`flex items-center justify-between p-4 rounded shadow ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-gray-200 text-black'}`}>
+        <p className="font-semibold text-base sm:text-lg">{item.question}</p>
+        <button
+          className={`transition-colors duration-300 ${isDarkMode ? 'text-gray-300 hover:text-gray-100' : 'text-blue-500 hover:text-blue-700'}`}
+          onClick={() => toggleAnswer(index)}
+        >
+          {activeIndex !== index ? <FaPlus /> : <ImCross />}
+        </button>
+      </div>
+      {activeIndex === index && (
+        <div className={`p-4 rounded-b shadow-inner mt-2 ${isDarkMode ? 'bg-gray-600 text-gray-200' : 'bg-gray-100 text-black'}`}>
+          <p className="text-sm sm:text-base">{item.answer}</p>
         </div>
-      ))}
+      )}
     </div>
+  ))}
+</div>
+
   );
 };
 

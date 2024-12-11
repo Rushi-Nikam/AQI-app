@@ -5,6 +5,7 @@ import { Icon } from 'leaflet';
 import 'leaflet-control-geocoder'; // For geocoder control
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
 import * as d3 from 'd3';
+// import img from "../../../public/Images/1.png";
 
 const getColorFromAQI = (aqiValue) => {
   if (aqiValue <= 50) return "#00e400"; // Good
@@ -99,19 +100,38 @@ const LiveLocation = () => {
       const { latitude, longitude, accuracy } = pos.coords;
       const latLng = [latitude, longitude];
 
+      // if (locationMarker) {
+      //   locationMarker.setLatLng(latLng);
+      //   locationMarker.getPopup().setContent('You are here').openOn(map);
+      // } else {
+      //   // Define a custom icon
+      //   const customIcon = L.icon({
+      //     iconUrl: img, 
+      //     iconSize: [60, 60], 
+      //     iconAnchor: [32, 32], // Point of the icon that corresponds to marker's location
+      //     popupAnchor: [0, -32] // Point from which the popup should open relative to the iconAnchor
+      //   });
+      
+      //   // Create a marker with the custom icon
+      //   const marker = L.marker(latLng, { icon: customIcon })
+      //     .addTo(map)
+      //     .bindPopup('You are here');
+      
+      //   setLocationMarker(marker);
+      //   marker.openPopup(); 
+      // }
       if (locationMarker) {
         locationMarker.setLatLng(latLng);
         locationMarker.getPopup().setContent('You are here').openOn(map);
       } else {
         const marker = L.marker(latLng).addTo(map).bindPopup('You are here');
         setLocationMarker(marker);
-        marker.openPopup(); // Open popup initially
+        marker.openPopup(); 
       }
-
       if (locationCircle) {
         locationCircle.setLatLng(latLng).setRadius(accuracy);
       } else {
-        const circle = L.circle(latLng, { radius: accuracy }).addTo(map);
+        const circle = L.circle(latLng, { radius: accuracy + 1 }).addTo(map);
         setLocationCircle(circle);
       }
 

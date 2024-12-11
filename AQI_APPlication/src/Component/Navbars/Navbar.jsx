@@ -37,11 +37,14 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
         </Link>
 
         {/* Existing Map Links */}
-        <div className='block sm:hidden gap-10 lg:mr-[200px] justify-center items-center text-center sm:visible '><div>
-        <Link to='/map-choro' className='flex justify-center items-center gap-1'>
-          Map {location.pathname === '/map-choro' ? <FaChevronUp /> : <FaChevronDown />}
-        </Link>
-        </div>
+        <div className="hidden sm:flex gap-10 lg:mr-[200px] justify-center items-center text-center">
+  <div>
+    <Link to="/map-choro" className="flex justify-center items-center gap-1">
+      Map {location.pathname === '/map-choro' ? <FaChevronUp /> : <FaChevronDown />}
+    </Link>
+  </div>
+
+
         {/* <div>
           <Link to='/aqi-info' className='flex justify-center items-center gap-1'>resource {location.pathname==='/aqi-info' ? <FaChevronUp />:<FaChevronDown />} </Link>
         </div>
@@ -63,18 +66,34 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
       </div>
 
       {/* Search Bar */}
-      <form onSubmit={handleSearch} className="hidden lg:flex w-full max-w-md relative">
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search location..."
-          className="pl-10 w-full"
-        />
-        <button type="submit" className="absolute inset-y-0 left-3">
-          <FaSearch className="text-gray-500" />
-        </button>
-      </form>
+      <form
+  onSubmit={handleSearch}
+  className={`hidden lg:flex w-full max-w-md relative ${
+    isDarkMode ? 'bg-gray-800' : 'bg-white'
+  } rounded-lg shadow`}
+>
+  <input
+    type="text"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    placeholder="Search location..."
+    className={`pl-10 w-full py-2 rounded-lg border focus:outline-none transition-colors duration-300 ${
+      isDarkMode
+        ? 'bg-gray-700 text-white border-gray-600 placeholder-gray-400 focus:border-blue-300'
+        : 'bg-white text-gray-900 border-gray-300 placeholder-gray-500 focus:border-blue-500'
+    }`}
+  />
+  <button
+    type="submit"
+    className="absolute inset-y-0 left-3 flex items-center"
+  >
+    <FaSearch
+      className={`transition-colors duration-300 ${
+        isDarkMode ? 'text-gray-300' : 'text-gray-500'
+      }`}
+    />
+  </button>
+</form>
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
@@ -102,18 +121,35 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
       </div>
 
       {/* Mobile Search Bar */}
-      <form onSubmit={handleSearch} className={`lg:hidden w-full max-w-md relative mt-4 ${isMobileMenuOpen ? 'block' : 'hidden'}`}>
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search location..."
-          className="pl-10 w-full"
-        />
-        <button type="submit" className="absolute inset-y-0 left-3">
-          <FaSearch className="text-gray-500" />
-        </button>
-      </form>
+      <form
+  onSubmit={handleSearch}
+  className={`lg:hidden w-full max-w-md relative mt-4 ${
+    isMobileMenuOpen ? 'block' : 'hidden'
+  } ${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow`}
+>
+  <input
+    type="text"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    placeholder="Search location..."
+    className={`pl-10 w-full py-2 rounded-lg border focus:outline-none transition-colors duration-300 ${
+      isDarkMode
+        ? 'bg-gray-700 text-white border-gray-600 placeholder-gray-400 focus:border-blue-300'
+        : 'bg-white text-gray-900 border-gray-300 placeholder-gray-500 focus:border-blue-500'
+    }`}
+  />
+  <button
+    type="submit"
+    className="absolute inset-y-0 left-3 flex items-center"
+  >
+    <FaSearch
+      className={`transition-colors duration-300 ${
+        isDarkMode ? 'text-gray-300' : 'text-gray-500'
+      }`}
+    />
+  </button>
+</form>
+
     </header>
   );
 };

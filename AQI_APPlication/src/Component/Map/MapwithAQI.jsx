@@ -3,11 +3,11 @@ import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import * as L from 'leaflet';
-import 'leaflet-control-geocoder'; 
+import 'leaflet-control-geocoder';
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css'; // Import CSS
 import * as d3 from 'd3';
-import { ImBold } from 'react-icons/im';
 
+// Helper function to determine color based on AQI value
 const getColorFromAQI = (aqiValue) => {
   if (aqiValue <= 50) return "#00e400"; // Good
   if (aqiValue <= 100) return "#ffff00"; // Moderate
@@ -17,51 +17,46 @@ const getColorFromAQI = (aqiValue) => {
   return "#7e0023"; // Hazardous
 };
 
+// Function to create a custom icon using D3.js
 const createCustomIcon = (aqiValue, backgroundColor) => {
-  // Create a simple circle SVG
   const svgWidth = 38;
   const svgHeight = 38;
-  const radius = 18; // Fixed radius for simplicity
+  const radius = 18;
 
-  // Set up the SVG structure
   const svg = d3.create('svg')
     .attr('width', svgWidth)
     .attr('height', svgHeight)
     .attr('viewBox', '0 0 38 38')
     .attr('xmlns', 'http://www.w3.org/2000/svg');
 
-  // Add a circle with dynamic size and color based on AQI
   svg.append('circle')
     .attr('cx', svgWidth / 2)
     .attr('cy', svgHeight / 2)
-    .attr('r', radius) // Fixed circle radius
-    .attr('fill', backgroundColor) // Set background color based on AQI
+    .attr('r', radius)
+    .attr('fill', backgroundColor)
     .attr('stroke', '#ffffff')
     .attr('stroke-width', 2);
 
-  // Add text to represent AQI value, adjusted dynamically based on the value
   svg.append('text')
     .attr('x', '50%')
     .attr('y', '50%')
     .attr('text-anchor', 'middle')
-    .attr('dy', '.3em') // Adjust vertical alignment
-    .attr('font-size', 12) // Fixed font size
+    .attr('dy', '.3em')
+    .attr('font-size', 12)
     .attr('fill', '#ffffff')
     .attr('font-family', 'Arial')
     .text(aqiValue);
 
-  // Convert the D3-created SVG to a data URL
   const svgData = svg.node().outerHTML;
   const svgUrl = `data:image/svg+xml;base64,${btoa(svgData)}`;
 
-  // Return the Leaflet icon with the generated SVG circle
   return new Icon({
     iconUrl: svgUrl,
     iconSize: [38, 38],
   });
 };
 
-// Live Location component
+// Live Location Component
 const LiveLocation = () => {
   const map = useMap();
   const [locationMarker, setLocationMarker] = useState(null);
@@ -80,7 +75,7 @@ const LiveLocation = () => {
       } else {
         const marker = L.marker(latLng).addTo(map).bindPopup('You are here');
         setLocationMarker(marker);
-        marker.openPopup(); 
+        marker.openPopup();
       }
 
       if (locationCircle) {
@@ -105,32 +100,44 @@ const LiveLocation = () => {
       enableHighAccuracy: true,
     });
 
+    if (locationMarker && locationCircle) {
+      const featureGroup = L.featureGroup([locationMarker, locationCircle]);
+      map.fitBounds(featureGroup.getBounds());
+    }
+
     return () => navigator.geolocation.clearWatch(watchId);
   }, [map, locationMarker, locationCircle]);
 
   return null;
 };
 
-// Search Control component
+// Search Control Component
 const SearchControl = () => {
   const map = useMap();
 
   useEffect(() => {
     if (!map) return;
 
-    // Geocoder integration
     const geocoder = L.Control.Geocoder.nominatim();
     const geocoderControl = L.Control.geocoder({
       position: 'topright',
       placeholder: 'Search for location...',
       geocoder,
     })
-      .on('markgeocode', (e) => {
-        const { center } = e.geocode;
-        L.marker(center)
-          .addTo(map)
-          .bindPopup(e.geocode.name)
-          .openPopup();
+      .on('markgeocode', async (e) => {
+        const { center, name } = e.geocode;
+
+        const response = await fetch(`http://localhost:5000/api/aqi?location=${name}`);
+        const data = await response.json();
+
+        const aqiValue = data?.aqi || 'Unknown';
+        const backgroundColor = aqiValue !== 'Unknown' ? getColorFromAQI(aqiValue) : '#cccccc';
+
+        const marker = L.marker(center, {
+          icon: createCustomIcon(aqiValue, backgroundColor),
+        }).addTo(map);
+
+        marker.bindPopup(`Location: ${name}<br>AQI: ${aqiValue}`).openPopup();
         map.setView(center, 13);
       })
       .addTo(map);
@@ -141,7 +148,7 @@ const SearchControl = () => {
   return null;
 };
 
-// Main Map with AQI component
+// Main Map Component
 const MapwithAQI = () => {
   const [markers, setMarkers] = useState([
     { geocode: [18.6492, 73.7707], popup: "Nigdi", aqiValue: 50, backgroundColor: "#00e400" },
@@ -153,17 +160,16 @@ const MapwithAQI = () => {
   useEffect(() => {
     const fetchAQIData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/aqi'); // Replace with your API endpoint
+        const response = await fetch('http://localhost:5000/api/aqi');
         const data = await response.json();
 
         const updatedMarkers = markers.map((marker) => {
           const cityData = data.find((item) => item.locality.toLowerCase() === marker.popup.toLowerCase());
           if (cityData) {
-            const aqiValue = cityData.aqi;
             return {
               ...marker,
-              aqiValue,
-              backgroundColor: getColorFromAQI(aqiValue),
+              aqiValue: cityData.aqi,
+              backgroundColor: getColorFromAQI(cityData.aqi),
             };
           }
           return marker;
@@ -176,7 +182,7 @@ const MapwithAQI = () => {
     };
 
     fetchAQIData();
-  }, [markers]);
+  }, []);
 
   return (
     <MapContainer
@@ -197,8 +203,9 @@ const MapwithAQI = () => {
           icon={createCustomIcon(marker.aqiValue, marker.backgroundColor)}
         >
           <Popup>
-            <div style={{  padding: '5px', borderRadius: '5px', color: 'black' }}>
-              {marker.popup},Maharashtra
+            <div style={{ padding: '5px', borderRadius: '5px', color: 'black' }}>
+              {marker.popup}, Maharashtra<br />
+              AQI: {marker.aqiValue}
             </div>
           </Popup>
         </Marker>

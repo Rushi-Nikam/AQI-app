@@ -12,6 +12,10 @@ import CityDetails from '../Component/molecules/CityDetails';
 import AQITable from '../Component/molecules/AQITable';
 import MapwithAQI from '../Component/Map/MapwithAQI';
 import Choropath from '../Component/Map/choropath';
+import Humidity from '../Component/molecules/humidity';
+import PieChart from '../Component/molecules/PieChart';
+import PageNotFound from '../Component/pages/PageNotFound';
+import Demo from '../Component/Map/demo';
 
 const Routers = ({ isDarkMode}) => {
   return (
@@ -27,9 +31,14 @@ const Routers = ({ isDarkMode}) => {
       <Route path="/locality/:name" element={<LocalityDetail isDarkMode={isDarkMode} />} />
       <Route path="/aqi-table" element={<AQITable isDarkMode={isDarkMode} />} />
       <Route path="/city/:name" element={<CityDetails isDarkMode={isDarkMode} />} />
+      <Route path="/humidity" element={<Humidity/>} />
+      <Route path="/pie" element={<PieChart/>} />
+      <Route path="/map-demo" element={<Demo/>} />
+      
+
       <Route path="/detailed-precautions/:level" element={<DetailedPrecaution isDarkMode={isDarkMode} />} />
       {/* 404 page */}
-      {/* <Route path="*" element={<NotFound />} /> */}
+      <Route path="*" element={<PageNotFound/>} />
     </Routes>
   );
 };

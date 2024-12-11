@@ -84,11 +84,15 @@ const PollutantDivTable = ({isDarkMode}) => {
   };
 
   return (
-    <div className={`w-full p-6 rounded-lg shadow-lg`}>
+    <div className={`w-full p-6 rounded-lg shadow-lg `}>
       {/* Buttons for pollutant selection */}
-      <div className={`${isDarkMode ? 'bg-gray-600 text-white' : 'bg-white text-gray-800'} flex gap-4 sm:gap-2 md:gap-8 lg:gap-[60px]  justify-center text-xl text-wrap lg:text-2xl sm:text-[2px] bg-[#e7eef4] rounded-2xl items-center  mb-6`}>
+      <div className='flex mx-auto justify-center text-2xl mb-4 font-bold'>
+          <p>Gases and AQI Information </p>
+        </div>
+      <div className={`${isDarkMode ? 'bg-gray-500 text-white' : 'bg-gray-300 text-gray-800'} flex gap-4 sm:gap-2 md:gap-8 lg:gap-[60px]  justify-center text-xl text-wrap lg:text-2xl sm:text-[2px] bg-[#e7eef4] rounded-2xl items-center  mb-6`}>
+        
         {Object.keys(pollutantData).map((pollutant) => (
-          <button
+          <button 
             key={pollutant}
             onClick={() => handleButtonClick(pollutant)}
             className={`px-4 py-2 text-xs lg:text-xl  rounded-2xl w-[60px] lg:w-[150px] md:w-[120px] sm:w-[20px] ${

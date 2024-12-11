@@ -8,6 +8,7 @@ const SideCard = ({ location = "Mumbai", isDarkMode }) => {
   const [isClicked, setIsClicked] = useState(false); // Track click state
   const [citydata , setCitydata]= useState();
   const [loading,setloading] = useState(true);
+  // const [humidityData, setHumidityData] = useState([]);
 
   useEffect(() => {
     // Fetch the gas data from the API when the component mounts
@@ -30,7 +31,7 @@ const SideCard = ({ location = "Mumbai", isDarkMode }) => {
     // Fetch city data from the backend
     const fetchData = async () => {
       try {
-        const response = await fetch("http://192.168.40.191:8000/aqi_values/get-data/");
+        const response = await fetch("http://192.168.29.191:8000/aqi_values/get-data/");
         if (!response.ok) throw new Error("Network response was not ok");
         const sensorData = await response.json();
       //   if (sensorData.Sensor_data && sensorData.Sensor_data.length > 0) {
@@ -45,8 +46,8 @@ const SideCard = ({ location = "Mumbai", isDarkMode }) => {
       //   console.error("Error fetching sensor data:", error);
       // }
   
-        const latestAQIValue = sensorData.length > 0 ? Math.round(data[data.length -1].value) : "N/A";
-        const sensor = sensorData.humidity;
+        // const latestAQIValue = sensorData.length > 0 ? Math.round(data[data.length -1].value) : "N/A";
+        const sensor = sensorData.mq7;
         // const sensor = sensorData
         setCitydata(sensor);
         // setCitydata(latestAQIValue)
@@ -59,6 +60,36 @@ const SideCard = ({ location = "Mumbai", isDarkMode }) => {
     };
 
     fetchData();
+
+    // const fetchData = async () => {
+    //   try {
+    //     const response = await fetch("http://192.168.40.191:8000/aqi_values/get-data/");
+    //     if (!response.ok) throw new Error("Network response was not ok");
+    //     const sensorData = await response.json();
+        
+    //     const sensorValues = sensorData.map(item => item.value); // Modify 'value' if different
+    
+    //     if (sensorValues.length > 0) {
+    //       // Calculate the average of the sensor values
+    //       const averageValue = sensorValues.reduce((acc, curr) => acc + curr, 0) / sensorValues.length;
+    //       const roundedAverage = Math.round(averageValue); // Round the result to the nearest integer
+    
+    //       setCitydata(roundedAverage); // Update state with the average value
+    //     } else {
+    //       console.warn("Sensor data is empty.");
+    //       setCitydata("N/A");
+    //     }
+    
+    //     setloading(false); // Assuming you want to stop the loading state after fetching data
+    //     console.log(sensorData);
+    
+    //   } catch (error) {
+    //     console.error("Error fetching AQI data:", error);
+    //   }
+    // };
+    
+    // fetchData();
+    
   }, []);
 
   const calculateAQI = () => {
@@ -78,16 +109,12 @@ const SideCard = ({ location = "Mumbai", isDarkMode }) => {
    const aqiValue =45;
 
   return (
-    // <main
-    //   className={`sm:w-[320px] w-full lg:mr-8 max-w-xl h-[400px] p-6 rounded-lg shadow-lg transition-transform cursor-pointer ${isDarkMode ? "bg-[#111830]" : "bg-white"} ${isDarkMode ? "text-white" : "text-[#111830]"}`}
-    //   onClick={() => setIsClicked(!isClicked)}
-    // >
-    <main
+ 
+     <main
       className={`sm:w-[320px] w-full lg:mr-8 max-w-xl h-[400px] p-6 rounded-lg shadow-lg transition-transform cursor-pointer ${isDarkMode ? "bg-[#111830]" : "bg-white"} ${isDarkMode ? "text-white" : "text-[#111830]"}`}
+    > 
     
-     
-    >
-      <div className={`text-black text-center mb-4 ${isDarkMode ? "text-white" : "text-[#111830]"}`}>
+    <div className={`text-black text-center mb-4 ${isDarkMode ? "text-white" : "text-[#111830]"}`}>
         <h1 className="text-xl font-bold">{location} Location</h1>
         <p className="text-sm">Maharashtra, India</p>
       </div>
@@ -95,28 +122,13 @@ const SideCard = ({ location = "Mumbai", isDarkMode }) => {
       <div className={`flex flex-col sm:flex-row justify-center sm:items-start ${isDarkMode ? "text-white" : "text-[#111830]"}`}>
         <div className="flex text-black flex-col items-center sm:mt-0">
           <div className={`text-xl font-semibold ${isDarkMode ? "text-white" : "text-[#111830]"}`}>Air Quality Index</div>
-          {/* Add Circle component here to visualize the AQI value */}
-          {/* <div>{loading?`Loading.....`: <Circle aqiValue={ aqiValue || citydata} isDarkMode={isDarkMode}/>}</div> */}
+         
           <Circle  aqiValue={citydata} isDarkMode={isDarkMode}/>
           {/* <Circle aqiValue={ aqiValue || citydata} isDarkMode={isDarkMode}/> */}
         </div>
       </div>
 
-      {/* Conditionally show gas values on click */}
-      {/* {isClicked && (
-        <div className="flex flex-col w-[600px] mt-[-410px] ml-[500px] text-center justify-center items-center">
-          <div className="flex ml-[80px]">
-            <div>
-              <h1 className="font-bold mx-auto lg:mt-[15px]">Gases responsible for AQI Index</h1>
-              <Gases/>
-            </div>
-            <div className="mt-[-60px]">
-              
-              <Pre/>
-            </div>
-          </div>
-        </div>
-      )} */}
+    
     </main>
   );
 };

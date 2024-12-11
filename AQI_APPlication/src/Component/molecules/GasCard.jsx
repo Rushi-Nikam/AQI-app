@@ -1,31 +1,49 @@
 import React from 'react'
 
-const GasCard = ({title:humidity,v}) => {
+const GasCard = ({title="Humidity" , value="35",isDarkMode=true }) => {
   return (
     <div>
-      <div className="grid lg:rid-cols-1 bg-white sm:grid-cols-2  w-[350px] h-[400px] rounded-lg">
-  <div
-    className="shadow-md p-4 rounded-lg flex flex-col items-center justify-center"
-  >
-    {/* Title Section */}
-    <div className="flex gap-1 items-center m-auto h-2">
-      <div className="text-xs m-auto bg-blue-600 font-bold rounded-full p-2 text-white">O3</div>
-      <div className="text-xs text-gray-700 mt-2">Ozone</div>
+ <div
+  className={`shadow-md rounded-lg flex flex-col justify-between items-center p-4 ${
+    isDarkMode
+      ? 'bg-gray-700 text-[#82909d] hover:border-[1px] border-solid border-white'
+      : 'bg-[#f7f7fc] text-gray-700 hover:border-[1px] border-solid border-black'
+  }`}
+>
+  <div className="flex gap-3 text-center items-center">
+    <div
+      className={`text-xl font-bold rounded-full p-2 ${
+        isDarkMode ? 'bg-gray-600 text-[#82909d]' : 'bg-blue-600 text-white'
+      }`}
+    >
+      {value}
     </div>
-
-    {/* Progress Bar */}
-    <div className="w-full mt-8">
-      <div className="h-2 bg-gray-200 rounded-full">
-        <div
-          className="h-full bg-blue-500 rounded-full"
-          style={{ width: `${(120 / 200) * 100}%`, overflow: 'hidden' }} // Example value
-        ></div>
-      </div>
-      <div className="text-xs text-gray-600 mt-2 text-right">
-        {`120 µg/m³`}
-      </div>
+    <div className="text-2xl">{title}</div>
+    <div
+      className={`text-xl flex flex-col justify-center items-end text-right ${
+        isDarkMode ? 'bg-gray-700 text-white' : 'bg-[#f7f7fc] text-gray-700'
+      }`}
+    >
+      {/* {`${value.mq7}`} */}
+      {/* <div>{value.mq135}</div> */}
     </div>
   </div>
+
+  {/* <div className="w-full mt-4">
+    <div className="h-4 bg-gray-300 rounded-full overflow-hidden">
+      <div
+        className={`h-full ${
+          isDarkMode ? 'bg-blue-400' : 'bg-blue-600'
+        }`}
+        style={{
+          // width: `${(gas.value / gas.max) * 100}%`,
+        }}
+      ></div>
+    </div>
+    <div className="text-xs mt-2 text-right">
+      {`(${gas.value} / ${gas.max} ${gas.unit})`}
+    </div>
+  </div> */}
 </div>
 
     </div>
