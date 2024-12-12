@@ -97,7 +97,10 @@ const LiveLocation = () => {
     if (!map) return;
 
     const handleSuccess = (pos) => {
-      const { latitude, longitude, accuracy } = pos.coords;
+
+      const latitude = pos.coords;
+      const longitude = pos.coords;
+      const {  accuracy } = pos.coords;
       const latLng = [latitude, longitude];
 
       // if (locationMarker) {

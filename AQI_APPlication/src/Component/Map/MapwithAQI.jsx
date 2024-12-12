@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polygon,useMap } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import * as L from 'leaflet';
 import 'leaflet-control-geocoder';
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css'; // Import CSS
 import * as d3 from 'd3';
+import { puneData } from '../../data'; // Assuming puneData is available in your project
 
 // Helper function to determine color based on AQI value
 const getColorFromAQI = (aqiValue) => {
@@ -57,6 +58,7 @@ const createCustomIcon = (aqiValue, backgroundColor) => {
 };
 
 // Live Location Component
+// Live Location Component with Timeout
 const LiveLocation = () => {
   const map = useMap();
   const [locationMarker, setLocationMarker] = useState(null);
@@ -69,23 +71,27 @@ const LiveLocation = () => {
       const { latitude, longitude, accuracy } = pos.coords;
       const latLng = [latitude, longitude];
 
-      if (locationMarker) {
-        locationMarker.setLatLng(latLng);
-        locationMarker.getPopup().setContent('You are here').openOn(map);
-      } else {
-        const marker = L.marker(latLng).addTo(map).bindPopup('You are here');
-        setLocationMarker(marker);
-        marker.openPopup();
-      }
+      // Delay the update of live location
+      setTimeout(() => {
+        if (locationMarker) {
+          locationMarker.setLatLng(latLng);
+          locationMarker.getPopup().setContent('You are here').openOn(map);
+        } else {
+          const marker = L.marker(latLng).addTo(map).bindPopup('You are here');
+          setLocationMarker(marker);
+          marker.openPopup();
+        }
 
-      if (locationCircle) {
-        locationCircle.setLatLng(latLng).setRadius(accuracy);
-      } else {
-        const circle = L.circle(latLng, { radius: accuracy }).addTo(map);
-        setLocationCircle(circle);
-      }
+        if (locationCircle) {
+          locationCircle.setLatLng(latLng).setRadius(accuracy);
+        } else {
+          const circle = L.circle(latLng, { radius: accuracy }).addTo(map);
+          setLocationCircle(circle);
+        }
 
-      map.setView(latLng, map.getZoom());
+        map.setView(latLng, map.getZoom());
+        console.log("it's",  accuracy);
+      }, 2000); // Set a 2-second delay (you can adjust this value)
     };
 
     const handleError = (err) => {
@@ -100,6 +106,7 @@ const LiveLocation = () => {
       enableHighAccuracy: true,
     });
 
+    // Fit map bounds to include marker and circle
     if (locationMarker && locationCircle) {
       const featureGroup = L.featureGroup([locationMarker, locationCircle]);
       map.fitBounds(featureGroup.getBounds());
@@ -110,6 +117,7 @@ const LiveLocation = () => {
 
   return null;
 };
+
 
 // Search Control Component
 const SearchControl = () => {
@@ -210,6 +218,46 @@ const MapwithAQI = () => {
           </Popup>
         </Marker>
       ))}
+
+      {/* Adding Polygons for Sub-locations from puneData */}
+      {puneData.features.map((state, index) => {
+        const coordinates = state.geometry.coordinates[0].map(coord => [coord[1], coord[0]]); // Swap [lng, lat] to [lat, lng]
+
+        return (
+          <Polygon
+            key={index}
+            positions={coordinates}
+            pathOptions={{
+              fillColor: "#FD8D3C",
+              fillOpacity: 0.5,
+              color: "white",
+              weight: 1,
+            }}
+            eventHandlers={
+              {
+              // mouseover: (e) => {
+              //   const layer = e.target;
+              //   layer.setStyle({
+              //     fillColor: "#db6f0a662",
+              //     fillOpacity: 1,
+              //   });
+              // },
+              mouseout: (e) => {
+                const layer = e.target;
+                layer.setStyle({
+                  fillColor: "#FD8D3C",
+                  fillOpacity: 0.5,
+                });
+              },
+            }}
+          >
+            <Popup>
+              <strong>{state.properties.name}</strong><br />
+              Density: {state.properties.density}
+            </Popup>
+          </Polygon>
+        );
+      })}
     </MapContainer>
   );
 };
