@@ -90,7 +90,7 @@ const LiveLocation = () => {
         }
 
         map.setView(latLng, map.getZoom());
-        console.log("it's",  accuracy);
+        // console.log("it's",  accuracy);
       }, 2000); // Set a 2-second delay (you can adjust this value)
     };
 

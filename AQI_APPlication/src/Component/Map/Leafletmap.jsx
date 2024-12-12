@@ -96,41 +96,40 @@ const LiveLocation = () => {
   useEffect(() => {
     if (!map) return;
 
-    const handleSuccess = (pos) => {
-
-      const latitude = pos.coords;
-      const longitude = pos.coords;
-      const {  accuracy } = pos.coords;
+    const handleSuccess = async (pos) => {
+      const latitude = pos.coords.latitude;
+      const longitude = pos.coords.longitude;
+      const accuracy = pos.coords.accuracy;
       const latLng = [latitude, longitude];
-
-      // if (locationMarker) {
-      //   locationMarker.setLatLng(latLng);
-      //   locationMarker.getPopup().setContent('You are here').openOn(map);
-      // } else {
-      //   // Define a custom icon
-      //   const customIcon = L.icon({
-      //     iconUrl: img, 
-      //     iconSize: [60, 60], 
-      //     iconAnchor: [32, 32], // Point of the icon that corresponds to marker's location
-      //     popupAnchor: [0, -32] // Point from which the popup should open relative to the iconAnchor
-      //   });
-      
-      //   // Create a marker with the custom icon
-      //   const marker = L.marker(latLng, { icon: customIcon })
-      //     .addTo(map)
-      //     .bindPopup('You are here');
-      
-      //   setLocationMarker(marker);
-      //   marker.openPopup(); 
-      // }
+      let data;
+      let pop="Your Location ";
+      // Send data to the Python server
+      try {
+        const response = await fetch(`aqi_values/get-data/`)
+        data = await response.json();
+        console.log("latitude",data.sensor.latitude);
+        console.log("longitude",data.sensor.longitude)
+      //   if(data.Errormsg){
+      //     pop = data.Errormsg;
+      //   }else if(!data.Errormsg){
+      //     pop = `<p> <b>Sensor Data:</b> Temp: ${JSON.parse(sensor.sensor_data).Temp}°C, 
+      //   Humid: ${JSON.parse(sensor.sensor_data).humid}%</p>`
+      //   }else{
+      //     pop= "You Location"
+      //   }
+      //   // console.log('Server Response:', data);
+      } catch (error) {
+        console.error('Error sending data to server:', error);
+      }
       if (locationMarker) {
         locationMarker.setLatLng(latLng);
-        locationMarker.getPopup().setContent('You are here').openOn(map);
+        locationMarker.getPopup().setContent(pop).openOn(map);
       } else {
-        const marker = L.marker(latLng).addTo(map).bindPopup('You are here');
+        const marker = L.marker(latLng).addTo(map).bindPopup(pop);
         setLocationMarker(marker);
-        marker.openPopup(); 
+        marker.openPopup();
       }
+
       if (locationCircle) {
         locationCircle.setLatLng(latLng).setRadius(accuracy);
       } else {
@@ -160,12 +159,42 @@ const LiveLocation = () => {
 };
 
 const Leafletmap = () => {
+  const [data, setdata]=useState();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`aqi_values/get-data/`);
+        const sensors = await response.json();
+        console.log("latitude", sensors.sensor.latitude);
+        console.log("longitude", sensors.sensor.longitude);
+        setdata(sensors);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   const [markers, setMarkers] = useState([
-    { geocode: [18.6492, 73.7707], popup: "Nigdi", aqiValue: null, backgroundColor: "#00e400" },
+    { geocode: [18.6492, 73.7707], popup: "Nigdi", aqiValue: 40, backgroundColor: "#00e400" },
     { geocode: [18.6011, 73.7641], popup: "Wakad", aqiValue: 105, backgroundColor: "#ff7e00" },
     { geocode: [18.5913, 73.7389], popup: "Hinjawadi", aqiValue: 103, backgroundColor: "#ff0000" },
-    { geocode: [18.7167, 73.7678], popup: "Dehu", aqiValue: 102, backgroundColor: "#7e0023" },
+    // { geocode: [18.7167, 73.7678], popup: "Dehu", aqiValue: 102, backgroundColor: "#7e0023" },
+    
   ]);
+  useEffect(() => {
+    if (data && data.sensor) {
+      setMarkers((prevMarkers) => [
+        ...prevMarkers,
+        {
+          geocode: [data.sensor.latitude, data.sensor.longitude],
+          popup: "Dehu", // Update if needed
+          aqiValue: 104, // Update if needed
+          backgroundColor: "#7e0023", // Update if needed
+        },
+      ]);
+    }
+  }, [data]);
 
   useEffect(() => {
     const fetchAQIData = async () => {
@@ -206,7 +235,7 @@ const Leafletmap = () => {
         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <SearchControl />
-      <LiveLocation />
+      <LiveLocation  />
       {markers.map((marker, index) => (
         <Marker
           key={index}

@@ -16,6 +16,7 @@ import Humidity from '../Component/molecules/humidity';
 import PieChart from '../Component/molecules/PieChart';
 import PageNotFound from '../Component/pages/PageNotFound';
 import Demo from '../Component/Map/demo';
+import Deomse from '../Component/Map/deomse';
 
 const Routers = ({ isDarkMode}) => {
   return (
@@ -23,6 +24,8 @@ const Routers = ({ isDarkMode}) => {
       <Route path="/" element={<HomePage isDarkMode={isDarkMode} />} /> 
       <Route path='/about' element={<About isDarkMode={isDarkMode} />} />
       <Route path='/aqi-info' element={<AQIdata isDarkMode={isDarkMode} />} />
+      <Route path='/go-one' element={<Deomse/>} />
+
       <Route path='/map' element={<MapII isDarkMode={isDarkMode} />} />
       <Route path='/map-aqi' element={<MapwithAQI/>} />
       <Route path='/map-choro' element={<Choropath/>} />

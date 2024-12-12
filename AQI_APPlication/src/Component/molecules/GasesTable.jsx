@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import GasCard from './GasCard';
 
 const GasesTable = ({ isDarkMode }) => {
-  const [gases, setGases] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // const [gases, setGases] = useState([]);
+  // const [loading, setLoading] = useState(true);
   const [value, setValue] = useState([]);
   const [humidityData, setHumidityData] = useState([]);
 //  const [isDarkmode , setIsDarkmode]= useState(false);
@@ -11,29 +11,29 @@ const GasesTable = ({ isDarkMode }) => {
 
 
 
-  useEffect(() => {
-    const fetchGases = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/gases');
-        if (response.ok) {
-          const data = await response.json();
-          setGases(data[0]); // Assuming data is an array of gas objects
-          setLoading(false);
-        } else {
-          console.error('Error fetching gas data');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchGases = async () => {
+  //     try {
+  //       const response = await fetch('http://localhost:5000/api/gases');
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         setGases(data); // Assuming data is an array of gas objects
+  //         setLoading(false);
+  //       } else {
+  //         console.error('Error fetching gas data');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error:', error);
+  //     }
+  //   };
 
-    fetchGases();
-  }, []);
+  //   fetchGases();
+  // }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://192.168.29.191:8000/aqi_values/get-data/');
+        const response = await fetch('aqi_values/get-data/');
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         // const latestAQIValue = data.length > 0 ? Math.round(data[data.length - 1].value) : 'N/A';
@@ -42,7 +42,7 @@ const GasesTable = ({ isDarkMode }) => {
         console.log(sensor)
         const humidity = data.humidity[0];
         setHumidityData(humidity);
-        setLoading(false);
+      
       } catch (error) {
         console.error('Error fetching AQI data:', error);
       }
@@ -51,9 +51,9 @@ const GasesTable = ({ isDarkMode }) => {
     fetchData();
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
 
   return (
     <div className="cursor-pointer">

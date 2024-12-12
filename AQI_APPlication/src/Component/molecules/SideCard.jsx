@@ -31,9 +31,10 @@ const SideCard = ({ location = "Mumbai", isDarkMode }) => {
     // Fetch city data from the backend
     const fetchData = async () => {
       try {
-        const response = await fetch("http://192.168.29.191:8000/aqi_values/get-data/");
+        const response = await fetch("http://192.168.40.191:8000/aqi_values/get-data/");
         if (!response.ok) throw new Error("Network response was not ok");
         const sensorData = await response.json();
+        console.log(sensorData);
       //   if (sensorData.Sensor_data && sensorData.Sensor_data.length > 0) {
       //     const firstValue = sensorData.Sensor_data[0].value; // Accessing 'value' from the first element
       //     console.log("First value:", firstValue);
