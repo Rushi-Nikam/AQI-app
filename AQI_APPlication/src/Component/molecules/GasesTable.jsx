@@ -39,7 +39,7 @@ const GasesTable = ({ isDarkMode }) => {
         // const latestAQIValue = data.length > 0 ? Math.round(data[data.length - 1].value) : 'N/A';
         const sensor = data;
         setValue(sensor);
-        console.log(sensor)
+        // console.log(sensor)
         const humidity = data.humidity[0];
         setHumidityData(humidity);
       

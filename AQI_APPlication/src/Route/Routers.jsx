@@ -17,6 +17,7 @@ import PieChart from '../Component/molecules/PieChart';
 import PageNotFound from '../Component/pages/PageNotFound';
 import Demo from '../Component/Map/demo';
 import Deomse from '../Component/Map/deomse';
+import Maplibre from '../Component/Map/maplibre';
 
 const Routers = ({ isDarkMode}) => {
   return (
@@ -37,6 +38,7 @@ const Routers = ({ isDarkMode}) => {
       <Route path="/humidity" element={<Humidity/>} />
       <Route path="/pie" element={<PieChart/>} />
       <Route path="/map-demo" element={<Demo/>} />
+      <Route path="/map-libre" element={<Maplibre/>} />
       
 
       <Route path="/detailed-precautions/:level" element={<DetailedPrecaution isDarkMode={isDarkMode} />} />

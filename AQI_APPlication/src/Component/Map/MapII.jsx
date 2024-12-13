@@ -65,19 +65,24 @@ const LiveLocation = () => {
   const map = useMap();
   const [locationMarker, setLocationMarker] = useState(null);
   const [locationCircle, setLocationCircle] = useState(null);
-
+const [location,setLocation]=useState();
   useEffect(() => {
     if (!map) return;
 
-    const handleSuccess = (pos) => {
+    const handleSuccess = async(pos) => {
       const { latitude, longitude, accuracy } = pos.coords;
       const latLng = [latitude, longitude];
-
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+      );
+      const source = await response.json(); 
+      console.log("response",{source});
+      let pop = source.address.suburb;
       if (locationMarker) {
         locationMarker.setLatLng(latLng);
-        locationMarker.getPopup().setContent('You are here').openOn(map);
+        locationMarker.getPopup().setContent(pop?source.address.suburb:"You are here").openOn(map);
       } else {
-        const marker = L.marker(latLng).addTo(map).bindPopup('You are here');
+        const marker = L.marker(latLng).addTo(map).bindPopup(pop?source.address.suburb:"You are here");
         setLocationMarker(marker);
         marker.openPopup(); 
       }
@@ -141,7 +146,7 @@ const SearchControl = () => {
 };
 
 // Main Map with AQI component
-const MapwithAQI = () => {
+const MapII = () => {
   const [markers, setMarkers] = useState([
     { geocode: [18.6492, 73.7707], popup: "Nigdi", aqiValue: 50, backgroundColor: "#00e400" },
     { geocode: [18.6011, 73.7641], popup: "Wakad", aqiValue: 105, backgroundColor: "#ff7e00" },
@@ -206,4 +211,4 @@ const MapwithAQI = () => {
   );
 };
 
-export default MapwithAQI;
+export default MapII;

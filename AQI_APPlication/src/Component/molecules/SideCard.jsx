@@ -3,14 +3,14 @@ import Pre from "../molecules/Pre";
 import Circle from "../molecules/Circle"
 import Gases from "../molecules/Gases"
 
-const SideCard = ({ location = "Mumbai", isDarkMode }) => {
-  const [gases, setGases] = useState([]); // State to store the gases data
-  const [isClicked, setIsClicked] = useState(false); // Track click state
+const SideCard = ({ location, isDarkMode }) => {
+  const [gases, setGases] = useState([]);
+  // const [isClicked, setIsClicked] = useState(false);
   const [citydata , setCitydata]= useState();
   const [loading,setloading] = useState(true);
   // const [humidityData, setHumidityData] = useState([]);
 
-  useEffect(() => {
+  useEffect(() => { 
     // Fetch the gas data from the API when the component mounts
     const fetchGases = async () => {
       try {
@@ -30,11 +30,11 @@ const SideCard = ({ location = "Mumbai", isDarkMode }) => {
   useEffect(() => {
     // Fetch city data from the backend
     const fetchData = async () => {
-      try {
-        const response = await fetch("http://192.168.40.191:8000/aqi_values/get-data/");
+      try { 
+        const response = await fetch("aqi_values/get-data/");
         if (!response.ok) throw new Error("Network response was not ok");
         const sensorData = await response.json();
-        console.log(sensorData);
+        // console.log(sensorData);
       //   if (sensorData.Sensor_data && sensorData.Sensor_data.length > 0) {
       //     const firstValue = sensorData.Sensor_data[0].value; // Accessing 'value' from the first element
       //     console.log("First value:", firstValue);
@@ -53,7 +53,7 @@ const SideCard = ({ location = "Mumbai", isDarkMode }) => {
         setCitydata(sensor);
         // setCitydata(latestAQIValue)
         setloading(false);
-        console.log(sensorData);  
+        // console.log(sensorData);  
   
       } catch (error) {
         console.error("Error fetching AQI data:", error);
@@ -121,10 +121,12 @@ const SideCard = ({ location = "Mumbai", isDarkMode }) => {
       </div>
 
       <div className={`flex flex-col sm:flex-row justify-center sm:items-start ${isDarkMode ? "text-white" : "text-[#111830]"}`}>
-        <div className="flex text-black flex-col items-center sm:mt-0">
-          <div className={`text-xl font-semibold ${isDarkMode ? "text-white" : "text-[#111830]"}`}>Air Quality Index</div>
+
+        
+        <div  onClick={()=>window.location.reload()} className="flex text-black flex-col items-center sm:mt-0">
+          <div  className={`text-xl font-semibold ${isDarkMode ? "text-white" : "text-[#111830]"}`}>Air Quality Index</div>
          
-          <Circle  aqiValue={citydata} isDarkMode={isDarkMode}/>
+          <Circle   aqiValue={citydata} isDarkMode={isDarkMode}/>
           {/* <Circle aqiValue={ aqiValue || citydata} isDarkMode={isDarkMode}/> */}
         </div>
       </div>

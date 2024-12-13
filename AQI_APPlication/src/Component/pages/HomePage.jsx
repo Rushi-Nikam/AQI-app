@@ -9,6 +9,8 @@ const Leafletmap = React.lazy(() => import('../Map/Leafletmap'));
 
 const HomePage = ({ isDarkMode }) => {
 // const [isHovered,setIsHovered]=useState();
+const [location, setLocation] = useState();
+
   const handleWindow = useCallback(() => {
     console.log("Page loaded");
   }, []);
@@ -21,6 +23,41 @@ const HomePage = ({ isDarkMode }) => {
     };
   }, [handleWindow]);
 
+  useEffect(() => {
+    const fetchLocation = async () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const { latitude, longitude } = position.coords;
+            try {
+              // Use a reverse geocoding API to fetch the location name
+              const response = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+              ); // not showing
+              
+              const data = await response.json();
+              console.log({data})
+              if (data) {
+                setLocation(data);
+              }
+            } catch (error) {
+              console.error('Error fetching location:', error);
+              setLocation('Error fetching location');
+            }
+          },
+          (error) => {
+            console.error('Geolocation error:', error);
+            setLocation('Location permission denied');
+          }
+        );
+      } else {
+        setLocation('Geolocation not supported');
+      }
+    };
+
+    fetchLocation();
+  }, []);
+
   return (
     <div className={`py-4 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'} w-full`}>
       {/* Header */}
@@ -28,7 +65,7 @@ const HomePage = ({ isDarkMode }) => {
         <h1
           className={`font-serif text-2xl md:text-3xl font-bold mb-5 text-center ${isDarkMode ? 'text-white' : 'text-black'}`}
         >
-          Pune AQI Status | Live Air Quality and Pollution Data
+          {location ? location?.address?.city: "pune"} AQI Status | Live Air Quality and Pollution Data
         </h1>
       </div>
 
@@ -36,17 +73,17 @@ const HomePage = ({ isDarkMode }) => {
       <div className="flex flex-col-reverse lg:flex-row lg:mx-20 my-4 gap-8 lg:gap-12 px-4">
       
         <div className="flex justify-center lg:w-1/3"
-        onClick={()=>window.location.reload()} 
+        // onClick={()=>window.location.reload()} 
         // onClick={()=>setIsHovered(!isHovered)}
         >
           <Suspense fallback={<div>Loading...</div>}>
-            <SideCard location={"Pune"} isDarkMode={isDarkMode} />
+            {/* <h1>location : {location?.address.suburb}</h1> */}
+            <SideCard location={location ?location?.address?.state_district:'pune' } isDarkMode={isDarkMode} />
           </Suspense>
         </div>
 
         {/* Leaflet Map */}
-        <div 
-        className="flex justify-center lg:w-2/3" 
+        <div  className="flex justify-center lg:w-2/3" 
           //  className={`${isHovered ? 'opacity-0' : 'opacity-100'} flex justify-center lg:w-2/3`}
            >
           <Suspense fallback={<div>Loading...</div>}>

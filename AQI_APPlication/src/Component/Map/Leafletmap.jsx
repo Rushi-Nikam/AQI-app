@@ -92,35 +92,44 @@ const LiveLocation = () => {
   const map = useMap();
   const [locationMarker, setLocationMarker] = useState(null);
   const [locationCircle, setLocationCircle] = useState(null);
+  const [location, setlocation] = useState();
 
   useEffect(() => {
     if (!map) return;
-
+  
     const handleSuccess = async (pos) => {
-      const latitude = pos.coords.latitude;
-      const longitude = pos.coords.longitude;
-      const accuracy = pos.coords.accuracy;
+      // const latitude = pos.coords.latitude;
+      // const longitude = pos.coords.longitude;
+      // const accuracy = pos.coords.accuracy;
+      const { latitude, longitude, accuracy } = pos.coords;
       const latLng = [latitude, longitude];
-      let data;
-      let pop="Your Location ";
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+      );
+      // console.log(latLng);
+      const data = await response.json();
+      console.log(data);
+      // let data;
+      let pop= data.address.suburb;
+      ;
       // Send data to the Python server
-      try {
-        const response = await fetch(`aqi_values/get-data/`)
-        data = await response.json();
-        console.log("latitude",data.sensor.latitude);
-        console.log("longitude",data.sensor.longitude)
-      //   if(data.Errormsg){
-      //     pop = data.Errormsg;
-      //   }else if(!data.Errormsg){
-      //     pop = `<p> <b>Sensor Data:</b> Temp: ${JSON.parse(sensor.sensor_data).Temp}°C, 
-      //   Humid: ${JSON.parse(sensor.sensor_data).humid}%</p>`
-      //   }else{
-      //     pop= "You Location"
-      //   }
-      //   // console.log('Server Response:', data);
-      } catch (error) {
-        console.error('Error sending data to server:', error);
-      }
+      // try {
+      //   const response = await fetch(`aqi_values/get-data/`)
+      //   data = await response.json();
+      //   console.log("latitude",data.sensor.latitude);
+      //   console.log("longitude",data.sensor.longitude)
+      // //   if(data.Errormsg){
+      // //     pop = data.Errormsg;
+      // //   }else if(!data.Errormsg){
+      // //     pop = `<p> <b>Sensor Data:</b> Temp: ${JSON.parse(sensor.sensor_data).Temp}°C, 
+      // //   Humid: ${JSON.parse(sensor.sensor_data).humid}%</p>`
+      // //   }else{
+      // //     pop= "You Location"
+      // //   }
+      // //   // console.log('Server Response:', data);
+      // } catch (error) {
+      //   console.error('Error sending data to server:', error);
+      // }
       if (locationMarker) {
         locationMarker.setLatLng(latLng);
         locationMarker.getPopup().setContent(pop).openOn(map);
@@ -165,8 +174,8 @@ const Leafletmap = () => {
       try {
         const response = await fetch(`aqi_values/get-data/`);
         const sensors = await response.json();
-        console.log("latitude", sensors.sensor.latitude);
-        console.log("longitude", sensors.sensor.longitude);
+        // console.log("latitude", sensors.sensor.latitude);
+        // console.log("longitude", sensors.sensor.longitude);
         setdata(sensors);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -179,21 +188,29 @@ const Leafletmap = () => {
     { geocode: [18.6492, 73.7707], popup: "Nigdi", aqiValue: 40, backgroundColor: "#00e400" },
     { geocode: [18.6011, 73.7641], popup: "Wakad", aqiValue: 105, backgroundColor: "#ff7e00" },
     { geocode: [18.5913, 73.7389], popup: "Hinjawadi", aqiValue: 103, backgroundColor: "#ff0000" },
-    // { geocode: [18.7167, 73.7678], popup: "Dehu", aqiValue: 102, backgroundColor: "#7e0023" },
+    { geocode: [18.7167, 73.7678], popup: "Dehu", aqiValue: 102, backgroundColor: "#7e0023" },
     
   ]);
   useEffect(() => {
-    if (data && data.sensor) {
-      setMarkers((prevMarkers) => [
-        ...prevMarkers,
-        {
-          geocode: [data.sensor.latitude, data.sensor.longitude],
-          popup: "Dehu", // Update if needed
-          aqiValue: 104, // Update if needed
-          backgroundColor: "#7e0023", // Update if needed
-        },
-      ]);
-    }
+    // Function to update markers based on data
+    const updateMarkers = () => {
+      if (data && data.sensor) {
+        setMarkers((prevMarkers) => [
+          ...prevMarkers,
+          {
+            geocode: [data.sensor.latitude, data.sensor.longitude],
+            popup: "Dehu", // Update if needed
+            aqiValue: 104, // Update if needed
+            backgroundColor: "#7e0023", // Update if needed
+          },
+        ]);
+      }
+    };
+  
+
+    const interval = setInterval(updateMarkers, 10000); // 10 seconds
+    console.log(interval);
+    return () => clearInterval(interval); 
   }, [data]);
 
   useEffect(() => {

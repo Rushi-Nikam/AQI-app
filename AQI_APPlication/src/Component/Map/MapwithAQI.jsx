@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, TileLayer, Marker, Popup, Polygon,useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import * as L from 'leaflet';
 import 'leaflet-control-geocoder';
-import 'leaflet-control-geocoder/dist/Control.Geocoder.css'; // Import CSS
+import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
 import * as d3 from 'd3';
-import { puneData } from '../../data'; // Assuming puneData is available in your project
 
-// Helper function to determine color based on AQI value
 const getColorFromAQI = (aqiValue) => {
-  if (aqiValue <= 50) return "#00e400"; // Good
-  if (aqiValue <= 100) return "#ffff00"; // Moderate
-  if (aqiValue <= 150) return "#ffcc00"; // Unhealthy for sensitive groups
-  if (aqiValue <= 200) return "#ff7e00"; // Unhealthy
-  if (aqiValue <= 300) return "#ff0000"; // Very Unhealthy
-  return "#7e0023"; // Hazardous
+  if (aqiValue <= 50) return "#00e400";
+  if (aqiValue <= 100) return "#ffff00";
+  if (aqiValue <= 150) return "#ffcc00";
+  if (aqiValue <= 200) return "#ff7e00";
+  if (aqiValue <= 300) return "#ff0000";
+  return "#7e0023";
 };
 
-// Function to create a custom icon using D3.js
 const createCustomIcon = (aqiValue, backgroundColor) => {
   const svgWidth = 38;
   const svgHeight = 38;
@@ -57,112 +54,12 @@ const createCustomIcon = (aqiValue, backgroundColor) => {
   });
 };
 
-// Live Location Component
-// Live Location Component with Timeout
-const LiveLocation = () => {
-  const map = useMap();
-  const [locationMarker, setLocationMarker] = useState(null);
-  const [locationCircle, setLocationCircle] = useState(null);
-
-  useEffect(() => {
-    if (!map) return;
-
-    const handleSuccess = (pos) => {
-      const { latitude, longitude, accuracy } = pos.coords;
-      const latLng = [latitude, longitude];
-
-      // Delay the update of live location
-      setTimeout(() => {
-        if (locationMarker) {
-          locationMarker.setLatLng(latLng);
-          locationMarker.getPopup().setContent('You are here').openOn(map);
-        } else {
-          const marker = L.marker(latLng).addTo(map).bindPopup('You are here');
-          setLocationMarker(marker);
-          marker.openPopup();
-        }
-
-        if (locationCircle) {
-          locationCircle.setLatLng(latLng).setRadius(accuracy);
-        } else {
-          const circle = L.circle(latLng, { radius: accuracy }).addTo(map);
-          setLocationCircle(circle);
-        }
-
-        map.setView(latLng, map.getZoom());
-        // console.log("it's",  accuracy);
-      }, 2000); // Set a 2-second delay (you can adjust this value)
-    };
-
-    const handleError = (err) => {
-      if (err.code === 1) {
-        alert('Please allow Geolocation access.');
-      } else {
-        alert('Cannot get current location.');
-      }
-    };
-
-    const watchId = navigator.geolocation.watchPosition(handleSuccess, handleError, {
-      enableHighAccuracy: true,
-    });
-
-    // Fit map bounds to include marker and circle
-    if (locationMarker && locationCircle) {
-      const featureGroup = L.featureGroup([locationMarker, locationCircle]);
-      map.fitBounds(featureGroup.getBounds());
-    }
-
-    return () => navigator.geolocation.clearWatch(watchId);
-  }, [map, locationMarker, locationCircle]);
-
-  return null;
-};
-
-
-// Search Control Component
-const SearchControl = () => {
-  const map = useMap();
-
-  useEffect(() => {
-    if (!map) return;
-
-    const geocoder = L.Control.Geocoder.nominatim();
-    const geocoderControl = L.Control.geocoder({
-      position: 'topright',
-      placeholder: 'Search for location...',
-      geocoder,
-    })
-      .on('markgeocode', async (e) => {
-        const { center, name } = e.geocode;
-
-        const response = await fetch(`http://localhost:5000/api/aqi?location=${name}`);
-        const data = await response.json();
-
-        const aqiValue = data?.aqi || 'Unknown';
-        const backgroundColor = aqiValue !== 'Unknown' ? getColorFromAQI(aqiValue) : '#cccccc';
-
-        const marker = L.marker(center, {
-          icon: createCustomIcon(aqiValue, backgroundColor),
-        }).addTo(map);
-
-        marker.bindPopup(`Location: ${name}<br>AQI: ${aqiValue}`).openPopup();
-        map.setView(center, 13);
-      })
-      .addTo(map);
-
-    return () => map.removeControl(geocoderControl);
-  }, [map]);
-
-  return null;
-};
-
-// Main Map Component
 const MapwithAQI = () => {
   const [markers, setMarkers] = useState([
-    { geocode: [18.6492, 73.7707], popup: "Nigdi", aqiValue: 50, backgroundColor: "#00e400" },
-    { geocode: [18.6011, 73.7641], popup: "Wakad", aqiValue: 105, backgroundColor: "#ff7e00" },
-    { geocode: [18.5913, 73.7389], popup: "Hinjawadi", aqiValue: 103, backgroundColor: "#ff0000" },
-    { geocode: [18.7167, 73.7678], popup: "Dehu", aqiValue: 102, backgroundColor: "#7e0023" },
+    { geocode: [18.6492, 73.7707], popup: "Nigdi", aqiValue: null },
+    { geocode: [18.6011, 73.7641], popup: "Wakad", aqiValue: 102 },
+    { geocode: [18.5913, 73.7389], popup: "Hinjawadi", aqiValue: 103 },
+    { geocode: [18.7167, 73.7678], popup: "Dehu", aqiValue: 100 },
   ]);
 
   useEffect(() => {
@@ -170,7 +67,7 @@ const MapwithAQI = () => {
       try {
         const response = await fetch('http://localhost:5000/api/aqi');
         const data = await response.json();
-
+console.log(data);
         const updatedMarkers = markers.map((marker) => {
           const cityData = data.find((item) => item.locality.toLowerCase() === marker.popup.toLowerCase());
           if (cityData) {
@@ -192,72 +89,48 @@ const MapwithAQI = () => {
     fetchAQIData();
   }, []);
 
+  const puneCenter = [18.5204, 73.8567];
+
   return (
     <MapContainer
-      center={[18.5913, 73.7389]}
-      zoom={13}
+      center={puneCenter}
+      zoom={11}
       style={{ height: '100vh', width: '100%' }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <SearchControl />
-      <LiveLocation />
-      {markers.map((marker, index) => (
-        <Marker
-          key={index}
-          position={marker.geocode}
-          icon={createCustomIcon(marker.aqiValue, marker.backgroundColor)}
-        >
-          <Popup>
-            <div style={{ padding: '5px', borderRadius: '5px', color: 'black' }}>
-              {marker.popup}, Maharashtra<br />
-              AQI: {marker.aqiValue}
-            </div>
-          </Popup>
-        </Marker>
-      ))}
 
-      {/* Adding Polygons for Sub-locations from puneData */}
-      {puneData.features.map((state, index) => {
-        const coordinates = state.geometry.coordinates[0].map(coord => [coord[1], coord[0]]); // Swap [lng, lat] to [lat, lng]
+      {/* Large Circle for Pune */}
+      <Circle
+        center={puneCenter}
+        radius={30000}
+        pathOptions={{
+          fillColor: 'pink',
+          fillOpacity: 0.2,
+          color: '#666666',
+          weight: 1,
+        }}
+      >
+        <Popup>Pune Region</Popup>
 
-        return (
-          <Polygon
+        {/* Markers Inside Pune Circle */}
+        {markers.map((marker, index) => (
+          <Marker
             key={index}
-            positions={coordinates}
-            pathOptions={{
-              fillColor: "#FD8D3C",
-              fillOpacity: 0.5,
-              color: "white",
-              weight: 1,
-            }}
-            eventHandlers={
-              {
-              // mouseover: (e) => {
-              //   const layer = e.target;
-              //   layer.setStyle({
-              //     fillColor: "#db6f0a662",
-              //     fillOpacity: 1,
-              //   });
-              // },
-              mouseout: (e) => {
-                const layer = e.target;
-                layer.setStyle({
-                  fillColor: "#FD8D3C",
-                  fillOpacity: 0.5,
-                });
-              },
-            }}
+            position={marker.geocode}
+            icon={createCustomIcon(marker.aqiValue, getColorFromAQI(marker.aqiValue))}
           >
             <Popup>
-              <strong>{state.properties.name}</strong><br />
-              Density: {state.properties.density}
+              <div style={{ padding: '5px', borderRadius: '5px', color: 'black' }}>
+                <strong>{marker.popup}, Maharashtra</strong><br />
+                AQI: {marker.aqiValue}
+              </div>
             </Popup>
-          </Polygon>
-        );
-      })}
+          </Marker>
+        ))}
+      </Circle>
     </MapContainer>
   );
 };
