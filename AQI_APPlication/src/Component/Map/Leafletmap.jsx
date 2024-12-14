@@ -5,6 +5,8 @@ import { Icon } from 'leaflet';
 import 'leaflet-control-geocoder'; // For geocoder control
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
 import * as d3 from 'd3';
+import { IoLocationOutline } from "react-icons/io5";
+import ReactDOMServer from "react-dom/server";
 // import img from "../../../public/Images/1.png";
 
 const getColorFromAQI = (aqiValue) => {
@@ -130,15 +132,32 @@ const LiveLocation = () => {
       // } catch (error) {
       //   console.error('Error sending data to server:', error);
       // }
+      const customIcon = L.divIcon({
+        html: ReactDOMServer.renderToString(
+          <div className="flex items-center justify-center w-8 h-8  rounded-full shadow-lg">
+            <IoLocationOutline className="text-blue-500 " size={100} />
+          </div>
+        ),
+        className: "",
+        iconSize: [32, 32], // Adjust the size as needed
+      });
+      
       if (locationMarker) {
+        // Update the existing marker's position and popup content
         locationMarker.setLatLng(latLng);
         locationMarker.getPopup().setContent(pop).openOn(map);
+      
+        // Update the icon for consistency
+        locationMarker.setIcon(customIcon);
       } else {
-        const marker = L.marker(latLng).addTo(map).bindPopup(pop);
+        // Create a new marker with the custom icon
+        const marker = L.marker(latLng, { icon: customIcon })
+          .addTo(map)
+          .bindPopup(pop);
+      
         setLocationMarker(marker);
         marker.openPopup();
       }
-
       if (locationCircle) {
         locationCircle.setLatLng(latLng).setRadius(accuracy);
       } else {
