@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from 'react-leaflet';
 import { Icon } from 'leaflet';
-import * as L from 'leaflet';
+// import * as L from 'leaflet';
 import 'leaflet-control-geocoder';
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
 import * as d3 from 'd3';
@@ -72,7 +72,7 @@ console.log(data);
           const cityData = data.find((item) => item.locality.toLowerCase() === marker.popup.toLowerCase());
           if (cityData) {
             return {
-              ...marker,
+              ...marker,  
               aqiValue: cityData.aqi,
               backgroundColor: getColorFromAQI(cityData.aqi),
             };

@@ -6,7 +6,8 @@ import Gases from "../molecules/Gases"
 const SideCard = ({ location, isDarkMode }) => {
   const [gases, setGases] = useState([]);
   // const [isClicked, setIsClicked] = useState(false);
-  const [citydata , setCitydata]= useState();
+  const [citydata , setCitydata]= useState(null);
+  const [time,setTime]=useState(null);
   const [loading,setloading] = useState(true);
   // const [humidityData, setHumidityData] = useState([]);
 
@@ -48,15 +49,18 @@ const SideCard = ({ location, isDarkMode }) => {
       // }
   
         // const latestAQIValue = sensorData.length > 0 ? Math.round(data[data.length -1].value) : "N/A";
-        const sensor = sensorData.mq7;
+        // const sensor = sensorData.mq7;
         // const sensor = sensorData
-        setCitydata(sensor);
-        // setCitydata(latestAQIValue)
-        setloading(false);
-        // console.log(sensorData);  
-  
+        if (sensorData && sensorData.Bus_data) {
+          setCitydata(sensorData.Bus_data);
+          setTime(sensorData.timestamp) // Set the `Bus_data` object directly
+        } else {
+          console.warn("Unexpected data format:", sensorData);
+          setCitydata(null);
+        } // Set the fetched data to the state
       } catch (error) {
         console.error("Error fetching AQI data:", error);
+        setCitydata(null)
       }
     };
 
@@ -112,7 +116,7 @@ const SideCard = ({ location, isDarkMode }) => {
   return (
  
      <main
-      className={`sm:w-[320px] w-full lg:mr-8 max-w-xl h-[400px] p-6 rounded-lg shadow-lg transition-transform cursor-pointer ${isDarkMode ? "bg-[#111830]" : "bg-white"} ${isDarkMode ? "text-white" : "text-[#111830]"}`}
+      className={`sm:w-[320px] w-full lg:mr-8 max-w-xl  h-[440px] p-8 rounded-lg shadow-lg transition-transform cursor-pointer ${isDarkMode ? "bg-[#111830]" : "bg-white"} ${isDarkMode ? "text-white" : "text-[#111830]"}`}
     > 
     
     <div className={`text-black text-center mb-4 ${isDarkMode ? "text-white" : "text-[#111830]"}`}>
@@ -125,9 +129,11 @@ const SideCard = ({ location, isDarkMode }) => {
         
         <div  onClick={()=>window.location.reload()} className="flex text-black flex-col items-center sm:mt-0">
           <div  className={`text-xl font-semibold ${isDarkMode ? "text-white" : "text-[#111830]"}`}>Air Quality Index</div>
-         
-          <Circle   aqiValue={citydata} isDarkMode={isDarkMode}/>
+          {/* {citydata}   */}
+          <Circle aqiValue={citydata?.mq7 || 0} isDarkMode={isDarkMode} />
+
           {/* <Circle aqiValue={ aqiValue || citydata} isDarkMode={isDarkMode}/> */}
+          <p className="py-3 font-medium">{new Date(time).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</p>
         </div>
       </div>
 

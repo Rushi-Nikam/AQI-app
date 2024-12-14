@@ -68,7 +68,7 @@ const Circle = ({ aqiValue = 50, maxAqi = 500, isDarkMode }) => {
   return (
     <div className="flex flex-col items-center justify-center">
       <svg ref={svgRef} width={200} height={200}></svg>
-      <div className={`text-xl mt-2 ${isDarkMode ? 'text-white' : '#111830'}`}>{text}</div>
+      <div className={`text-xl text-center mt-2 ${isDarkMode ? 'text-white' : '#111830'}`}>{text}</div>
     </div>
   );
 };

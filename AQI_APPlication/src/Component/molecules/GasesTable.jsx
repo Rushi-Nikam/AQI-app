@@ -38,10 +38,10 @@ const GasesTable = ({ isDarkMode }) => {
         const data = await response.json();
         // const latestAQIValue = data.length > 0 ? Math.round(data[data.length - 1].value) : 'N/A';
         const sensor = data;
-        setValue(sensor);
+        setValue(sensor.Bus_data);
         // console.log(sensor)
-        const humidity = data.humidity[0];
-        setHumidityData(humidity);
+        //const humidity = data.humidity;
+        //setHumidityData(humidity);
       
       } catch (error) {
         console.error('Error fetching AQI data:', error);
@@ -67,12 +67,12 @@ const GasesTable = ({ isDarkMode }) => {
         }`}
       >
         
-          <GasCard title='humidity' value={humidityData.value} isDarkMode={isDarkMode}/> 
+          <GasCard title='humidity' value={value.humidity} isDarkMode={isDarkMode}/> 
           <GasCard title='temperature' value={value.temperature} isDarkMode={isDarkMode}/> 
           <GasCard title='co' value={value.mq7} isDarkMode={isDarkMode}/> 
           <GasCard title='O3' value={value.mq131} isDarkMode={isDarkMode}/> 
-          <GasCard title='sensor data' value={45} isDarkMode={isDarkMode}/> 
-          <GasCard title='sensor data' value={80} isDarkMode={isDarkMode}/> 
+          <GasCard title='pm2.5' value={value.pm25} isDarkMode={isDarkMode}/> 
+          <GasCard title='pm10' value={value.pm10} isDarkMode={isDarkMode}/> 
          
 
       </div>

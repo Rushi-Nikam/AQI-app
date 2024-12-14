@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams ,useNavigate } from "react-router-dom";
 import GoodImage from "/Images/1.png";
 import ModerateImage from "/Images/2.png";
 import UnhealthyForSensitiveImage from "/Images/3.png";
@@ -7,11 +7,12 @@ import UnhealthyImage from "/Images/4.png";
 import VeryUnhealthyImage from "/Images/5.png";
 import HazardousImage from "/Images/6.png";
 import PageNotFound from "./PageNotFound";
-
+// import {} from "rea"
 const LocalityDetail = ({ isDarkMode }) => {
   const { name } = useParams();
   const [localityData, setLocalityData] = useState(null);
   const [error, setError] = useState(null);
+  const navigator = useNavigate();
   // const [currentTime, setCurrentTime] = useState(new Date().toLocaleString());
 
   // useEffect(() => {
@@ -32,7 +33,8 @@ const LocalityDetail = ({ isDarkMode }) => {
         setLocalityData(data);
       } catch (error) {
         // setError("found and error",error.message);
-        setError(<PageNotFound/>)
+        // setError(<PageNotFound/>)
+        navigator('/')
       }
     };
 

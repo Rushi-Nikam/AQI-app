@@ -22,11 +22,18 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
     };
   }, [isDarkMode]);
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
-    if (searchTerm.trim()) {
-      navigate(`/locality/${searchTerm}`);
-    }
+    let searchTerm = e.target.value?.toString().toLowerCase();
+
+    // data[0].geojson.coordinates[0]                     // co-oridnates of region
+
+    const ENDPOINT = `https://nominatim.openstreetmap.org/search.php?q=${searchTerm}&polygon_geojson=1&format=jsonv2`
+    // const ENDPOINT = `https://nominatim.openstreetmap.org/ui/search.html?q=${searchTerm}`;
+    const api = await fetch(ENDPOINT, { method: "GET" });
+    const data = await api.json();
+
+    console.log({data});
   };
 
   return (

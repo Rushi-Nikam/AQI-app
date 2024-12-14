@@ -92,7 +92,7 @@ const LiveLocation = () => {
   const map = useMap();
   const [locationMarker, setLocationMarker] = useState(null);
   const [locationCircle, setLocationCircle] = useState(null);
-  const [location, setlocation] = useState();
+  // const [location, setlocation] = useState();
 
   useEffect(() => {
     if (!map) return;
@@ -175,8 +175,9 @@ const Leafletmap = () => {
         const response = await fetch(`aqi_values/get-data/`);
         const sensors = await response.json();
         // console.log("latitude", sensors.sensor.latitude);
-        // console.log("longitude", sensors.sensor.longitude);
-        setdata(sensors);
+        // console.log("longitude", sensors.Bus-data.latitude);
+        console.log("sersonrs",sensors);
+        setdata(sensors.Bus_data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -185,20 +186,20 @@ const Leafletmap = () => {
     fetchData();
   }, []);
   const [markers, setMarkers] = useState([
-    { geocode: [18.6492, 73.7707], popup: "Nigdi", aqiValue: 40, backgroundColor: "#00e400" },
+    // { geocode: [18.6492, 73.7707], popup: "Nigdi", aqiValue: 40, backgroundColor: "#00e400" },
     { geocode: [18.6011, 73.7641], popup: "Wakad", aqiValue: 105, backgroundColor: "#ff7e00" },
-    { geocode: [18.5913, 73.7389], popup: "Hinjawadi", aqiValue: 103, backgroundColor: "#ff0000" },
-    { geocode: [18.7167, 73.7678], popup: "Dehu", aqiValue: 102, backgroundColor: "#7e0023" },
-    
+    // { geocode: [18.5913, 73.7389], popup: "Hinjawadi", aqiValue: 103, backgroundColor: "#ff0000" },
+    // { geocode: [18.7167, 73.7678], popup: "Dehu", aqiValue: 102, backgroundColor: "#7e0023" },
+
   ]);
   useEffect(() => {
     // Function to update markers based on data
     const updateMarkers = () => {
-      if (data && data.sensor) {
+      if (data) {
         setMarkers((prevMarkers) => [
           ...prevMarkers,
           {
-            geocode: [data.sensor.latitude, data.sensor.longitude],
+            geocode: [data.latitude, data.longitude],
             popup: "Dehu", // Update if needed
             aqiValue: 104, // Update if needed
             backgroundColor: "#7e0023", // Update if needed
@@ -208,8 +209,8 @@ const Leafletmap = () => {
     };
   
 
-    const interval = setInterval(updateMarkers, 10000); // 10 seconds
-    console.log(interval);
+    const interval = setInterval(updateMarkers, 1000*2); // 1 second
+    // console.log(interval);
     return () => clearInterval(interval); 
   }, [data]);
 
