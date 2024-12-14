@@ -12,7 +12,7 @@ import CityDetails from '../Component/molecules/CityDetails';
 import AQITable from '../Component/molecules/AQITable';
 import MapwithAQI from '../Component/Map/MapwithAQI';
 import Choropath from '../Component/Map/choropath';
-import Humidity from '../Component/molecules/humidity';
+import Humidity from '../Component/molecules/Humidity';
 import PieChart from '../Component/molecules/PieChart';
 import PageNotFound from '../Component/pages/PageNotFound';
 import Demo from '../Component/Map/demo';
