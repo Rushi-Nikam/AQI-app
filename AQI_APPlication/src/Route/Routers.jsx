@@ -15,9 +15,9 @@ import Choropath from '../Component/Map/choropath';
 import Humidity from '../Component/molecules/Humidity';
 import PieChart from '../Component/molecules/PieChart';
 import PageNotFound from '../Component/pages/PageNotFound';
-import Demo from '../Component/Map/demo';
-import Deomse from '../Component/Map/deomse';
-import Maplibre from '../Component/Map/maplibre';
+import Demo from '../Component/Map/Demo';
+import Deomse from '../Component/Map/Deomse';
+import Maplibre from '../Component/Map/Maplibre';
 
 const Routers = ({ isDarkMode}) => {
   return (
