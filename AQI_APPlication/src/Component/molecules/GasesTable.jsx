@@ -33,7 +33,7 @@ const GasesTable = ({ isDarkMode }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('aqi_values/get-data/');
+        const response = await fetch('http://34.30.30.232:8000/aqi_values/get-data/');
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         // const latestAQIValue = data.length > 0 ? Math.round(data[data.length - 1].value) : 'N/A';
