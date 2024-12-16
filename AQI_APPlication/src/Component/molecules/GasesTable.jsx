@@ -33,7 +33,7 @@ const GasesTable = ({ isDarkMode }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://34.30.30.232:8000/aqi_values/get-data/');
+        const response = await fetch('aqi_values/get-data/');
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         // const latestAQIValue = data.length > 0 ? Math.round(data[data.length - 1].value) : 'N/A';
@@ -49,7 +49,18 @@ const GasesTable = ({ isDarkMode }) => {
     };
 
     fetchData();
+
   }, []);
+  const gasData = [
+    { title: 'Humidity', value: value.humidity },
+    { title: 'Temperature', value: value.temperature },
+    { title: 'CO', value: value.mq7 },
+    { title: 'O₃', value: value.mq131 },
+    { title: 'PM2.5', value: value.pm25 },
+    { title: 'PM10', value: value.pm10 },
+    { title: 'NH3', value: value.nh3 },
+    { title: 'NO₂', value: value.no2 },
+  ];
 
   // if (loading) {
   //   return <div>Loading...</div>;
@@ -62,17 +73,16 @@ const GasesTable = ({ isDarkMode }) => {
       </div>
 
       <div
-        className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 lg:w-[1400px] h-auto mb-[200px] mt-[50px] rounded-lg ${
+        className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 lg:w-[1400px] h-auto mb-[200px] mt-[50px] rounded-lg ${
           isDarkMode ? 'bg-gray-800 text-pink-800' : 'bg-white text-gray-600'
         }`}
       >
         
-          <GasCard title='Humidity' value={value.humidity} isDarkMode={isDarkMode}/> 
-          <GasCard title='Temperature' value={value.temperature} isDarkMode={isDarkMode}/> 
-          <GasCard title='co' value={value.mq7} isDarkMode={isDarkMode}/> 
-          <GasCard title='O₃' value={value.mq131} isDarkMode={isDarkMode}/> 
-          <GasCard title='PM2.5' value={value.pm25} isDarkMode={isDarkMode}/> 
-          <GasCard title='PM10' value={value.pm10} isDarkMode={isDarkMode}/> 
+    
+
+{gasData.map((gas, index) => (
+  <GasCard key={index}  value={gas.value}  title={gas.title} isDarkMode={isDarkMode} />
+))}
          
 
       </div>

@@ -10,7 +10,9 @@ const GasCard = ({title="Humidity" , value="35",isDarkMode=true }) => {
       : 'bg-[#f7f7fc] text-gray-700 hover:border-[1px] border-solid border-black'
   }`}
 >
-  <div className="flex gap-3 text-center items-center">
+  <div className="flex gap-5 justify-between ">
+   
+    <div className="text-2xl">{title}</div>
     <div
       className={`text-xl font-bold rounded-full p-2 ${
         isDarkMode ? 'bg-gray-600 text-[#82909d]' : 'bg-blue-600 text-white'
@@ -18,7 +20,6 @@ const GasCard = ({title="Humidity" , value="35",isDarkMode=true }) => {
     >
       {value}
     </div>
-    <div className="text-2xl">{title}</div>
     <div
       className={`text-xl flex flex-col justify-center items-end text-right ${
         isDarkMode ? 'bg-gray-700 text-white' : 'bg-[#f7f7fc] text-gray-700'
@@ -27,6 +28,7 @@ const GasCard = ({title="Humidity" , value="35",isDarkMode=true }) => {
       {/* {`${value.mq7}`} */}
       {/* <div>{value.mq135}</div> */}
     </div>
+
   </div>
 
   {/* <div className="w-full mt-4">

@@ -32,7 +32,7 @@ const SideCard = ({ location, isDarkMode }) => {
     // Fetch city data from the backend
     const fetchData = async () => {
       try { 
-        const response = await fetch("aqi_values/get-data/");
+        const response = await fetch("//aqi_values/get-data/");
         if (!response.ok) throw new Error("Network response was not ok");
         const sensorData = await response.json();
         // console.log(sensorData);
