@@ -130,7 +130,7 @@ const SideCard = ({ location, isDarkMode }) => {
         <div  onClick={()=>window.location.reload()} className="flex text-black flex-col items-center sm:mt-0">
           <div  className={`text-xl font-semibold ${isDarkMode ? "text-white" : "text-[#111830]"}`}>Air Quality Index</div>
           {/* {citydata}   */}
-          <Circle aqiValue={citydata?.mq7 ||  0} isDarkMode={isDarkMode} />
+          <Circle aqiValue={citydata?.aqi ||  0} isDarkMode={isDarkMode} />
 
           {/* <Circle aqiValue={ aqiValue || citydata} isDarkMode={isDarkMode}/> */}
           <p className="py-3 font-medium">{new Date(time).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</p>

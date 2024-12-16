@@ -135,7 +135,7 @@ const LiveLocation = () => {
       const customIcon = L.divIcon({
         html: ReactDOMServer.renderToString(
           <div className="flex items-center justify-center w-8 h-8  rounded-full shadow-lg">
-            <IoLocationOutline className="text-blue-500 " size={100} />
+            <IoLocationOutline className="text-blue-500 " size={24} />
           </div>
         ),
         className: "",

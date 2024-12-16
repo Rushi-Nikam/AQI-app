@@ -67,12 +67,12 @@ const GasesTable = ({ isDarkMode }) => {
         }`}
       >
         
-          <GasCard title='humidity' value={value.humidity} isDarkMode={isDarkMode}/> 
-          <GasCard title='temperature' value={value.temperature} isDarkMode={isDarkMode}/> 
+          <GasCard title='Humidity' value={value.humidity} isDarkMode={isDarkMode}/> 
+          <GasCard title='Temperature' value={value.temperature} isDarkMode={isDarkMode}/> 
           <GasCard title='co' value={value.mq7} isDarkMode={isDarkMode}/> 
-          <GasCard title='O3' value={value.mq131} isDarkMode={isDarkMode}/> 
-          <GasCard title='pm2.5' value={value.pm25} isDarkMode={isDarkMode}/> 
-          <GasCard title='pm10' value={value.pm10} isDarkMode={isDarkMode}/> 
+          <GasCard title='O₃' value={value.mq131} isDarkMode={isDarkMode}/> 
+          <GasCard title='PM2.5' value={value.pm25} isDarkMode={isDarkMode}/> 
+          <GasCard title='PM10' value={value.pm10} isDarkMode={isDarkMode}/> 
          
 
       </div>
