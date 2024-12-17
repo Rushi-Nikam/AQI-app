@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Pre from "../molecules/Pre";
 import Circle from "../molecules/Circle"
-import Gases from "../molecules/Gases"
+// import Gases from "../molecules/Gases"
 
 const SideCard = ({ location, isDarkMode }) => {
   const [gases, setGases] = useState([]);
@@ -32,7 +32,7 @@ const SideCard = ({ location, isDarkMode }) => {
     // Fetch city data from the backend
     const fetchData = async () => {
       try { 
-        const response = await fetch("//aqi_values/get-data/");
+        const response = await fetch("aqi_values/get-data/");
         if (!response.ok) throw new Error("Network response was not ok");
         const sensorData = await response.json();
         // console.log(sensorData);
@@ -130,7 +130,7 @@ const SideCard = ({ location, isDarkMode }) => {
         <div  onClick={()=>window.location.reload()} className="flex text-black flex-col items-center sm:mt-0">
           <div  className={`text-xl font-semibold ${isDarkMode ? "text-white" : "text-[#111830]"}`}>Air Quality Index</div>
           {/* {citydata}   */}
-          <Circle aqiValue={citydata?.aqi ||  0} isDarkMode={isDarkMode} />
+          <Circle aqiValue={citydata?.aqi} isDarkMode={isDarkMode} />
 
           {/* <Circle aqiValue={ aqiValue || citydata} isDarkMode={isDarkMode}/> */}
           <p className="py-3 font-medium">{new Date(time).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</p>

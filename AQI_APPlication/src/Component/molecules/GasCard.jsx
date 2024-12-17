@@ -1,6 +1,6 @@
 import React from 'react'
 
-const GasCard = ({title="Humidity" , value="35",isDarkMode=true }) => {
+const GasCard = ({title ,value,isDarkMode=true}) => {
   return (
     <div>
  <div
@@ -25,27 +25,10 @@ const GasCard = ({title="Humidity" , value="35",isDarkMode=true }) => {
         isDarkMode ? 'bg-gray-700 text-white' : 'bg-[#f7f7fc] text-gray-700'
       }`}
     >
-      {/* {`${value.mq7}`} */}
-      {/* <div>{value.mq135}</div> */}
+
     </div>
 
   </div>
-
-  {/* <div className="w-full mt-4">
-    <div className="h-4 bg-gray-300 rounded-full overflow-hidden">
-      <div
-        className={`h-full ${
-          isDarkMode ? 'bg-blue-400' : 'bg-blue-600'
-        }`}
-        style={{
-          // width: `${(gas.value / gas.max) * 100}%`,
-        }}
-      ></div>
-    </div>
-    <div className="text-xs mt-2 text-right">
-      {`(${gas.value} / ${gas.max} ${gas.unit})`}
-    </div>
-  </div> */}
 </div>
 
     </div>
