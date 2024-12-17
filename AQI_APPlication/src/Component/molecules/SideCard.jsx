@@ -10,12 +10,15 @@ const SideCard = ({ location, isDarkMode }) => {
   const [time,setTime]=useState(null);
   const [loading,setloading] = useState(true);
   // const [humidityData, setHumidityData] = useState([]);
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; // Get base URL from .env
+  const AQI_ENDPOINT = import.meta.env.VITE_AQI_ENDPOINT; 
+  const AQI_URL = import.meta.env.VITE_URL;
 
   useEffect(() => { 
     // Fetch the gas data from the API when the component mounts
     const fetchGases = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/gases"); // Replace with your actual API URL
+        const response = await fetch(`${API_BASE_URL}/gases`); // Replace with your actual API URL
         if (!response.ok) {
           throw new Error("Failed to fetch gases data");
         }
@@ -32,7 +35,7 @@ const SideCard = ({ location, isDarkMode }) => {
     // Fetch city data from the backend
     const fetchData = async () => {
       try { 
-        const response = await fetch("aqi_values/get-data/");
+        const response = await fetch(`${AQI_ENDPOINT} `);
         if (!response.ok) throw new Error("Network response was not ok");
         const sensorData = await response.json();
         // console.log(sensorData);
