@@ -22,19 +22,24 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
     };
   }, [isDarkMode]);
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    let searchTerm = e.target.value?.toString().toLowerCase();
+  // const handleSearch = async (e) => {
+  //   e.preventDefault();
+  //   let searchTerm = e.target.value?.toString().toLowerCase();
 
-    // data[0].geojson.coordinates[0]                     // co-oridnates of region
+  //   // data[0].geojson.coordinates[0]                     // co-oridnates of region
 
-    const ENDPOINT = `https://nominatim.openstreetmap.org/search.php?q=${searchTerm}&polygon_geojson=1&format=jsonv2`
-    // const ENDPOINT = `https://nominatim.openstreetmap.org/ui/search.html?q=${searchTerm}`;
-    const api = await fetch(ENDPOINT, { method: "GET" });
-    const data = await api.json();
+  //   const ENDPOINT = `https://nominatim.openstreetmap.org/search.php?q=${searchTerm}&polygon_geojson=1&format=jsonv2`
+  //   // const ENDPOINT = `https://nominatim.openstreetmap.org/ui/search.html?q=${searchTerm}`;
+  //   const api = await fetch(ENDPOINT, { method: "GET" });
+  //   const data = await api.json();
 
-    console.log({data});
-  };
+  //   console.log({data});
+  // };
+  const handleSearch = (e) => {
+    if (searchTerm.trim()) {
+      navigate(`/locality/${searchTerm}`);
+    }
+  }
 
   return (
     <header className={`flex flex-col lg:flex-row items-center w-full px-6 py-2 sticky top-0 z-[60] ${bgColor}`}>

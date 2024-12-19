@@ -69,7 +69,7 @@ const fetchLocation = async (setLocation) => {
             setLocation({
               loaded: true,
               coordinates: { lat: latitude, lng: longitude },
-              locationName: data.address.suburb,
+              locationName: data.address.city,
             });
           }
         } catch (error) {

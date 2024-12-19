@@ -123,7 +123,7 @@ const SideCard = ({ location, isDarkMode }) => {
     > 
     
     <div className={`text-black text-center mb-4 ${isDarkMode ? "text-white" : "text-[#111830]"}`}>
-        <h1 className="text-xl font-bold">{location} Location</h1>
+        <h1 className="text-xl font-bold">{location} City</h1>
         <p className="text-sm">Maharashtra, India</p>
       </div>
 
