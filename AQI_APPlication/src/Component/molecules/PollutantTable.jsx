@@ -111,7 +111,7 @@ const PollutantDivTable = ({isDarkMode}) => {
       </div>
 
      
-      <div className=" lg:w-[960px] flex flex-col justify-center m-auto gap-y-4">
+      <div className=" lg:w-[1000px]  flex flex-col justify-center m-auto gap-y-4">
       
         {data.map((item, index) => (
           <div
@@ -122,12 +122,12 @@ const PollutantDivTable = ({isDarkMode}) => {
           >
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full">
               {/* Range and Message */}
-              <div className="flex-2 m-auto p-4">
+              <div className="flex-2 mx-auto lg:items-center p-4">
                 <div className='flex lg: lg:flex-col gap-3 lg:gap-0'>
                 <div>{item.range}</div>
-                <div className={`p-2 ${getMessageColor(item.message)} w-[10px] flex justify-center items-center`}>
+                <div className={`p-2 ${getMessageColor(item.message)} w-[10px] flex justify-center mx-4 items-center`}>
                 </div>
-                <div className='flex mx-auto justify-center items-center'>
+                <div className='flex mx-2 justify-center items-center'>
 
                 <div>{item.message}</div>
                 </div>

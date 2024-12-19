@@ -58,9 +58,9 @@ const SideCard = ({ location, isDarkMode }) => {
           setCitydata(sensorData.Bus_data);
           setTime(sensorData.timestamp) // Set the `Bus_data` object directly
         } else {
-          console.warn("Unexpected data format:", sensorData);
+          
           setCitydata(null);
-        } // Set the fetched data to the state
+        }
       } catch (error) {
         console.error("Error fetching AQI data:", error);
         setCitydata(null)
@@ -100,21 +100,21 @@ const SideCard = ({ location, isDarkMode }) => {
     
   }, []);
 
-  const calculateAQI = () => {
-    const aqiValues = gases.map((gas) => {
-      const { value, range, index } = gas;
-      const { low, high } = range;
-      const { low: indexLow, high: indexHigh } = index;
-      const aqi = ((indexHigh - indexLow) / (high - low)) * (value - low) + indexLow;
-      return aqi;
-    });
+  // const calculateAQI = () => {
+  //   const aqiValues = gases.map((gas) => {
+  //     const { value, range, index } = gas;
+  //     const { low, high } = range;
+  //     const { low: indexLow, high: indexHigh } = index;
+  //     const aqi = ((indexHigh - indexLow) / (high - low)) * (value - low) + indexLow;
+  //     return aqi;
+  //   });
 
-    return Math.round(aqiValues.reduce((acc, cur) => acc + cur, 0) / aqiValues.length);
-  };
+  //   return Math.round(aqiValues.reduce((acc, cur) => acc + cur, 0) / aqiValues.length);
+  // };
 
   // const aqiValue = calculateAQI(); // Calculate the AQI value
    // Calculate the AQI value
-   const aqiValue =45;
+  //  const aqiValue =45;
 
   return (
  

@@ -11,17 +11,17 @@ const HomePage = ({ isDarkMode }) => {
 // const [isHovered,setIsHovered]=useState();
 const [location, setLocation] = useState();
 
-  const handleWindow = useCallback(() => {
-    console.log("Page loaded");
-  }, []);
+  // const handleWindow = useCallback(() => {
+  //   console.log("Page loaded");
+  // }, []);
 
-  useEffect(() => {
-    window.addEventListener('load', handleWindow);
+  // useEffect(() => {
+  //   window.addEventListener('load', handleWindow);
 
-    return () => {
-      window.removeEventListener("load", handleWindow);
-    };
-  }, [handleWindow]);
+  //   return () => {
+  //     window.removeEventListener("load", handleWindow);
+  //   };
+  // }, [handleWindow]);
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -65,7 +65,7 @@ const [location, setLocation] = useState();
         <h1
           className={`font-serif text-2xl md:text-3xl font-bold mb-5 text-center ${isDarkMode ? 'text-white' : 'text-black'}`}
         >
-          {location ? location?.address?.city: "pune"} AQI Status | Live Air Quality and Pollution Data
+          {`${location?location.address.suburb:"Pune"}`} AQI Status | Live Air Quality and Pollution Data
         </h1>
       </div>
 
@@ -78,7 +78,7 @@ const [location, setLocation] = useState();
         >
           <Suspense fallback={<div>Loading...</div>}>
             {/* <h1>location : {location?.address.suburb}</h1> */}
-            <SideCard location={location ?location?.address?.state_district:'pune' } isDarkMode={isDarkMode} />
+            <SideCard location={location?location.address.suburb:"Pune"} isDarkMode={isDarkMode} />
           </Suspense>
         </div>
 
