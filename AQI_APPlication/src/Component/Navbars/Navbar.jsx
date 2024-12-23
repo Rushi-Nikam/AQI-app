@@ -57,15 +57,15 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
   </div>
 
 
-        {/* <div>
-          <Link to='/aqi-info' className='flex justify-center items-center gap-1'>resource {location.pathname==='/aqi-info' ? <FaChevronUp />:<FaChevronDown />} </Link>
+        <div>
+          <Link to='/Bar_chart' className='flex justify-center items-center gap-1'>BarChart {location.pathname==='/Bar_chart' ? <FaChevronUp />:<FaChevronDown />} </Link>
         </div>
 
       
         <div>
-          <Link to='/about' className='flex justify-center items-center gap-1'>About{location.pathname==='/about' ? <FaChevronUp />:<FaChevronDown />}</Link>
+          <Link to='/new_page' className='flex justify-center items-center gap-1'>scatter{location.pathname==='/new_page' ? <FaChevronUp />:<FaChevronDown />}</Link>
         </div>
-         */}
+        
         </div> 
         
 

@@ -13,9 +13,6 @@ const GasesTable = ({ isDarkMode }) => {
         // const latestAQIValue = data.length > 0 ? Math.round(data[data.length - 1].value) : 'N/A';
         const sensor = data;
         setValue(sensor.Bus_data);
-        // console.log(sensor)
-        //const humidity = data.humidity;
-        //setHumidityData(humidity);
       } catch (error) {
         console.error("Error fetching AQI data:", error);
       }

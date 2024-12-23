@@ -87,9 +87,9 @@ const LocalityDetail = ({ isDarkMode }) => {
       {/* AQI Section */}
       <div className={`${isDarkMode?'bg-gray-500':'bg-gray-250'} border-4 shadow-lg p-6 rounded-xl flex-1`}>
         <h2 className="text-2xl font-bold mb-2">
-          {name} Real-time Air Quality Index (AQI)
+          {name}  Air Quality Index (AQI)
         </h2>
-        <p>Real-time PM2.5, PM10 air pollution levels in Maharashtra.</p>
+        <p> PM2.5, PM10 air pollution levels in Maharashtra.</p>
         <div className="flex  justify-end items-end  mt-6">
           <div className="flex flex-col text-center">
             <p className="text-3xl text-red-600 font-bold">{aqi}</p>
@@ -105,7 +105,7 @@ const LocalityDetail = ({ isDarkMode }) => {
             alt="AQI Category"
             className="w-28 h-28 mx-auto"
           />
-          <p className="text-xl"><span className="text-red-400">Last Updated:</span>  {new Date().toDateString()}</p>  
+          {/* <p className="text-xl"><span className="text-red-400">Last Updated:</span>  {new Date().toDateString()}</p>   */}
         </div>
       </div>
 

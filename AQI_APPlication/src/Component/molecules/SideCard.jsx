@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Pre from "../molecules/Pre";
+
 import Circle from "../molecules/Circle"
 // import Gases from "../molecules/Gases"
 

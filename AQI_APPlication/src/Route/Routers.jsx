@@ -18,6 +18,10 @@ import PageNotFound from '../Component/pages/PageNotFound';
 import Demo from '../Component/Map/Demo';
 import Deomse from '../Component/Map/Deomse';
 import Maplibre from '../Component/Map/Maplibre';
+import ScatterPlot from '../Component/molecules/ScatterPlot';
+import DummyBarChart from '../Component/molecules/DummyBarChart';
+import CityBarChart from '../Component/molecules/CityBarChart';
+import DemoPage from '../Component/pages/DemoPage';
 
 const Routers = ({ isDarkMode}) => {
   return (
@@ -39,6 +43,10 @@ const Routers = ({ isDarkMode}) => {
       <Route path="/pie" element={<PieChart/>} />
       <Route path="/map-demo" element={<Demo/>} />
       <Route path="/map-libre" element={<Maplibre/>} />
+      <Route path="/scatter" element={<ScatterPlot/>} />
+      <Route path="/Bar_chart" element={<DummyBarChart/>} />
+      <Route path="/city_chart" element={<CityBarChart/>} />
+      <Route path="/new_page" element={<DemoPage/>} />
       
 
       <Route path="/detailed-precautions/:level" element={<DetailedPrecaution isDarkMode={isDarkMode} />} />
