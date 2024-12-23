@@ -1,13 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import * as d3 from "d3";
 
-const BarChart = () => {
+const BarChart = ({ darkMode }) => {
   const [data, setData] = useState([]);
   const [tooltip, setTooltip] = useState({ visible: false, x: 0, y: 0, label: "", value: "" });
   const svgRef = useRef();
 
   useEffect(() => {
-    // Fetch data from API
     const fetchData = async () => {
       try {
         const response = await fetch("http://34.30.30.232:8000/aqi_values/get-data/");
@@ -36,7 +35,6 @@ const BarChart = () => {
   useEffect(() => {
     if (!data.length) return;
 
-    // Setting up container
     const w = 500;
     const h = 400;
     const margin = { top: 20, right: 30, bottom: 50, left: 50 };
@@ -47,12 +45,11 @@ const BarChart = () => {
       .attr("height", h)
       .style("overflow", "visible")
       .style("margin-top", "50px")
-      .style("background-color", "#fff") // Light theme
-      .style("color", "#000");
+      // .style("background-color", darkMode ? "#333" : "#fff")
+      .style("color", darkMode ? "#fff" : "#000");
 
-    svg.selectAll("*").remove(); // Clear previous content
+    svg.selectAll("*").remove();
 
-    // Setting up scaling
     const xScale = d3
       .scaleBand()
       .domain(data.map((d) => d.label))
@@ -61,10 +58,9 @@ const BarChart = () => {
 
     const yScale = d3
       .scaleLinear()
-      .domain([0, d3.max(data, (d) => d.value) + 10]) // Adding buffer
+      .domain([0, d3.max(data, (d) => d.value) + 10])
       .range([h - margin.bottom, margin.top]);
 
-    // Setting up axes
     const xAxis = d3.axisBottom(xScale);
     const yAxis = d3.axisLeft(yScale);
 
@@ -73,17 +69,22 @@ const BarChart = () => {
       .attr("transform", `translate(0, ${h - margin.bottom})`)
       .call(xAxis)
       .selectAll("text")
-      .attr("transform", "rotate(-45)")
-      .style("text-anchor", "end");
+      .style("text-anchor", "middle")
+      .style("fill", darkMode ? "#fff" : "#000");
 
-    svg.append("g").attr("transform", `translate(${margin.left}, 0)`).call(yAxis);
+    svg
+      .append("g")
+      .attr("transform", `translate(${margin.left}, 0)`)
+      .call(yAxis)
+      .selectAll("text")
+      .style("fill", darkMode ? "#fff" : "#000");
 
-    // Adding labels
     svg
       .append("text")
       .attr("x", w / 2)
       .attr("y", h - 10)
       .attr("text-anchor", "middle")
+      .style("fill", darkMode ? "#fff" : "#000")
       .text("Parameters");
 
     svg
@@ -92,9 +93,9 @@ const BarChart = () => {
       .attr("x", -h / 2)
       .attr("y", 15)
       .attr("text-anchor", "middle")
+      .style("fill", darkMode ? "#fff" : "#000")
       .text("Values");
 
-    // Drawing bars with animation
     svg
       .selectAll(".bar")
       .data(data)
@@ -102,12 +103,10 @@ const BarChart = () => {
       .append("rect")
       .attr("class", "bar")
       .attr("x", (d) => xScale(d.label))
-      .attr("y", h - margin.bottom) // Start at bottom for animation
-      .attr("width", xScale.bandwidth())
-      .attr("height", 0) // Start with height 0 for animation
-      .attr("fill", "teal") // Bar color
       .attr("y", (d) => yScale(d.value))
-      .attr("height", (d) => h - margin.bottom - yScale(d.value)) // Animate height
+      .attr("width", xScale.bandwidth())
+      .attr("height", (d) => h - margin.bottom - yScale(d.value))
+      .attr("fill", "blue")
       .on("click", (event, d) => {
         const [x, y] = d3.pointer(event);
         setTooltip({
@@ -119,29 +118,30 @@ const BarChart = () => {
         });
       });
 
-    // Adding text labels at the top of each bar to show values
     svg
       .selectAll(".bar-text")
       .data(data)
       .enter()
       .append("text")
       .attr("class", "bar-text")
-      .attr("x", (d) => xScale(d.label) + xScale.bandwidth() / 2) // Position text in the center of each bar
-      .attr("y", (d) => yScale(d.value) - 5) // Position text just above the bar
+      .attr("x", (d) => xScale(d.label) + xScale.bandwidth() / 2)
+      .attr("y", (d) => yScale(d.value) - 5)
       .attr("text-anchor", "middle")
-      .attr("fill", "black")
+      .style("fill", darkMode ? "#fff" : "#000")
       .text((d) => d.value);
-  }, [data]);
+  }, [data, darkMode]);
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center relative">
       <svg ref={svgRef}></svg>
       {tooltip.visible && (
         <div
-          className="absolute bg-white border rounded p-2 text-sm shadow"
+          className="absolute border rounded p-2 text-sm shadow"
           style={{
             left: tooltip.x + 20,
             top: tooltip.y - 20,
+            backgroundColor: darkMode ? "#222" : "#fff",
+            color: darkMode ? "#fff" : "#000",
           }}
         >
           <strong>{tooltip.label}</strong>: {tooltip.value}

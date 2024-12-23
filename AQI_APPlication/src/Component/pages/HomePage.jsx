@@ -1,98 +1,50 @@
-import React, { Suspense, useCallback, useEffect } from 'react';
-import { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import PollutantTable from '../molecules/PollutantTable';
 import Questions from '../molecules/Questions';
-import ScatterPlot from '../molecules/ScatterPlot';
-import PieChart from '../molecules/PieChart';
 import BarChart from '../molecules/BarChart';
-import CityBarChart from '../molecules/CityBarChart';
-import PollScatter from '../molecules/PollScatter';
-import Chartdata from '../molecules/chartdata';
-// import ChartData from '../molecules/Chartdata';
-
+import SensorData from '../molecules/SensorData';
+import SensorDatas from '../molecules/SensorDatas';
+import { FcAbout } from "react-icons/fc";
+import Predict from '../molecules/Predict';
+import Report from '../molecules/Report';
+import SunburstChart from '../molecules/PieChart';
+import PieChart from '../molecules/PieChart';
+import DynamicPieChart from '../molecules/PieChart';
+import ChartReport from '../molecules/ChartReport';
 const GasesTable = React.lazy(() => import('../molecules/GasesTable'));
 const SideCard = React.lazy(() => import('../molecules/SideCard'));
 const Leafletmap = React.lazy(() => import('../Map/Leafletmap'));
 
 const HomePage = ({ isDarkMode }) => {
-// const [isHovered,setIsHovered]=useState();
-const [location, setLocation] = useState();
-
-  // const handleWindow = useCallback(() => {
-  //   console.log("Page loaded");
-  // }, []);
-
-  // useEffect(() => {
-  //   window.addEventListener('load', handleWindow);
-
-  //   return () => {
-  //     window.removeEventListener("load", handleWindow);
-  //   };
-  // }, [handleWindow]);
-
-  // useEffect(() => {
-  //   const fetchLocation = async () => {
-  //     if (navigator.geolocation) {
-  //       navigator.geolocation.getCurrentPosition(
-  //         async (position) => {
-  //           const { latitude, longitude } = position.coords;
-  //           try {
-  //             // Use a reverse geocoding API to fetch the location name
-  //             const response = await fetch(
-  //               `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
-  //             ); // not showing
-              
-  //             const data = await response.json();
-  //             console.log({data})
-  //             if (data) {
-  //               setLocation(data);
-  //             }
-  //           } catch (error) {
-  //             console.error('Error fetching location:', error);
-  //             setLocation('Error fetching location');
-  //           }
-  //         },
-  //         (error) => {
-  //           console.error('Geolocation error:', error);
-  //           setLocation('Location permission denied');
-  //         }
-  //       );
-  //     } else {
-  //       setLocation('Geolocation not supported');
-  //     }
-  //   };
-
-  //   fetchLocation();
-  // }, []);
-
+  // const [location, setLocation] = useState();
+const [view,setView] = useState(false);
+const onclickHandler =()=>{
+  setView(!view);
+} 
   return (
     <div className={`py-4 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'} w-full`}>
       {/* Header */}
       <div className="flex justify-center px-4">
-        <h1
-          className={`font-serif text-2xl md:text-3xl font-bold mb-5 text-center ${isDarkMode ? 'text-white' : 'text-black'}`}
-        >
-          {`${"Pune"}`} AQI Status | Live Air Quality and Pollution Data
+        <h1 className={`font-serif text-2xl md:text-3xl font-bold mb-5 text-center ${isDarkMode ? 'text-white' : 'text-black'}`}>
+          {"Pune"} AQI Status | Live Air Quality and Pollution Data
         </h1>
       </div>
 
-    
-      <div className="flex flex-col-reverse lg:flex-row lg:mx-20 my-4 gap-8 lg:gap-12 px-4">
-      
-        <div className="flex justify-center lg:w-1/3"
-        // onClick={()=>window.location.reload()} 
-        // onClick={()=>setIsHovered(!isHovered)}
-        >
+      {/* Main Content */}
+      <div className="flex flex-col-reverse  lg:flex-row lg:mx-20 my-4 gap-8 lg:gap-12 px-4">
+        {/* Side Card */}
+        <div className="flex justify-center lg:w-1/3 relative">
           <Suspense fallback={<div>Loading...</div>}>
-            {/* <h1>location : {location?.address.suburb}</h1> */}
-            <SideCard location={location?location.address.state_district:"Pune"} isDarkMode={isDarkMode} />
+            <SideCard location={ "Pune"} isDarkMode={isDarkMode} />
+            <div className="mt-[410px] cursor-pointer ml-[250px]   absolute flex text-2xl">
+            <FcAbout onClick={onclickHandler} />
+          
+            </div>
           </Suspense>
         </div>
 
         {/* Leaflet Map */}
-        <div  className="flex justify-center lg:w-2/3" 
-          //  className={`${isHovered ? 'opacity-0' : 'opacity-100'} flex justify-center lg:w-2/3`}
-           >
+        <div className="flex justify-center lg:w-2/3">
           <Suspense fallback={<div>Loading...</div>}>
             <Leafletmap />
           </Suspense>
@@ -108,52 +60,82 @@ const [location, setLocation] = useState();
         </div>
       </div>
 
-      {/* Pollutant Table */}
-      <div className={`px-4 lg:mt-0 mt-[250px] ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
+      {/* Chart Data */}
+      <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
         <Suspense fallback={<div>Loading...</div>}>
-          <PollutantTable isDarkMode={isDarkMode} />
+          <SensorData darkmode={isDarkMode} />
         </Suspense>
+      </div>
+      <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <SensorDatas darkMode={isDarkMode}/>
+        </Suspense>
+      </div>
+ {/* Chart Visualizations */}
+ <div className="flex justify-evenly items-center">
+        {/* <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
+          <Suspense fallback={<div>Loading...</div>}>
+            <ScatterPlot />
+          </Suspense>
+        </div> */}
+        <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <BarChart darkMode={isDarkMode} />
+        </Suspense>
+      </div>
+        
+      </div>
+       <div className={`px-4 mt-10 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Predict />
+          </Suspense>
+         </div>
+
+
+      {/* Pollutant Table */}
+    
+      <div className={`px-4 lg:mt-0 mt-[250px] ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
+{view?<Suspense fallback={<div>Loading...</div>}>
+          <PollutantTable isDarkMode={isDarkMode}/>
+        </Suspense>:""}
+        
       </div>
 
       {/* Questions Section */}
-      <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-wihte'}`}>
+      <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
         <Suspense fallback={<div>Loading...</div>}>
           <Questions isDarkMode={isDarkMode} />
         </Suspense>
       </div>
-      <div className='flex justify-evenly items-center '>
-      <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-wihte'}`}>
+      {/* <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
         <Suspense fallback={<div>Loading...</div>}>
-          <ScatterPlot />
+          <Report/>
         </Suspense>
       </div>
-      <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-wihte'}`}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <PieChart />
-        </Suspense>
-      </div>
-      </div>
-      <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-wihte'}`}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <BarChart/>
-        </Suspense>
-      </div>
-      <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-wihte'}`}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <CityBarChart/>
-        </Suspense>
-      </div>
-      <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-wihte'}`}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <PollScatter/>
-        </Suspense>
-      </div>
-      <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-wihte'}`}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Chartdata/>
-        </Suspense>
-      </div>
+
+      <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
+          <Suspense fallback={<div>Loading...</div>}>
+            <DynamicPieChart/>
+          </Suspense>
+        </div> */}
+      {/* <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
+          <Suspense fallback={<div>Loading...</div>}>
+            <ChartReport/>
+          </Suspense>
+        </div> */}
+      {/* Bar Charts */}
     
+      {/* <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <CityBarChart />
+        </Suspense>
+      </div>
+
+      <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <PollScatter />
+        </Suspense>
+      </div> */}
      
     </div>
   );

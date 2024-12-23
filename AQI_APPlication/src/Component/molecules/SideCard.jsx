@@ -28,9 +28,10 @@ const SideCard = ({ location, isDarkMode }) => {
         console.error("Error fetching gases:", error);
       }
     };
-
     fetchGases(); // Call the fetch function when the component mounts
-  }, []); // Empty dependency array ensures this runs only once after the initial render
+  },
+
+   []); // Empty dependency array ensures this runs only once after the initial render
   useEffect(() => {
     // Fetch city data from the backend
     const fetchData = async () => {
@@ -137,6 +138,9 @@ const SideCard = ({ location, isDarkMode }) => {
 
           {/* <Circle aqiValue={ aqiValue || citydata} isDarkMode={isDarkMode}/> */}
           <p className="py-3 font-medium">{new Date(time).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</p>
+        </div>
+        <div>
+          <button></button>
         </div>
       </div>
 
