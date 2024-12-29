@@ -137,10 +137,10 @@ const SideCard = ({ location, isDarkMode }) => {
           <Circle aqiValue={citydata?.aqi} isDarkMode={isDarkMode} />
 
           {/* <Circle aqiValue={ aqiValue || citydata} isDarkMode={isDarkMode}/> */}
-          <p className="py-3 font-medium">{new Date(time).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}</p>
-        </div>
-        <div>
-          <button></button>
+          <p className={`${isDarkMode ? "text-white" : "text-[#111830]"} py-3 font-medium`}>
+  {new Date(time).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}
+</p>
+
         </div>
       </div>
 

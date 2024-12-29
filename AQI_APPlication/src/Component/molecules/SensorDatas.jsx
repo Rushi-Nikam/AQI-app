@@ -173,9 +173,8 @@ const SensorDatas = ({ darkMode }) => {
       .transition()
       .duration(5000) // Same duration as the bars animation
       .attr("y", ([_, value]) => yScale(value) - 5)
-      .text(([_, value]) => value.toFixed(2)); // Display value with 2 decimal places
+      .text(([_, value]) => value.toFixed(2)); 
   };
-  
 
   const handleDateChange = (e) => {
     setSelectedDate(e.target.value);
@@ -185,16 +184,16 @@ const SensorDatas = ({ darkMode }) => {
     <div
       className={`text-center mt-5 ${darkMode ? "bg-gray-900 text-white" : "bg-white text-black"}`} // Apply dark mode classes
     >
-      <h1 className="mb-5 font-sans text-xl font-bold">Sensor Data Bar Chart</h1>
+      <h1 className="mb-5 font-sans text-2xl font-bold"> Historial Air Quality Bar Chart</h1>
 
       {/* Dropdown for selecting the date */}
       <div className="mb-5">
         <select
           value={selectedDate}
           onChange={handleDateChange}
-          className="border p-2 rounded"
+          className={`${darkMode?"bg-black text-white":"bg-white text-black"}border p-2 rounded`}
         >
-          <option value="">Select a Date</option> {/* Empty option to clear the selection */}
+          <option className={`${darkMode?"bg-black text-white":"bg-white text-black"}`} value="">Select a Date</option> {/* Empty option to clear the selection */}
           {groupedData.map((data) => (
             <option key={data.date} value={data.date}>
               {data.date}
@@ -202,7 +201,8 @@ const SensorDatas = ({ darkMode }) => {
           ))}
         </select>
       </div>
-<svg
+
+      <svg
         ref={svgRef}
         width="100%"
         height="500"
@@ -210,8 +210,6 @@ const SensorDatas = ({ darkMode }) => {
         preserveAspectRatio="xMidYMid meet"
         className="border border-gray-400 mt-5"
       ></svg>
-
-      
     </div>
   );
 };

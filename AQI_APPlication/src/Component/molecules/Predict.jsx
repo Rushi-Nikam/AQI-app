@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 // Function to format timestamp
 const formatTime = (timestamp) => {
@@ -7,19 +8,18 @@ const formatTime = (timestamp) => {
 };
 
 const getIndicatorColor = (AQI) => {
-    if (AQI <= 50) return "green";
-    if (AQI <= 100) return "yellow";
-    if (AQI <= 150) return "orange";
-    if (AQI <= 200) return "red";
-    if (AQI <= 300) return "purple";
-    return "maroon"; // Hazardous
-  };
+  if (AQI <= 50) return "green";
+  if (AQI <= 100) return "yellow";
+  if (AQI <= 150) return "orange";
+  if (AQI <= 200) return "red";
+  if (AQI <= 300) return "purple";
+  return "maroon"; // Hazardous
+};
 
-const Predict = () => {
+const Predict = ({ isdarkMode }) => {
   const [data, setData] = useState([]);
 
-  // Function to get indicator color based on AQI value
- 
+  // Function to fetch data
   useEffect(() => {
     const fetchGases = async () => {
       try {
@@ -30,8 +30,9 @@ const Predict = () => {
           throw new Error(`Failed to fetch gases data: ${response.status}`);
         }
         const data = await response.json();
-        setData(data); // Set fetched data to state
-        console.log("Fetched data:", data);
+        setData(data); 
+        // console.log({data})// Set fetched data to state
+        // console.log("Fetched data:", data);
       } catch (error) {
         console.error("Error fetching gases:", error);
       }
@@ -40,31 +41,32 @@ const Predict = () => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center text-center justify-center min-h-screen rounded">
-      <h1 className="text-3xl font-bold text-indigo-700 mb-6 rounded">Next 5 Days Prediction</h1>
+    <div className={`flex flex-col items-center text-center justify-center min-h-screen rounded`}>
+      <h1 className="text-3xl font-bold mb-6 rounded">Next 5 Days Prediction</h1>
       {data.map((item, index) => (
-        <div
+        <Link
           key={index}
-          className="flex flex-col sm:flex-row items-center justify-between bg-white shadow-lg p-6 m-4 w-[90%] sm:w-[80%] lg:w-[70%] rounded-lg border-2 border-gray-300"
+          to={`/detail/${item.AQI}`}  // Add the specific detail page route
+          className={`flex flex-col sm:flex-row items-center justify-between ${isdarkMode ? "bg-gray-800 border-gray-600" : "bg-white border-gray-400"} shadow-lg p-6 m-4 w-[90%] sm:w-[80%] lg:w-[70%] rounded-lg border-2`}
         >
-          <div className="text-gray-700 font-medium">
+          <div className={`font-medium ${isdarkMode ? "text-gray-300" : "text-gray-700"}`}>
             <div className="text-lg">{formatTime(item.Timestamp)}</div>
           </div>
-          <div className="text-gray-700 font-medium">
+          <div className={`font-medium ${isdarkMode ? "text-gray-300" : "text-gray-700"}`}>
             <div className="text-lg flex flex-col text-center items-center">
               <span className="font-bold">Indicator:</span>
               <div
                 className="w-8 h-8 rounded-full"
-                style={{ backgroundColor: getIndicatorColor(Math.abs(item.AQI)) }}
+                style={{ backgroundColor: getIndicatorColor(item.AQI) }}
               ></div>
             </div>
           </div>
-          <div className="text-gray-700 font-medium">
+          <div className={`font-medium ${isdarkMode ? "text-gray-300" : "text-gray-700"}`}>
             <div className="text-lg flex flex-col">
-              <div className="font-bold">AQI:</div> {Math.round(Math.floor(Math.abs(item.AQI)))}
+              <div className="font-bold">AQI:</div> {Math.round(Math.floor(item.AQI))}
             </div>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   );

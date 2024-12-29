@@ -32,13 +32,13 @@ const GasesTable = ({ isDarkMode }) => {
   ];
 
   return (
-    <div className="cursor-pointer">
-      <div className="flex justify-center text-2xl mt-3 font-bold">
+    <div className="cursor-pointer gap-2 ">
+      <div className="flex justify-center text-2xl font-bold my-10">
         <h1>Gases Responsible for AQI Index</h1>
       </div>
 
       <div
-        className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 lg:w-[1400px] h-auto mb-[200px] mt-[50px] rounded-lg ${
+        className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 lg:w-[1400px] h-auto mb-[200px]  rounded-lg ${
           isDarkMode ? "bg-gray-800 text-pink-800" : "bg-white text-gray-600"
         }`}
       >

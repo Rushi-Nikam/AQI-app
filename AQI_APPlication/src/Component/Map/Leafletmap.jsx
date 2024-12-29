@@ -1,23 +1,25 @@
-// 
 import React, { useCallback, useEffect, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup,useMap } from 'react-leaflet';
 import { Icon } from 'leaflet';
-import * as d3 from 'd3';
 import ReactDOMServer from "react-dom/server";
 import { IoLocationSharp } from "react-icons/io5";
+import 'leaflet/dist/leaflet.css';
+import 'leaflet-control-geocoder'; 
+import 'leaflet-control-geocoder/dist/Control.Geocoder.css'; 
+import 'leaflet-control-geocoder';
+import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
+import * as d3 from 'd3';
 
-// Utility function to get the color from AQI value
 const getColorFromAQI = (aqiValue) => {
-  if (aqiValue <= 50) return "#00e400"; // Good
-  if (aqiValue <= 100) return "#ffff00"; // Moderate
-  if (aqiValue <= 150) return "#ffcc00"; // Unhealthy for sensitive groups
-  if (aqiValue <= 200) return "#ff7e00"; // Unhealthy
-  if (aqiValue <= 300) return "#ff0000"; // Very Unhealthy
-  return "#7e0023"; // Hazardous
+  if (aqiValue <= 50) return "#00e400";
+  if (aqiValue <= 100) return "#ffff00";
+  if (aqiValue <= 150) return "#ffcc00";
+  if (aqiValue <= 200) return "#ff7e00";
+  if (aqiValue <= 300) return "#ff0000";
+  return "#7e0023";
 };
 
-// Create custom icon based on AQI value
 const createCustomIcon = (aqiValue, backgroundColor) => {
   const svgWidth = 38;
   const svgHeight = 38;
@@ -56,23 +58,6 @@ const createCustomIcon = (aqiValue, backgroundColor) => {
   });
 };
 
-// Function to fetch location name using reverse geocoding
-const fetchLocationName = async (lat, lng) => {
-  try {
-    const response = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
-    );
-    const data = await response.json();
-
-
-    return data?.address?.suburb || 'Unknown Location';
-  } catch (error) {
-    console.error('Error fetching location:', error);
-    return 'Unknown Location';
-  }
-};
-
-// LeafMap component to fetch live location and log it every 2 seconds
 const LeafMap = ({ setLocation }) => {
   useEffect(() => {
     const fetchLocation = () => {
@@ -80,16 +65,14 @@ const LeafMap = ({ setLocation }) => {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
             const { latitude, longitude } = position.coords;
-            const locationName = await fetchLocationName(latitude, longitude);
+            const locationName = "Your Location Here";
 
-            // Update location data
             setLocation({
               loaded: true,
               coordinates: { lat: latitude, lng: longitude },
               locationName,
             });
 
-            // Log the live location
             // console.log(`Latitude: ${latitude}, Longitude: ${longitude}, Location: ${locationName}`);
           },
           (error) => {
@@ -102,21 +85,37 @@ const LeafMap = ({ setLocation }) => {
       }
     };
 
-    // Call fetchLocation immediately on mount
     fetchLocation();
-
-    // Set an interval to fetch the location every 2 seconds
     const intervalId = setInterval(fetchLocation, 2000);
-
-    // Cleanup: clear the interval on component unmount
     return () => clearInterval(intervalId);
-
   }, [setLocation]);
 
   return null;
 };
-
-
+const SearchControl = () => {
+  const map = useMap();
+  useEffect(() => {
+    if (!map) return;
+    // Geocoder integration
+    const geocoder = L.Control.Geocoder.nominatim();
+    const geocoderControl = L.Control.geocoder({
+      position: 'topright',
+      placeholder: 'Search for location...',
+      geocoder,
+    })
+      .on('markgeocode', (e) => {
+        const { center } = e.geocode;
+        L.marker(center)
+          .addTo(map)
+          .bindPopup(e.geocode.name)
+          .openPopup();
+        map.setView(center, 13);
+      })
+      .addTo(map);
+    return () => map.removeControl(geocoderControl);
+  }, [map]);
+  return null;
+};
 const Leafletmap = () => {
   const [data, setData] = useState(null);
   const [location, setLocation] = useState({
@@ -126,97 +125,93 @@ const Leafletmap = () => {
     error: null,
   });
   const [markers, setMarkers] = useState([
-    { geocode: [18.6492, 73.7707], popup: "Nigdi", aqiValue: 40, backgroundColor: "#00e400" },
-    { geocode: [18.6011, 73.7641], popup: "Wakad", aqiValue: 105, backgroundColor: "#ff7e00" },
-    { geocode: [18.5913, 73.7389], popup: "Hinjawadi", aqiValue: 103, backgroundColor: "#ff0000" },
-    { geocode: [18.7167, 73.7678], popup: "Dehu", aqiValue: 102, backgroundColor: "#7e0023" },
+    // { geocode: [18.7167, 73.7678], popup: "Dehu", aqiValue: 102, backgroundColor: "#7e0023" },
+    // { geocode: [18.6492, 73.7707], popup: "Nigdi", aqiValue: 50, backgroundColor: "#007e06" },
   ]);
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`aqi_values/get-data/`);
+      const sensors = await response.json();
+      setData(sensors.Bus_data);
+      console.log(sensors.Bus_data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
-  // Fetch AQI data from the server
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`aqi_values/get-data/`);
-        const sensors = await response.json();
-        setData(sensors.Bus_data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
     fetchData();
   }, []);
 
-  // Update markers with fetched AQI data and location
   const updateMarkers = useCallback(async () => {
     if (data) {
       try {
-        const locationName = await fetchLocationName(data.latitude, data.longitude);
-        
-        // Log latitude and longitude
-        // console.log(`Latitude: ${data.latitude}, Longitude: ${data.longitude}`);
-  
-        // Setting static coordinates and AQI for demonstration
+        const locationName = "Bus is here";
+        data.aqi = 50;  
+        data.latitude = 18.6492 ;
+        data.longitude =73.7707;
+        // console.log(`data:lan=${data.latitude} & and data:long=${data.longitude}`);
         // data.latitude = 18.5204;
-        // data.longitude = 73.8567;
-        data.aqi = 50;
-  
+        // data.longitude =73.8567;
         const newMarker = {
-          geocode: [data.latitude, data.latitude],
+          geocode: [data.latitude, data.longitude],
           popup: `City: ${locationName}`,
           aqiValue: data.aqi,
           backgroundColor: getColorFromAQI(data.aqi),
         };
-  
-        setMarkers((prevMarkers) => {
-          // Avoid duplicate marker addition
-          const exists = prevMarkers.some(
-            (marker) => marker.geocode[0] === newMarker.geocode[0] && marker.geocode[1] === newMarker.geocode[1]
-          );
-          if (!exists) {
-            return [...prevMarkers, newMarker];
-          }
-          return prevMarkers;
-        });
+      
+        // setMarkers((prevMarkers) => {
+        //   const exists = prevMarkers.some(
+        //     (marker) => marker.geocode[0] === newMarker.geocode[0] && marker.geocode[1] === newMarker.geocode[1]
+        //   );
+        //   if (!exists) {
+        //     return [...prevMarkers, newMarker];
+        //   }
+        //   return prevMarkers;
+        // });
+        setMarkers([newMarker]);
       } catch (error) {
         console.error('Error fetching location data:', error);
       }
     }
   }, [data]);
-  
+
   useEffect(() => {
-    const interval = setInterval(updateMarkers, 2000);
-  
-    // Cleanup the interval on component unmount
-    return () => clearInterval(interval); 
+    const interval = setInterval(updateMarkers,500);
+    return () => clearInterval(interval);
   }, [updateMarkers]);
-  
-  
 
   return (
-    <MapContainer className="h-[55vh] w-full lg:w-[960px] z-50 overflow-hidden" center={[18.5913, 73.7389]} zoom={13}>
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <LeafMap setLocation={setLocation} />
-      {location.loaded && location.coordinates.lat && (
-        <Marker
-          position={[location.coordinates.lat, location.coordinates.lng]}
-          icon={new Icon({
-            iconUrl: `data:image/svg+xml;base64,${btoa(ReactDOMServer.renderToString(<IoLocationSharp size={30} color="blue" />))}`,
-            iconSize: [30, 30],
-          })}
-        >
-          <Popup>{`${location.locationName || 'Pune District'}, Maharashtra`}</Popup>
-        </Marker>
-      )}
-      {markers.map((marker, index) => (
-        <Marker key={index} position={marker.geocode} icon={createCustomIcon(marker.aqiValue, marker.backgroundColor)}>
-          <Popup>{`${marker.popup}, Maharashtra`}</Popup>
-        </Marker>
-      ))}
-    </MapContainer>
+    <div className="flex  w-full ">
+      <MapContainer
+        className="h-[40vh] sm:h-[50vh] md:h-[60vh] w-full  z-50"
+        center={[location.coordinates.lat || 18.5913, location.coordinates.lng || 73.7389]}
+        zoom={13}
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+         <SearchControl />
+        <LeafMap setLocation={setLocation} />
+        {location.loaded && location.coordinates.lat && (
+          <Marker
+            position={[location.coordinates.lat, location.coordinates.lng]}
+            icon={new Icon({
+              iconUrl: `data:image/svg+xml;base64,${btoa(ReactDOMServer.renderToString(<IoLocationSharp size={30} color="blue" />))}`,
+              iconSize: [30, 30],
+            })}
+          >
+            <Popup>{`${location.locationName || 'Pune District'}, Maharashtra`}</Popup>
+          </Marker>
+        )}
+        {markers.map((marker, index) => (
+          <Marker key={index} position={marker.geocode} icon={createCustomIcon(marker.aqiValue, marker.backgroundColor)}>
+            <Popup>{`${marker.popup}, Maharashtra`}</Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+    </div>
   );
 };
 

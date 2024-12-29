@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { FaSearch, FaRegMoon } from "react-icons/fa";
 import { IoSunnyOutline } from "react-icons/io5";
 import { HiMenu, HiX } from "react-icons/hi";
 import { FaChevronDown , FaChevronUp } from "react-icons/fa6";
 
-const Navbar = ({ isDarkMode, setIsDarkMode }) => {
+const Navbar = ({ isDarkMode=true, setIsDarkMode }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [bgColor, setBgColor] = useState('transparent');
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();  // Use this for pathname checking
 
   const handleScroll = () => {
     setBgColor(window.scrollY > 50 ? (isDarkMode ? 'bg-[#111827] shadow' : 'bg-white shadow') : 'transparent');
@@ -22,24 +23,18 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
     };
   }, [isDarkMode]);
 
-  // const handleSearch = async (e) => {
-  //   e.preventDefault();
-  //   let searchTerm = e.target.value?.toString().toLowerCase();
+  // Default dark mode is set to true
+  useEffect(() => {
+    if (isDarkMode === undefined) {
+      setIsDarkMode(true);  // Set dark mode to true by default if it's undefined
+    }
+  }, [isDarkMode, setIsDarkMode]);
 
-  //   // data[0].geojson.coordinates[0]                     // co-oridnates of region
-
-  //   const ENDPOINT = `https://nominatim.openstreetmap.org/search.php?q=${searchTerm}&polygon_geojson=1&format=jsonv2`
-  //   // const ENDPOINT = `https://nominatim.openstreetmap.org/ui/search.html?q=${searchTerm}`;
-  //   const api = await fetch(ENDPOINT, { method: "GET" });
-  //   const data = await api.json();
-
-  //   console.log({data});
-  // };
   const handleSearch = (e) => {
     if (searchTerm.trim()) {
       navigate(`/locality/${searchTerm}`);
     }
-  }
+  };
 
   return (
     <header className={`flex flex-col lg:flex-row items-center w-full px-6 py-2 sticky top-0 z-[60] ${bgColor}`}>
@@ -50,24 +45,18 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
 
         {/* Existing Map Links */}
         <div className="hidden sm:flex gap-10 lg:mr-[200px] justify-center items-center text-center">
-  <div>
-    <Link to="/map-aqi" className="flex justify-center items-center gap-1">
-      Map {location.pathname === '/map-aqi' ? <FaChevronUp /> : <FaChevronDown />}
-    </Link>
-  </div>
-
-
-        <div>
-          <Link to='/Bar_chart' className='flex justify-center items-center gap-1'>BarChart {location.pathname==='/Bar_chart' ? <FaChevronUp />:<FaChevronDown />} </Link>
-        </div>
-
-      
-        <div>
-          <Link to='/new_page' className='flex justify-center items-center gap-1'>scatter{location.pathname==='/new_page' ? <FaChevronUp />:<FaChevronDown />}</Link>
-        </div>
-        
+          <div>
+            <Link to="/map-aqi" className="flex justify-center items-center gap-1">
+              Map {location.pathname === '/map-aqi' ? <FaChevronUp /> : <FaChevronDown />}
+            </Link>
+          </div>
+          {/* <div>
+            <Link to='/Bar_chart' className='flex justify-center items-center gap-1'>BarChart {location.pathname==='/Bar_chart' ? <FaChevronUp />:<FaChevronDown />} </Link>
+          </div> */}
+          {/* <div>
+            <Link to='/new_page' className='flex justify-center items-center gap-1'>scatter{location.pathname==='/new_page' ? <FaChevronUp />:<FaChevronDown />}</Link>
+          </div> */}
         </div> 
-        
 
         {/* Mobile Menu Button */}
         <div className="block lg:hidden">
@@ -79,33 +68,31 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
 
       {/* Search Bar */}
       <form
-  onSubmit={handleSearch}
-  className={`hidden lg:flex w-full max-w-md relative ${
-    isDarkMode ? 'bg-gray-800' : 'bg-white'
-  } rounded-lg shadow`}
->
-  <input
-    type="text"
-    value={searchTerm}
-    onChange={(e) => setSearchTerm(e.target.value)}
-    placeholder="Search location..."
-    className={`pl-10 w-full py-2 rounded-lg border focus:outline-none transition-colors duration-300 ${
-      isDarkMode
-        ? 'bg-gray-700 text-white border-gray-600 placeholder-gray-400 focus:border-blue-300'
-        : 'bg-white text-gray-900 border-gray-300 placeholder-gray-500 focus:border-blue-500'
-    }`}
-  />
-  <button
-    type="submit"
-    className="absolute inset-y-0 left-3 flex items-center"
-  >
-    <FaSearch
-      className={`transition-colors duration-300 ${
-        isDarkMode ? 'text-gray-300' : 'text-gray-500'
-      }`}
-    />
-  </button>
-</form>
+        onSubmit={handleSearch}
+        className={`hidden lg:flex w-full max-w-md relative ${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow`}
+      >
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search location..."
+          className={`pl-10 w-full py-2 rounded-lg border focus:outline-none transition-colors duration-300 ${
+            isDarkMode
+              ? 'bg-gray-700 text-white border-gray-600 placeholder-gray-400 focus:border-blue-300'
+              : 'bg-white text-gray-900 border-gray-300 placeholder-gray-500 focus:border-blue-500'
+          }`}
+        />
+        <button
+          type="submit"
+          className="absolute inset-y-0 left-3 flex items-center"
+        >
+          <FaSearch
+            className={`transition-colors duration-300 ${
+              isDarkMode ? 'text-gray-300' : 'text-gray-500'
+            }`}
+          />
+        </button>
+      </form>
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
@@ -114,8 +101,8 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
             {/* <IoIosNotificationsOutline /> */}
           </Link>
           <Link to='/map-aqi' className='flex justify-center items-center gap-1'>
-          Map {location.pathname === '/map-aqi' ? <FaChevronUp /> : <FaChevronDown />}
-        </Link>
+            Map {location.pathname === '/map-aqi' ? <FaChevronUp /> : <FaChevronDown />}
+          </Link>
           <div onClick={() => setIsDarkMode(!isDarkMode)} className="text-2xl text-black cursor-pointer">
             {isDarkMode ? <FaRegMoon /> : <IoSunnyOutline />}
           </div>
@@ -134,34 +121,31 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
 
       {/* Mobile Search Bar */}
       <form
-  onSubmit={handleSearch}
-  className={`lg:hidden w-full max-w-md relative mt-4 ${
-    isMobileMenuOpen ? 'block' : 'hidden'
-  } ${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow`}
->
-  <input
-    type="text"
-    value={searchTerm}
-    onChange={(e) => setSearchTerm(e.target.value)}
-    placeholder="Search location..."
-    className={`pl-10 w-full py-2 rounded-lg border focus:outline-none transition-colors duration-300 ${
-      isDarkMode
-        ? 'bg-gray-700 text-white border-gray-600 placeholder-gray-400 focus:border-blue-300'
-        : 'bg-white text-gray-900 border-gray-300 placeholder-gray-500 focus:border-blue-500'
-    }`}
-  />
-  <button
-    type="submit"
-    className="absolute inset-y-0 left-3 flex items-center"
-  >
-    <FaSearch
-      className={`transition-colors duration-300 ${
-        isDarkMode ? 'text-gray-300' : 'text-gray-500'
-      }`}
-    />
-  </button>
-</form>
-
+        onSubmit={handleSearch}
+        className={`lg:hidden w-full max-w-md relative mt-4 ${isMobileMenuOpen ? 'block' : 'hidden'} ${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow`}
+      >
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search location..."
+          className={`pl-10 w-full py-2 rounded-lg border focus:outline-none transition-colors duration-300 ${
+            isDarkMode
+              ? 'bg-gray-700 text-white border-gray-600 placeholder-gray-400 focus:border-blue-300'
+              : 'bg-white text-gray-900 border-gray-300 placeholder-gray-500 focus:border-blue-500'
+          }`}
+        />
+        <button
+          type="submit"
+          className="absolute inset-y-0 left-3 flex items-center"
+        >
+          <FaSearch
+            className={`transition-colors duration-300 ${
+              isDarkMode ? 'text-gray-300' : 'text-gray-500'
+            }`}
+          />
+        </button>
+      </form>
     </header>
   );
 };

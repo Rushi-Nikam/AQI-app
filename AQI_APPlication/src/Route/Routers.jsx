@@ -22,6 +22,7 @@ import ScatterPlot from '../Component/molecules/ScatterPlot';
 import DummyBarChart from '../Component/molecules/DummyBarChart';
 import CityBarChart from '../Component/molecules/CityBarChart';
 import DemoPage from '../Component/pages/DemoPage';
+import PredictDetails from '../Component/pages/PredictDetails';
 
 const Routers = ({ isDarkMode}) => {
   return (
@@ -47,6 +48,7 @@ const Routers = ({ isDarkMode}) => {
       <Route path="/Bar_chart" element={<DummyBarChart/>} />
       <Route path="/city_chart" element={<CityBarChart/>} />
       <Route path="/new_page" element={<DemoPage/>} />
+      <Route path="/detail/:AQI" element={<PredictDetails/>} />
       
 
       <Route path="/detailed-precautions/:level" element={<DetailedPrecaution isDarkMode={isDarkMode} />} />

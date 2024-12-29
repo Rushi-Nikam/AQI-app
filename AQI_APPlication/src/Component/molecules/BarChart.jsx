@@ -22,6 +22,7 @@ const BarChart = ({ darkMode }) => {
           { label: "PM2.5", value: parseFloat(busData.pm25) },
           { label: "PM10", value: parseFloat(busData.pm10) },
           { label: "Humidity", value: parseFloat(busData.humidity) },
+          { label: "AQI", value: parseFloat(busData.aqi) },
         ];
         setData(formattedData);
       } catch (error) {
@@ -35,78 +36,53 @@ const BarChart = ({ darkMode }) => {
   useEffect(() => {
     if (!data.length) return;
 
-    const w = 500;
-    const h = 400;
-    const margin = { top: 20, right: 30, bottom: 50, left: 50 };
+    // Specify chart dimensions
+    const width = 928;
+    const height = 500;
+    const marginTop = 20;
+    const marginRight = 0;
+    const marginBottom = 30;
+    const marginLeft = 40;
 
     const svg = d3
       .select(svgRef.current)
-      .attr("width", w)
-      .attr("height", h)
+      .attr("width", width)
+      .attr("height", height)
       .style("overflow", "visible")
       .style("margin-top", "50px")
-      // .style("background-color", darkMode ? "#333" : "#fff")
       .style("color", darkMode ? "#fff" : "#000");
 
     svg.selectAll("*").remove();
 
-    const xScale = d3
+    // Create the horizontal scale and its axis generator
+    const x = d3
       .scaleBand()
-      .domain(data.map((d) => d.label))
-      .range([margin.left, w - margin.right])
-      .padding(0.2);
+      .domain(d3.sort(data, (d) => -d.value).map((d) => d.label))
+      .range([marginLeft, width - marginRight])
+      .padding(0.3);
 
-    const yScale = d3
+    const xAxis = d3.axisBottom(x).tickSizeOuter(0);
+
+    // Create the vertical scale
+    const y = d3
       .scaleLinear()
-      .domain([0, d3.max(data, (d) => d.value) + 10])
-      .range([h - margin.bottom, margin.top]);
+      .domain([0, d3.max(data, (d) => d.value)]).nice()
+      .range([height - marginBottom, marginTop]);
 
-    const xAxis = d3.axisBottom(xScale);
-    const yAxis = d3.axisLeft(yScale);
+    const yAxis = d3.axisLeft(y);
 
+    // Append bars for the chart with animations
     svg
       .append("g")
-      .attr("transform", `translate(0, ${h - margin.bottom})`)
-      .call(xAxis)
-      .selectAll("text")
-      .style("text-anchor", "middle")
-      .style("fill", darkMode ? "#fff" : "#000");
-
-    svg
-      .append("g")
-      .attr("transform", `translate(${margin.left}, 0)`)
-      .call(yAxis)
-      .selectAll("text")
-      .style("fill", darkMode ? "#fff" : "#000");
-
-    svg
-      .append("text")
-      .attr("x", w / 2)
-      .attr("y", h - 10)
-      .attr("text-anchor", "middle")
-      .style("fill", darkMode ? "#fff" : "#000")
-      .text("Parameters");
-
-    svg
-      .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("x", -h / 2)
-      .attr("y", 15)
-      .attr("text-anchor", "middle")
-      .style("fill", darkMode ? "#fff" : "#000")
-      .text("Values");
-
-    svg
-      .selectAll(".bar")
+      .attr("class", "bars")
+      .attr("fill", "steelblue")
+      .selectAll("rect")
       .data(data)
-      .enter()
-      .append("rect")
-      .attr("class", "bar")
-      .attr("x", (d) => xScale(d.label))
-      .attr("y", (d) => yScale(d.value))
-      .attr("width", xScale.bandwidth())
-      .attr("height", (d) => h - margin.bottom - yScale(d.value))
-      .attr("fill", "blue")
+      .join("rect")
+      .attr("x", (d) => x(d.label))
+      .attr("y", height - marginBottom) // Start from the bottom (no height yet)
+      .attr("height", 0) // Set initial height to 0 (hidden)
+      .attr("width", x.bandwidth())
       .on("click", (event, d) => {
         const [x, y] = d3.pointer(event);
         setTooltip({
@@ -116,23 +92,73 @@ const BarChart = ({ darkMode }) => {
           label: d.label,
           value: d.value,
         });
-      });
+      })
+      .transition()
+      .duration(4000) // 1 second animation
+      .ease(d3.easeElasticOut) // Ease-out effect
+      .attr("y", (d) => y(d.value)) // Animate to the correct height
+      .attr("height", (d) => y(0) - y(d.value)); // Animate the height
 
+    // Append the x-axis
+    svg
+      .append("g")
+      .attr("class", "x-axis")
+      .attr("transform", `translate(0, ${height - marginBottom})`)
+      .call(xAxis)
+      .selectAll("text")
+      .style("text-anchor", "middle")
+      .style("fill", darkMode ? "#fff" : "#000")
+      .attr("dy", "1em");
+
+    // Append the y-axis
+    svg
+      .append("g")
+      .attr("class", "y-axis")
+      .attr("transform", `translate(${marginLeft}, 0)`)
+      .call(yAxis)
+      .selectAll("text")
+      .style("fill", darkMode ? "#fff" : "#000");
+
+    // Add axis labels
+    svg
+      .append("text")
+      .attr("x", width / 2)
+      .attr("y", height - 10)
+      .attr("text-anchor", "middle")
+      .attr("dy", "1.5em")
+      .style("fill", darkMode ? "#fff" : "#000")
+      .text("Parameters");
+
+    svg
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("x", -height / 2)
+      .attr("y", 15)
+      .attr("text-anchor", "middle")
+      .style("fill", darkMode ? "#fff" : "#000")
+      .text("Values");
+
+    // Tooltip display with fade-in animation
     svg
       .selectAll(".bar-text")
       .data(data)
       .enter()
       .append("text")
       .attr("class", "bar-text")
-      .attr("x", (d) => xScale(d.label) + xScale.bandwidth() / 2)
-      .attr("y", (d) => yScale(d.value) - 5)
+      .attr("x", (d) => x(d.label) + x.bandwidth() / 2)
+      .attr("y", (d) => y(d.value) - 5)
       .attr("text-anchor", "middle")
       .style("fill", darkMode ? "#fff" : "#000")
+      .style("opacity", 0) // Initially set opacity to 0
+      .transition()
+      .duration(4000) // 1 second fade-in animation
+      .style("opacity", 1) // Fade in the text
+
       .text((d) => d.value);
   }, [data, darkMode]);
 
   return (
-    <div className="flex justify-center relative">
+    <div className="relative">
       <svg ref={svgRef}></svg>
       {tooltip.visible && (
         <div
@@ -142,9 +168,10 @@ const BarChart = ({ darkMode }) => {
             top: tooltip.y - 20,
             backgroundColor: darkMode ? "#222" : "#fff",
             color: darkMode ? "#fff" : "#000",
+            transition: "all 0.3s ease", // Add a transition for the tooltip
           }}
         >
-          <strong>{tooltip.label}</strong>: {tooltip.value}
+          <strong>{tooltip.label}</strong> : {tooltip.value}
         </div>
       )}
     </div>
