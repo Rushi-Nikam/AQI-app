@@ -7,6 +7,7 @@ const BarChart = ({ darkMode }) => {
   const svgRef = useRef();
 
   useEffect(() => {
+    let intervalId;
     const fetchData = async () => {
       try {
         const response = await fetch("http://34.30.30.232:8000/aqi_values/get-data/");
@@ -31,6 +32,12 @@ const BarChart = ({ darkMode }) => {
     };
 
     fetchData();
+    intervalId = setInterval(fetchData, 20000);
+
+    // Cleanup on component unmount
+    return () => {
+      clearInterval(intervalId);
+    };
   }, []);
 
   useEffect(() => {

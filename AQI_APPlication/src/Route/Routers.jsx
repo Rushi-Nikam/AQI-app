@@ -23,6 +23,7 @@ import DummyBarChart from '../Component/molecules/DummyBarChart';
 import CityBarChart from '../Component/molecules/CityBarChart';
 import DemoPage from '../Component/pages/DemoPage';
 import PredictDetails from '../Component/pages/PredictDetails';
+import LeafMap from '../Component/Map/LeafMap';
 
 const Routers = ({ isDarkMode}) => {
   return (
@@ -37,6 +38,7 @@ const Routers = ({ isDarkMode}) => {
       <Route path='/map-choro' element={<Choropath/>} />
       <Route path='/aqi-map' element={<AQIMap isDarkMode={isDarkMode}/>} />
       <Route path='/leaflet-map' element={<Leafletmap isDarkMode={isDarkMode} />} />
+      <Route path='/leaf-map' element={<LeafMap isDarkMode={isDarkMode} />} />
       <Route path="/locality/:name" element={<LocalityDetail isDarkMode={isDarkMode} />} />
       <Route path="/aqi-table" element={<AQITable isDarkMode={isDarkMode} />} />
       <Route path="/city/:name" element={<CityDetails isDarkMode={isDarkMode} />} />

@@ -6,16 +6,16 @@ import AQIGraph from '../molecules/AQIGraph';
 
 const AQIMap = () => {
   const [markers, setMarkers] = useState([
-    { geocode: [18.6492, 73.7707], popup: 'Nigdi', aqiValue: null, backgroundColor: '#00e400' },
-    { geocode: [18.6011, 73.7641], popup: 'Wakad', aqiValue: null, backgroundColor: '#ff7e00' },
-    { geocode: [18.5913, 73.7389], popup: 'Hinjawadi', aqiValue: null, backgroundColor: '#ff0000' },
-    { geocode: [18.7167, 73.7678], popup: 'Dehu', aqiValue: null, backgroundColor: '#7e0023' },
-    { geocode: [18.5074, 73.8077], popup: 'Kothrud', aqiValue: null, backgroundColor: '#ffff00' },
-    { geocode: [18.5204, 73.8567], popup: 'Shivajinagar', aqiValue: null, backgroundColor: '#ffcc00' },
-    { geocode: [18.4954, 73.8257], popup: 'Hadapsar', aqiValue: null, backgroundColor: '#ff7e00' },
-    { geocode: [18.5167, 73.9331], popup: 'Kharadi', aqiValue: null, backgroundColor: '#ff7e00' },
-    { geocode: [18.4637, 73.8675], popup: 'Undri', aqiValue: null, backgroundColor: '#ffcc00' },
-    { geocode: [18.5793, 73.7097], popup: 'Baner', aqiValue: null, backgroundColor: '#ffff00' },
+    { geocode: [18.6492, 73.7707], popup: 'Nigdi', aqiValue:100, backgroundColor: '#00e400',Color:''},
+    { geocode: [18.6011, 73.7641], popup: 'Wakad', aqiValue: 100, backgroundColor: '#ff7e00', Color:""},
+    { geocode: [18.5913, 73.7389], popup: 'Hinjawadi', aqiValue: null, backgroundColor: '#ff0000',Color:'' },
+    { geocode: [18.7167, 73.7678], popup: 'Dehu', aqiValue: null, backgroundColor: '#7e0023',Color:'' },
+    { geocode: [18.5074, 73.8077], popup: 'Kothrud', aqiValue: null, backgroundColor: '#ffff00',Color:'' },
+    { geocode: [18.5204, 73.8567], popup: 'Shivajinagar', aqiValue: null, backgroundColor: '#ffcc00',Color:'' },
+    { geocode: [18.4954, 73.8257], popup: 'Hadapsar', aqiValue: null, backgroundColor: '#ff7e00',Color:'' },
+    { geocode: [18.5167, 73.9331], popup: 'Kharadi', aqiValue: null, backgroundColor: '#ff7e00',Color:'' },
+    { geocode: [18.4637, 73.8675], popup: 'Undri', aqiValue: null, backgroundColor: '#ffcc00',Color:'' },
+    { geocode: [18.5793, 73.7097], popup: 'Baner', aqiValue: null, backgroundColor: '#ffff00',Color:'' },
   ]);
 
   useEffect(() => {
@@ -32,6 +32,7 @@ const AQIMap = () => {
               ...marker,
               aqiValue,
               backgroundColor: getColorFromAQI(aqiValue),
+              Color: 'Green',
             };
           }
           return marker;
@@ -55,11 +56,11 @@ const AQIMap = () => {
     return '#7e0023';
   };
 
-  const createCustomIcon = (aqiValue, backgroundColor) => {
+  const createCustomIcon = (aqiValue, backgroundColor,Color) => {
     const svgIcon = `
       <svg width="33" height="44" viewBox="0 0 35 45" xmlns="http://www.w3.org/2000/svg">
         <path d="M28.205 3.217H6.777c-2.367 0-4.286 1.87-4.286 4.179v19.847c0 2.308 1.919 4.179 4.286 4.179h5.357l5.337 13.58 5.377-13.58h5.357c2.366 0 4.285-1.87 4.285-4.179V7.396c0-2.308-1.919-4.179-4.285-4.179" fill="${backgroundColor}"></path>
-        <text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="16" fill="#ffffff" font-family="Arial">${aqiValue}</text>
+        <text x="50%" y="50%" text-anchor="middle" dy=".3em" font-size="16" fill="${Color}" font-family="Arial">${aqiValue}</text>
       </svg>
     `;
     return new Icon({
@@ -76,7 +77,7 @@ const AQIMap = () => {
           <Marker
             key={index}
             position={marker.geocode}
-            icon={createCustomIcon(marker.aqiValue, marker.backgroundColor)}
+            icon={createCustomIcon(marker.aqiValue, marker.backgroundColor,marker.Color)}
           >
             <Popup>
               <div style={{ backgroundColor: marker.backgroundColor, padding: '5px', borderRadius: '5px', color: 'white' }}>
