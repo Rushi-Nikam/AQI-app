@@ -32,9 +32,9 @@ const HomePage = ({ isDarkMode }) => {
         <div className="flex justify-center lg:w-1/3 relative">
           <Suspense fallback={<div>Loading...</div>}>
             <SideCard location="Pune" isDarkMode={isDarkMode} />
-            <div className="mt-[410px] cursor-pointer lg:ml-[250px] absolute flex text-2xl">
+            {/* <div className="mt-[410px] cursor-pointer lg:ml-[250px] absolute flex text-2xl">
               <FcAbout onClick={onclickHandler} />
-            </div>
+            </div> */}
           </Suspense>
         </div>
 

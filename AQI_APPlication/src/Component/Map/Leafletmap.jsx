@@ -101,10 +101,10 @@ const Leafletmap = () => {
   const updateMarkers = useCallback(async () => {
     if (data) {
       //  data.aqi=360;
-       data.latitude=18.652990;
-       data.longitude=73.774390;
+      //  data.latitude=18.652990;
+      //  data.longitude=73.774390;
       try {
-        const locationName = "Vehical is here";
+        const locationName = "Vehicle is here";
         
         const newMarker = {
           geocode: [data.latitude, data.longitude],

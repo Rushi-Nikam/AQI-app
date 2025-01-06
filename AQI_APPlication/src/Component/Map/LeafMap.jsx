@@ -12,14 +12,13 @@ import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
 import * as d3 from 'd3';
 import LiveLocation from './LIveLocation';
 const getColorFromAQI = (aqiValue) => {
-  if (aqiValue <= 50) return "#00e400";
-  if (aqiValue <= 100) return "#ffff00";
-  if (aqiValue <= 150) return "#ffcc00";
-  if (aqiValue <= 200) return "#ff7e00";
-  if (aqiValue <= 300) return "#ff0000";
-  return "#7e0023";
+  if (aqiValue <= 50) return "rgb(76, 175, 80)";
+  if (aqiValue <= 100) return "rgb(255, 235, 59)";
+  if (aqiValue <= 150) return "rgb(255, 152, 0)";
+  if (aqiValue <= 200) return "rgb(244, 67, 54)";
+  if (aqiValue <= 300) return "rgb(156, 39, 176)";
+  return "rgb(139, 0, 0)";
 };
-
 // const createCustomIcon = (aqiValue, backgroundColor) => {
 //   const svgWidth = 38;
 //   const svgHeight = 38;
@@ -239,10 +238,10 @@ const LeafMap = () => {
     const updateMarkers = useCallback(async () => {
       if (data) {
         //  data.aqi=360;
-         data.latitude=18.652990;
-         data.longitude=73.774390;
+        //  data.latitude=18.652990;
+        //  data.longitude=73.774390;
         try {
-          const locationName = "Vehical is here";
+          const locationName = "Vehicle is here";
           
           const newMarker = {
             geocode: [data.latitude, data.longitude],
@@ -303,7 +302,7 @@ const LeafMap = () => {
           <Marker
             key={index}
             position={marker.geocode}
-            icon={createCustomIconWithD3(marker.aqiValue, marker.backgroundColor,marker.Color, 40)} // Adjust size as needed
+            icon={createCustomIconWithD3(marker.aqiValue, marker.backgroundColor,marker.Color, 48)} // Adjust size as needed
           >
             <Popup>{`${marker.popup}, Maharashtra`}</Popup>
           </Marker>

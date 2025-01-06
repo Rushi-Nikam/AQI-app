@@ -74,7 +74,7 @@ const LiveLocation = () => {
     };
 
     // Set interval for periodic location updates
-    const intervalId = setInterval(fetchLocation, 10000*8 ); // Update location every 30  second
+    const intervalId = setInterval(fetchLocation, 60000*100 ); // Update location every 30  second
 
     // Cleanup on unmount
     return () => {
