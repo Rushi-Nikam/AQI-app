@@ -10,7 +10,7 @@ const BarChart = ({ darkMode }) => {
     let intervalId;
     const fetchData = async () => {
       try {
-        const response = await fetch("http://34.30.30.232:8000/aqi_values/get-data/");
+        const response = await fetch("aqi_values/get-data/");
         const result = await response.json();
 
         const busData = result.Bus_data;
@@ -32,7 +32,7 @@ const BarChart = ({ darkMode }) => {
     };
 
     fetchData();
-    intervalId = setInterval(fetchData, 20000);
+    // intervalId = setInterval(fetchData, 20000);
 
     // Cleanup on component unmount
     return () => {
