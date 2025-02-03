@@ -7,6 +7,7 @@ import { Icon } from 'leaflet';
 import 'leaflet-control-geocoder'; 
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css'; 
 import LIveLocation from "./LIveLocation"
+import { Link } from 'react-router-dom';
 
 const getColorFromAQI = (aqiValue) => {
   if (aqiValue <= 50) return "rgb(76, 175, 80)";
@@ -19,7 +20,7 @@ const getColorFromAQI = (aqiValue) => {
 
 const createCustomIconWithD3 = (aqiValue, backgroundColor, Color, size = 44) => {
   const width = size;
-  const height = size * 1.2; // Adjust height proportionally
+  const height = size * 1.5; // Adjust height proportionally
   const svg = d3.create("svg")
     .attr("xmlns", "http://www.w3.org/2000/svg")
     .attr("width", width)
@@ -130,6 +131,7 @@ const intervelFun = ()=>{
     return () => clearInterval(interval);
   }, [intervelFun]);
 
+  // intervelFun();
   // useEffect(() => {
   //   const interval = setInterval(updateMarkers, 1000);
   //   return () => clearInterval(interval);
@@ -141,40 +143,47 @@ const intervelFun = ()=>{
   // }, [updateMarkers]);
 
   return (
-    <div className="flex  w-full ">
-      <MapContainer
-        className="h-[40vh] sm:h-[50vh] md:h-[60vh] w-full  z-50"
-        center={[18.5913, 73.7389]}
-        zoom={13}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <SearchControl />
-        <LIveLocation/>
-        {/* {location.loaded && location.coordinates.lat && (
-          <Marker 
-            position={[location.coordinates.lat, location.coordinates.lng]}
-            icon={new Icon({
-              iconUrl: `data:image/svg+xml;base64,${btoa(ReactDOMServer.renderToString(<IoLocationSharp size={30} color="black" />))}`,
-              iconSize: [30, 30],
-            })}
-          >
-            <Popup>{`${location.locationName || 'Pune District'}, Maharashtra`}</Popup>
-          </Marker>
-        )} */}
-       {markers.map((marker, index) => (
-  <Marker
-    key={index}
-    position={marker.geocode}
-    icon={createCustomIconWithD3(marker.aqiValue, marker.backgroundColor,marker.Color, 40)} // Adjust size as needed
-  >
-    <Popup>{`${marker.popup}, Maharashtra`}</Popup>
-  </Marker>
-))}
-      </MapContainer>
-    </div>
+    <Link to="/map-aqi">
+
+    <div className="flex w-full">
+    <MapContainer
+      className="h-[60vh] sm:h-[70vh] md:h-[80vh] w-full rounded-[5%] z-50"
+      center={[18.5913, 73.7389]}
+      zoom={13}
+      zoomControl={false}
+      scrollWheelZoom={false}
+      doubleClickZoom={false}
+      dragging={false}
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <SearchControl />
+      <LIveLocation />
+
+      {/* Display dynamic markers */}
+      {markers.map((marker, index) => (
+        <Marker
+          key={index}
+          position={marker.geocode}
+          icon={createCustomIconWithD3(marker.aqiValue, marker.backgroundColor, marker.Color, 40)}
+        >
+          <Popup>{`${marker.popup}, Maharashtra`}</Popup>
+        </Marker>
+      ))}
+    </MapContainer>
+
+    {/* Add Link for navigation */}
+    {/* <div className="absolute top-[170px] right-20 z-50">
+      <Link to="/map-aqi">
+        <button className="px-8 py-2 bg-gray-500 text-white rounded-lg shadow-md hover:bg-transparent hover:text-black border-2 border-green-300 ">
+           Map
+        </button>
+      </Link>
+    </div> */}
+  </div>
+  </Link>
   );
 };
 
