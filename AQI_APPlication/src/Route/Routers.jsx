@@ -24,6 +24,8 @@ import CityBarChart from '../Component/molecules/CityBarChart';
 import DemoPage from '../Component/pages/DemoPage';
 import PredictDetails from '../Component/pages/PredictDetails';
 import LeafMap from '../Component/Map/LeafMap';
+import LiveAQI from '../Component/pages/LiveAQI';
+import Predict from '../Component/molecules/Predict';
 
 const Routers = ({ isDarkMode}) => {
   return (
@@ -51,7 +53,8 @@ const Routers = ({ isDarkMode}) => {
       <Route path="/city_chart" element={<CityBarChart/>} />
       <Route path="/new_page" element={<DemoPage/>} />
       <Route path="/detail/:AQI" element={<PredictDetails/>} />
-      
+      <Route path="/live-aqi" element={<LiveAQI/>} />
+      <Route path="/pre" element={<Predict/>} />
 
       <Route path="/detailed-precautions/:level" element={<DetailedPrecaution isDarkMode={isDarkMode} />} />
       {/* 404 page */}
