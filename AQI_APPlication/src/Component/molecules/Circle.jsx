@@ -19,8 +19,8 @@ const Circle = ({ aqiValue = 50, maxAqi = 500, AQI = "Air Quality Index", isDark
   const { color, text } = getStrokeColorAndText(validAqiValue);
 
   // Increased radius and stroke width
-  const radius = 200;
-  const strokeWidth = 100; // Adjusted stroke width
+  const radius = 130;
+  const strokeWidth = 50; // Adjusted stroke width
 
   useEffect(() => {
     const svg = d3.select(svgRef.current);

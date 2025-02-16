@@ -184,7 +184,9 @@ const SensorDatas = ({ darkMode }) => {
     <div
       className={`text-center mt-5 ${darkMode ? "bg-gray-900 text-white" : "bg-white text-black"}`} // Apply dark mode classes
     >
-      <h1 className="mb-5 font-sans text-2xl font-bold"> Historial Air Quality Bar Chart</h1>
+   <h2 className="text-3xl font-semibold mb-6 text-center text-gray-800 dark:text-white">
+  Air Quality Data Over Time
+</h2>
 
       {/* Dropdown for selecting the date */}
       <div className="mb-5">

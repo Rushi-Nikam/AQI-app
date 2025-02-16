@@ -7,6 +7,7 @@ import SensorDatas from '../molecules/SensorDatas';
 
 import CurrentAQI from '../molecules/CurrentAQI';
 import LiveAQI from './LiveAQI';
+import Predict2 from '../molecules/Predict2';
 const GasesTable = React.lazy(() => import('../molecules/GasesTable'));
 const SideCard = React.lazy(() => import('../molecules/SideCard'));
 const Leafletmap = React.lazy(() => import('../Map/Leafletmap'));
@@ -27,38 +28,44 @@ const HomePage = ({ isDarkMode }) => {
         </h1>
       </div> */}
   {/* Leaflet Map */}
-  <div className='relative '>
-  <div className="flex flex-col z-10  lg:flex-row lg:justify-center  items-center ">
-        <div className={`w-full max-h-4xl  ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
-          <Suspense fallback={<div>Loading...</div>}>
-            <Leafletmap />
-          </Suspense>
-        </div>
+  <div className="relative flex flex-col lg:flex-row w-full">
+  {/* Left Side - Map (20%) */}
+  <div className={`w-full lg:w-[30%] ml-2 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'} lg:h-[calc(100vh-80px)]`}>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Leafletmap />
+    </Suspense>
+  </div>
+
+  {/* Right Side - Main Content (80%) */}
+  <div className="flex flex-col items-center justify-center w-full lg:w-[70%] p-4">
+    <div
+      className={`flex flex-col lg:flex-row p-5 gap-10 rounded-lg shadow-md w-full ${
+        isDarkMode ? "bg-gray-700" : "bg-gray-200"
+      }`}
+    >
+      {/* Side Card */}
+      <div className="flex justify-center lg:w-[30%] w-full">
+        <Suspense fallback={<div>Loading...</div>}>
+          <SideCard location="Pune" isDarkMode={isDarkMode} />
+        </Suspense>
       </div>
-      {/* Main Content */}
-      <div className={`flex items-center p-14 flex-col-reverse absolute z-50 top-96 ${isDarkMode?"bg-gray-700":"bg-gray-200"} rounded-[5%] lg:flex-row lg:mx-20 lg:my-4 gap-8  lg:px-4 `}>
-        {/* Side Card */}
-        <div className="flex justify-center lg:w-[50%]  relative">
-          <Suspense fallback={<div>Loading...</div>}>
-            <SideCard location="Pune" isDarkMode={isDarkMode} />
-            {/* <div className="mt-[410px] cursor-pointer lg:ml-[250px] absolute flex text-2xl">
-              <FcAbout onClick={onclickHandler} />
-            </div> */}
-          </Suspense>
-        </div>
 
       {/* AQI Table */}
-        <div className="flex justify-center lg:w-4/5 w-full">
-          <Suspense fallback={<div>Loading...</div>}>
-            <GasesTable isDarkMode={isDarkMode} />
-          </Suspense>
-        </div>
+      <div className="flex justify-center lg:w-[65%] w-full">
+        <Suspense fallback={<div>Loading...</div>}>
+          <GasesTable isDarkMode={isDarkMode} />
+        </Suspense>
       </div>
+    </div>
+  </div>
+</div>
 
-      </div>
+
+
 
       {/* Sensor Data */}
-      <div className={`px-4 lg:mt-[600px] sm:mt-[1150px] rounded   border-2 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
+      {/* <div className={`px-4 lg:mt-[600px] sm:mt-[1150px] rounded   border-2 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}> */}
+      <div className={`px-4 lg:mt-12 rounded   border-2 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
         <Suspense fallback={<div>Loading...</div>}>
           <SensorData darkmode={isDarkMode} />
           <button 
@@ -107,13 +114,19 @@ const HomePage = ({ isDarkMode }) => {
           </Suspense>
         )}
       </div> */}
-
+ {/* Questions Section */}
+ <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
+        <Suspense fallback={<div>Loading...</div>}>
+         <Predict2/>
+        </Suspense>
+      </div>
       {/* Questions Section */}
       <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
         <Suspense fallback={<div>Loading...</div>}>
           <Questions isDarkMode={isDarkMode} />
         </Suspense>
       </div>
+     
     </div>
   );
 };

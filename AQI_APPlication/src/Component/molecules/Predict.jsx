@@ -219,14 +219,15 @@ const Predict = ({ isdarkMode }) => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center text-center justify-center min-h-screen p-4 rounded">
+    <div className="flex flex-col items-center  justify-center border-2 min-h-screen h-[1000px] p-4 rounded">
+
       <h1 className="text-3xl font-bold mb-6">Next 5 Days Prediction</h1>
       {data.map((item, index) => (
         <div
           key={index}
           onMouseEnter={() => setHoveredIndex(index)}
           onMouseLeave={() => setHoveredIndex(null)}
-          className={`relative cursor-pointer flex flex-col sm:flex-row items-center justify-between ${
+          className={`relative cursor-pointer flex flex-col sm:flex-row  justify-between ${
             isdarkMode ? "bg-gray-800 border-gray-600" : "bg-white border-gray-400"
           } shadow-lg p-6 m-4 w-[90%] sm:w-[80%] lg:w-[64%] rounded-lg border-2`}
         >

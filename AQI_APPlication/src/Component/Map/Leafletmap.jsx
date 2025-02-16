@@ -74,7 +74,11 @@ const SearchControl = () => {
 };
 
 const Leafletmap = () => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState({
+    aqi:"",
+    latitude:"",
+    longitude:"",
+  });
   // const location = {
   //   loaded: false,
   //   coordinates: { lat: '', lng: '' },
@@ -99,31 +103,67 @@ const Leafletmap = () => {
   //   fetchData();
   // }, []);
 
-  const updateMarkers = useCallback(async () => {
-    if (data) {
-      //  data.aqi=360;
-      //  data.latitude=18.652990;
-      //  data.longitude=73.774390;
-      try {
-        const locationName = "Vehicle is here";
+  // const updateMarkers = useCallback(async () => {
+    
+  //      data.aqi=12;
+  //      data.latitude=18.6011;
+  //      data.longitude=73.7641;
+      
+  //     try {
+  //       const locationName = "Vehicle is here";
         
-        const newMarker = {
-          geocode: [data.latitude, data.longitude],
-          popup: `${locationName}`,
-          aqiValue: data.aqi,
-          backgroundColor: getColorFromAQI(data.aqi),
-          Color:(data.aqi <= 100 && data.aqi >= 50 )?"#000000":"#ffffff",
+  //       const newMarker = {
+  //         geocode: [data.latitude, data.longitude],
+  //         popup: `${locationName}`,
+  //         aqiValue: data.aqi,
+  //         backgroundColor: getColorFromAQI(data.aqi),
+  //         Color:(data.aqi <= 100 && data.aqi >= 50 )?"#000000":"#ffffff",
           
-        };
-        // console.log(data.latitude,data.longitude);
-        setMarkers([newMarker]);
-      } catch (error) {
-        console.error('Error fetching location data:', error);
-      }
+  //       };
+  //       console.log(data.latitude,data.longitude);
+  //       setMarkers([...newMarker,newMarker]);
+  //     } catch (error) {
+  //       console.error('Error fetching location data:', error);
+  //     }
+  //   },
+  //  [ data]);
+  const updateMarkers = useCallback(async () => {
+    try {
+      const newMarkers = [
+        { aqi: 12, latitude: 18.6011, longitude: 73.7641 }, // Location 1
+        { aqi: 85, latitude: 18.5204, longitude: 73.8567 }, // Location 2
+        { aqi: 160, latitude: 18.5800, longitude: 73.7400 }, // Location 3
+        { aqi: 45, latitude: 18.5074, longitude: 73.8070 }, // Location 4 (Kothrud)
+        { aqi: 110, latitude: 18.5224, longitude: 73.8330 }, // Location 5 (Shivajinagar)
+        { aqi: 190, latitude: 18.5310, longitude: 73.8440 }, // Location 6 (Deccan)
+        { aqi: 70, latitude: 18.5008, longitude: 73.8500 }, // Location 7 (Koregaon Park)
+        { aqi: 130, latitude: 18.5510, longitude: 73.9200 }, // Location 8 (Hadapsar)
+        { aqi: 95, latitude: 18.5860, longitude: 73.7550 }, // Location 9 (Hinjawadi)
+        { aqi: 175, latitude: 18.6500, longitude: 73.7700 }, // Location 10 (Ravet)
+        { aqi: 60, latitude: 18.5203, longitude: 73.8568 }, // Location 11 (Swargate)
+        { aqi: 140, latitude: 18.5679, longitude: 73.9145 }, // Location 12 (Magarpatta)
+        { aqi: 200, latitude: 18.5001, longitude: 73.9270 }, // Location 13 (Wagholi)
+        { aqi: 80, latitude: 18.5890, longitude: 73.8125 }, // Location 14 (Baner)
+        { aqi: 155, latitude: 18.5805, longitude: 73.7403 }, // Location 15 (Pashan)
+      ];
+      
+  
+      const updatedMarkers = newMarkers.map((data) => ({
+        geocode: [data.latitude, data.longitude],
+        popup: "Vehicle is here",
+        aqiValue: data.aqi,
+        backgroundColor: getColorFromAQI(data.aqi),
+        Color: data.aqi <= 100 && data.aqi >= 50 ? "#000000" : "#ffffff",
+      }));
+  
+      setMarkers(updatedMarkers);
+    } catch (error) {
+      console.error("Error fetching location data:", error);
     }
-  }, [fetchData , data]);
+  }, [data]);
+  
 const intervelFun = ()=>{
-  fetchData();
+  // fetchData();
   updateMarkers();
 }
   useEffect(() => {
@@ -143,17 +183,17 @@ const intervelFun = ()=>{
   // }, [updateMarkers]);
 
   return (
-    <Link to="/map-aqi">
+    <Link to="/Leaf-map" >
 
     <div className="flex w-full">
     <MapContainer
-      className="h-[60vh] sm:h-[70vh] md:h-[80vh] w-full rounded-[5%] z-50"
+      className="h-[60vh] sm:h-[70vh] lg:h-[100vh] md:h-[80vh] w-full rounded-[5%] z-50"
       center={[18.5913, 73.7389]}
       zoom={13}
-      zoomControl={false}
-      scrollWheelZoom={false}
-      doubleClickZoom={false}
-      dragging={false}
+      // zoomControl={false}
+      // scrollWheelZoom={false}
+      // doubleClickZoom={false}
+      // dragging={false}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
