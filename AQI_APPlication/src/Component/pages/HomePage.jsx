@@ -130,11 +130,11 @@ const HomePage = ({ isDarkMode }) => {
         )}
       </div> */}
  {/* Questions Section */}
- <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
+ {/* <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
         <Suspense fallback={<div>Loading...</div>}>
          <Predict2 isdarkMode={isDarkMode}/>
         </Suspense>
-      </div>
+      </div> */}
       {/* Questions Section */}
       <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
         <Suspense fallback={<div>Loading...</div>}>
