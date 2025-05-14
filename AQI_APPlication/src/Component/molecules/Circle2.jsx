@@ -1,90 +1,103 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-const pollutantRanges = {
-  pm25: { max: 500, levels: [50, 100, 250, 350, 500], labels: ['Good', 'Moderate', 'Unhealthy', 'Very Unhealthy', 'Hazardous'], colors: ['#4caf50', '#ffeb3b', '#ff9800', '#f44336', '#8b0000'] },
-  pm10: { max: 600, levels: [50, 100, 260, 430, 600], labels: ['Good', 'Moderate', 'Unhealthy', 'Very Unhealthy', 'Hazardous'], colors: ['#4caf50', '#ffeb3b', '#ff9800', '#f44336', '#8b0000'] },
-  co: { max: 50, levels: [1, 2, 10, 17, 34], labels: ['Good', 'Moderate', 'Unhealthy', 'Very Unhealthy', 'Hazardous'], colors: ['#4caf50', '#ffeb3b', '#ff9800', '#f44336', '#8b0000'] },
-  no2: { max: 400, levels: [40, 80, 180, 280, 400], labels: ['Good', 'Moderate', 'Unhealthy', 'Very Unhealthy', 'Hazardous'], colors: ['#4caf50', '#ffeb3b', '#ff9800', '#f44336', '#8b0000'] },
-  nh3: { max: 200, levels: [20, 50, 100, 150, 200], labels: ['Good', 'Moderate', 'Unhealthy', 'Very Unhealthy', 'Hazardous'], colors: ['#4caf50', '#ffeb3b', '#ff9800', '#f44336', '#8b0000'] },
-};
-
-const Circle2 = ({ pollutant = 'pm25', value = 50, isDarkMode = false }) => {
+const Circle2 = ({ aqiValue = 50, maxAqi = 500, AQI = "Air Quality Index", isDarkMode }) => {
   const svgRef = useRef(null);
-  const range = pollutantRanges[pollutant] || pollutantRanges['pm25'];
 
-  const getStrokeColorAndText = (value) => {
-    for (let i = 0; i < range.levels.length; i++) {
-      if (value <= range.levels[i]) {
-        return { color: range.colors[i], text: range.labels[i] };
-      }
-    }
-    return { color: range.colors[range.colors.length - 1], text: range.labels[range.labels.length - 1] };
+  const validAqiValue = isNaN(aqiValue) ? 0 : aqiValue;
+  const validMaxAqi = isNaN(maxAqi) || maxAqi === 0 ? 500 : maxAqi;
+  const getStrokeColorAndText = (aqi) => {
+    if (aqi <= 50) return { color: '#00b050', text: 'Good' };
+    else if (aqi <= 100) return { color: '#92d050', text: 'Satisfactory' };
+    else if (aqi <= 200) return { color: '#ffff00', text: 'Moderate	' };
+    else if (aqi <= 300) return { color: '#ff9900', text: 'Poor' };
+    else if (aqi <= 400) return { color: '#ff0000', text: 'Very Poor'};
+    else return { color: '#c00000', text: 'Severe' };
   };
+  const { color, text } = getStrokeColorAndText(validAqiValue);
 
-  const { color, text } = getStrokeColorAndText(value);
-  const radius = 80;
-  const strokeWidth = 12;
-  const circumference = 2 * Math.PI * radius;
+  const radius = 120;
+  const strokeWidth = 50;
 
   useEffect(() => {
     const svg = d3.select(svgRef.current);
-    const width = 200;
-    const height = 200;
+    const width = radius * 2 + strokeWidth;
+    const height = radius * 2 + strokeWidth;
+    const circumference = 2 * Math.PI * radius;
+    const progressValue = circumference * (1 - validAqiValue / validMaxAqi);
 
-    // Select or create background circle
-    const bgCircle = svg.selectAll('.bg-circle').data([null]);
-    bgCircle
-      .enter()
+    // Clear previous SVG elements
+    svg.selectAll('*').remove();
+
+    // Add background circle
+    svg
       .append('circle')
-      .attr('class', 'bg-circle')
       .attr('cx', width / 2)
       .attr('cy', height / 2)
       .attr('r', radius)
       .attr('fill', 'none')
-      .attr('stroke-width', strokeWidth)
-      .merge(bgCircle)
-      .attr('stroke', isDarkMode ? 'rgba(255, 255, 255, 0.25)' : 'rgba(69, 63, 63, 0.25)');
+      .attr('stroke', isDarkMode ? 'rgba(255, 255, 255, 0.25)' : 'rgba(69, 63, 63, 0.25)')
+      .attr('stroke-width', strokeWidth);
 
-    // Select or create progress circle
-    const progressCircle = svg.selectAll('.progress-circle').data([null]);
-    progressCircle
-      .enter()
+    // Add progress circle with animation
+    const progressCircle = svg
       .append('circle')
-      .attr('class', 'progress-circle')
       .attr('cx', width / 2)
       .attr('cy', height / 2)
       .attr('r', radius)
       .attr('fill', 'none')
+      .attr('stroke', color)
       .attr('stroke-width', strokeWidth)
       .attr('stroke-dasharray', circumference)
-      .style('transition', 'stroke-dashoffset 0.5s ease-in-out')
-      .merge(progressCircle)
-      .attr('stroke', color)
-      .attr('stroke-dashoffset', circumference * (1 - value / range.max));
+      .attr('stroke-dashoffset', circumference)
+      .attr('stroke-linecap', 'round') // Smooth stroke edges
+      .style('transition', 'stroke-dashoffset 0.1s ease-in-out');
 
-    // Select or create text element
-    const textElement = svg.selectAll('.aqi-text').data([null]);
-    textElement
-      .enter()
+    // Animate stroke
+    progressCircle
+      .transition()
+      .duration(1000)
+      .ease(d3.easeCubicInOut)
+      .attr('stroke-dashoffset', progressValue);
+
+    // Add AQI text inside the circle
+    svg
       .append('text')
-      .attr('class', 'aqi-text')
       .attr('x', width / 2)
-      .attr('y', height / 2 + 5)
+      .attr('y', height / 2 + 15)
       .attr('text-anchor', 'middle')
-      .style('font-size', '22px')
+      .attr('fill', color)
+      .style('font-size', '60px')
       .style('font-weight', 'bold')
-      .merge(textElement)
+      .text(validAqiValue)
+      .style('dominant-baseline', 'middle');
+
+    // Add category text inside the circle
+    svg
+      .append('text')
+      .attr('x', width / 2)
+      .attr('y', height / 2 + 70)
+      .attr('text-anchor', 'middle')
       .attr('fill', isDarkMode ? 'white' : '#111830')
-      .text(value);
-  }, [value, range, color, isDarkMode, circumference]);
+      .style('font-size', '18px')
+      .style('font-weight', 'normal')
+      .text(text);
+
+    // Add AQI label text
+    svg
+      .append('text')
+      .attr('x', width / 2)
+      .attr('y', height / 2 - 40)
+      .attr('text-anchor', 'middle')
+      .attr('fill', isDarkMode ? 'white' : '#111830')
+      .style('font-size', '16px')
+      .style('font-weight', 'bold')
+      .text(AQI);
+  }, [validAqiValue, validMaxAqi, color, isDarkMode]);
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <svg ref={svgRef} width={200} height={200} aria-label={`${pollutant.toUpperCase()} Level: ${value} - ${text}`}>
-        <title>{`${pollutant.toUpperCase()}: ${value} (${text})`}</title>
-      </svg>
-      <div className={`text-xl text-center mt-2 ${isDarkMode ? 'text-white' : '#111830'}`}>{text}</div>
+      <svg ref={svgRef} width={radius * 2 + strokeWidth} height={radius * 2 + strokeWidth}></svg>
     </div>
   );
 };

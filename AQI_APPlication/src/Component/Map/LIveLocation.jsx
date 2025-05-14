@@ -1,92 +1,83 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { CiLocationOn } from 'react-icons/ci';
-import ReactDOMServer from 'react-dom/server'; // Import ReactDOMServer
+import ReactDOMServer from 'react-dom/server';
+import { useMapContext } from '../../Context/MapContext';
 
 const LiveLocation = () => {
+  const { radius } = useMapContext();
   const map = useMap();
-  const [locationMarker, setLocationMarker] = useState(null);
-  const [locationCircle, setLocationCircle] = useState(null);
+  
+  // Using refs to persist marker and circle across renders
+  const locationMarker = useRef(null);
+  const locationCircle = useRef(null);
+
+  // Function to handle location success
+  const handleSuccess = useCallback((pos) => {
+    const { latitude, longitude } = pos.coords;
+    const latLng = [latitude, longitude];
+
+    // Update marker location or create a new one
+    if (locationMarker.current) {
+      locationMarker.current.setLatLng(latLng);
+      locationMarker.current.getPopup().setContent('You').openOn(map);
+    } else {
+      const iconSvg = ReactDOMServer.renderToString(<CiLocationOn size={32} color="blue" />);
+      const customIcon = L.divIcon({
+        className: '',
+        html: iconSvg,
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32],
+      });
+
+      locationMarker.current = L.marker(latLng, { icon: customIcon })
+        .addTo(map)
+        .bindPopup('You are here');
+
+      locationMarker.current.openPopup();
+    }
+
+    // Remove the previous circle before adding a new one
+    if (locationCircle.current) {
+      map.removeLayer(locationCircle.current);
+    }
+
+    locationCircle.current = L.circle(latLng, { radius: Number(radius)  }).addTo(map);
+
+    // Set map view to user's location
+    map.setView(latLng, map.getZoom());
+  }, [map, radius]);
+
+  const handleError = useCallback((err) => {
+    if (err.code === 1) {
+      alert('Please allow Geolocation access.');
+    } else {
+      alert('Cannot get current location.');
+    }
+  }, []);
+
+  const fetchLocation = useCallback(() => {
+    navigator.geolocation.getCurrentPosition(handleSuccess, handleError, {
+      enableHighAccuracy: true,
+    });
+  }, [handleSuccess, handleError]);
 
   useEffect(() => {
     if (!map) return;
 
-    // Function to handle location success
-    const handleSuccess = (pos) => {
-      const { latitude, longitude, accuracy } = pos.coords;
-      const latLng = [latitude, longitude];
-
-      // Update marker location or create a new one
-      if (locationMarker) {
-        // Update marker position and popup content
-        locationMarker.setLatLng(latLng);
-        locationMarker.getPopup().setContent('You').openOn(map);
-      } else {
-        // Render the React icon as an SVG string
-        const iconSvg = ReactDOMServer.renderToString(<CiLocationOn size={32} color="blue" />);
-        
-        // Create a custom icon using the rendered SVG
-        const customIcon = L.divIcon({
-          className: '', // Optional: Add custom classes for styling
-          html: iconSvg,
-          iconSize: [32, 32], // Adjust size if necessary
-          iconAnchor: [16, 32], // Adjust anchor to align correctly
-          popupAnchor: [0, -32], // Position of the popup relative to the icon
-        });
-
-        // Create a new marker with the custom icon
-        const marker = L.marker(latLng, { icon: customIcon })
-          .addTo(map)
-          .bindPopup('You are here');
-        
-        // Update the state with the new marker
-        setLocationMarker(marker);
-        marker.openPopup(); // Open the popup immediately
-      }
-
-      // Update circle location or create a new one
-      if (locationCircle) {
-        locationCircle.setLatLng(latLng).setRadius(accuracy);
-      } else {
-        const circle = L.circle(latLng, { radius: accuracy }).addTo(map);
-        setLocationCircle(circle);
-      }
-
-      // Set map view to user's location
-      map.setView(latLng, map.getZoom());
-    };
-
-    // Function to handle errors in geolocation
-    const handleError = (err) => {
-      if (err.code === 1) {
-        alert('Please allow Geolocation access.');
-      } else {
-        alert('Cannot get current location.');
-      }
-    };
-
     // Fetch location periodically
-    const fetchLocation = () => {
-      navigator.geolocation.getCurrentPosition(handleSuccess, handleError, {
-        enableHighAccuracy: true,
-      });
-    };
+    const intervalId = setInterval(fetchLocation, 1000); // Update location every 10 seconds
 
-    // Set interval for periodic location updates
-    const intervalId = setInterval(fetchLocation, 60000*100 ); // Update location every 30  second
-
-    // Cleanup on unmount
     return () => {
       clearInterval(intervalId);
-      if (locationMarker) {
-        map.removeLayer(locationMarker);
-      }
-      if (locationCircle) {
-        map.removeLayer(locationCircle);
+     
+      if (locationCircle.current) {
+        map.removeLayer(locationCircle.current);
       }
     };
-  }, [map, locationMarker, locationCircle]); // Added locationMarker and locationCircle to dependencies
+  }, [map, fetchLocation]);
 
   return null;
 };

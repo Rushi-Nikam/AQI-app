@@ -48,12 +48,12 @@ const AQIMap = () => {
   }, [markers]);
 
   const getColorFromAQI = (aqiValue) => {
-    if (aqiValue <= 50) return '#00e400';
-    if (aqiValue <= 100) return '#ffff00';
-    if (aqiValue <= 150) return '#ffcc00';
-    if (aqiValue <= 200) return '#ff7e00';
-    if (aqiValue <= 300) return '#ff0000';
-    return '#7e0023';
+    if (aqiValue <= 50) return '#00b050';
+    if (aqiValue <= 100) return '#92d050';
+    if (aqiValue <= 200) return '#ffff00';
+    if (aqiValue <= 300) return '#ff9900';
+    if (aqiValue <= 400) return '#ff0000';
+     return '#c00000';
   };
 
   const createCustomIcon = (aqiValue, backgroundColor,Color) => {

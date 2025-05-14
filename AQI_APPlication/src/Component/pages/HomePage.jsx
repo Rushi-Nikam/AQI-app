@@ -8,6 +8,8 @@ import SensorDatas from '../molecules/SensorDatas';
 import CurrentAQI from '../molecules/CurrentAQI';
 import LiveAQI from './LiveAQI';
 import Predict2 from '../molecules/Predict2';
+
+import PollutantInfo from '../molecules/PollutantInfo';
 const GasesTable = React.lazy(() => import('../molecules/GasesTable'));
 const SideCard = React.lazy(() => import('../molecules/SideCard'));
 const Leafletmap = React.lazy(() => import('../Map/Leafletmap'));
@@ -28,18 +30,21 @@ const HomePage = ({ isDarkMode }) => {
         </h1>
       </div> */}
   {/* Leaflet Map */}
-  <div className="relative flex flex-col lg:flex-row w-full">
+  <div className="relative   flex flex-col lg:flex-col w-full">
   {/* Left Side - Map (20%) */}
-  <div className={`w-full lg:w-[30%] ml-2 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'} lg:h-[calc(100vh-80px)]`}>
-    <Suspense fallback={<div>Loading...</div>}>
-      <Leafletmap />
-    </Suspense>
-  </div>
+  <div className="relative z-0 flex flex-col lg:flex-row lg:justify-center  items-center ">
+        <div className={`w-full max-h-4xl  ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Leafletmap />
+          </Suspense>
+        </div>
+      </div>
+    </div>
 
   {/* Right Side - Main Content (80%) */}
-  <div className="flex flex-col items-center justify-center w-full lg:w-[70%] p-4">
+  <div className="relative z-10 flex  flex-col  lg:mt-[-150px] items-center justify-center  w-full ">
     <div
-      className={`flex flex-col lg:flex-row p-5 gap-10 rounded-lg shadow-md w-full ${
+      className={`flex flex-col w-[90%] lg:flex-row p-5 gap-10 rounded-[30px] shadow-md ${
         isDarkMode ? "bg-gray-700" : "bg-gray-200"
       }`}
     >
@@ -58,11 +63,6 @@ const HomePage = ({ isDarkMode }) => {
       </div>
     </div>
   </div>
-</div>
-
-
-
-
       {/* Sensor Data */}
       {/* <div className={`px-4 lg:mt-[600px] sm:mt-[1150px] rounded   border-2 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}> */}
       <div className={`px-4 lg:mt-12 rounded   border-2 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
@@ -77,11 +77,26 @@ const HomePage = ({ isDarkMode }) => {
 
         </Suspense>
       </div>
+    
+      <div className="flex flex-wrap justify-evenly items-center gap-4">
+        <div className={`px-2 mt-6 w-full md:w-full ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
+          <Suspense fallback={<div>Loading...</div>}>
+            <PollutantInfo darkMode={isDarkMode}/>
+          </Suspense>
+        </div>
+      </div>
+   <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <SensorDatas darkMode={isDarkMode} />
+        </Suspense>
+      </div>  
+
    {view && <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
         <Suspense fallback={<div>Loading...</div>}>
           <SensorDatas darkMode={isDarkMode} />
         </Suspense>
       </div>}   
+{/* Guidelines and info */}
 
       {/* Chart Data */}
       <div className="flex flex-wrap justify-evenly items-center gap-4">
@@ -93,12 +108,12 @@ const HomePage = ({ isDarkMode }) => {
       </div>
 
       {/* Predict Section */}
-      <div className={` mt-2 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
+      {/* <div className={` mt-2 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
         <Suspense fallback={<div>Loading...</div>}>
-          {/* <Predict /> */}
+        <Predict /> 
 <CurrentAQI/>
         </Suspense>
-      </div>
+      </div> */}
       <div className={`px-4 h-full ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
         <Suspense fallback={<div>Loading...</div>}>
           {/* <Predict /> */}
@@ -117,7 +132,7 @@ const HomePage = ({ isDarkMode }) => {
  {/* Questions Section */}
  <div className={`px-4 mt-6 ${isDarkMode ? 'bg-[#111827]' : 'bg-white'}`}>
         <Suspense fallback={<div>Loading...</div>}>
-         <Predict2/>
+         <Predict2 isdarkMode={isDarkMode}/>
         </Suspense>
       </div>
       {/* Questions Section */}

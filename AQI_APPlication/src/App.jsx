@@ -3,9 +3,10 @@ import Navbar from "./Component/Navbars/Navbar";
 import Routers from "./Route/Routers";
 import { BrowserRouter } from "react-router-dom"; // Import BrowserRouter
 import Footer from "./Component/pages/footer/Footer";
+import { MapProvider } from "./Context/MapContext";
 
 function App() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -16,16 +17,20 @@ function App() {
   }, [isDarkMode]);
 
   return (
-    <BrowserRouter > {/* Wrap your components with BrowserRouter */}
-      <div className={`flex flex-col min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'}`}>
-        <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
-        <main className="flex-grow relative p-4">
-        
-          <Routers isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
-        </main>
-        <Footer />
-      </div>
-    </BrowserRouter>
+
+
+   <MapProvider> <BrowserRouter > {/* Wrap your components with BrowserRouter */}
+   <div className={`flex flex-col min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'}`}>
+     <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+     <main className="flex-grow relative p-4">
+     
+       <Routers isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+     </main>
+     <Footer />
+   </div>
+ </BrowserRouter> </MapProvider>
+   
+  
   );
 }
 

@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 
-const Predict2 = () => {
-  // State to hold AQI data fetched from API
+const Predict2 = ({ isdarkMode }) => {
   const [aqiData, setAqiData] = useState([]);
 
-  // Dummy data for fallback
   const dummyData = [
     { date: "2025-02-10", category: "Good", aqi: 50 },
     { date: "2025-02-11", category: "Moderate", aqi: 100 },
@@ -13,7 +11,6 @@ const Predict2 = () => {
     { date: "2025-02-14", category: "Moderate", aqi: 80 },
   ];
 
-  // Fetch AQI data from API
   useEffect(() => {
     const fetchAqiData = async () => {
       try {
@@ -24,10 +21,9 @@ const Predict2 = () => {
           throw new Error(`Failed to fetch data: ${response.status}`);
         }
         const apiData = await response.json();
-        setAqiData(apiData); // Replace with actual API response if needed
+        setAqiData(apiData);
       } catch (error) {
         console.error("Error fetching AQI data:", error);
-        // Fallback to dummy data if fetch fails
         setAqiData(dummyData);
       }
     };
@@ -35,9 +31,17 @@ const Predict2 = () => {
   }, []);
 
   const getStrokeDasharray = (aqi) => {
-    const maxAqi = 300; // Max AQI for the circle progress
-    const dasharray = (aqi / maxAqi) * 251.2; // 251.2 is the circumference of a circle with radius 40
-    return dasharray;
+    const maxAqi = 500;
+    return (aqi / maxAqi) * 251.2;
+  };
+
+  const getAqiColor = (aqi) => {
+    if (aqi <= 50) return "#00b050";
+    if (aqi <= 100) return "#92d050";
+    if (aqi <= 200) return "#ffff00";
+    if (aqi <= 300) return "#ff9900";
+    if (aqi <= 400) return "#ff0000";
+    return "#c00000";
   };
 
   return (
@@ -45,14 +49,14 @@ const Predict2 = () => {
       <h2 className="text-3xl font-semibold mb-6 text-center text-gray-800 dark:text-white">
         Predicted AQI Levels for Next 5 Days
       </h2>
-      <div className="flex space-x-6 overflow-x-auto justify-center">
-        {/* Render AQI Data Cards */}
+
+      {/* Horizontal scroll with snapping and custom scrollbar */}
+      <div className="overflow-x-auto flex space-x-6 p-2 scroll-smooth snap-x snap-mandatory overflow-y-hidden [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400 dark:[&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-track]:bg-gray-200 dark:[&::-webkit-scrollbar-track]:bg-gray-800 rounded-md">
         {aqiData.map((data, index) => (
           <div
             key={index}
-            className="flex flex-col items-center p-6 bg-gradient-to-r shadow-2xl rounded-xl w-52 transform transition-transform duration-300 hover:scale-105"
+            className="flex-shrink-0 snap-center flex flex-col items-center p-6 bg-gradient-to-r shadow-2xl rounded-xl w-52 transform transition-transform duration-300 hover:scale-105"
           >
-            {/* Circular AQI Indicator with Progress */}
             <svg width="90" height="90" viewBox="0 0 100 100">
               {/* Background circle */}
               <circle
@@ -69,13 +73,7 @@ const Predict2 = () => {
                 cx="50"
                 cy="50"
                 r="40"
-                stroke={
-                  data.category === "Good"
-                    ? "green"
-                    : data.category === "Moderate"
-                    ? "yellow"
-                    : "red"
-                }
+                stroke={getAqiColor(data.aqi)}
                 strokeWidth="5"
                 fill="none"
                 strokeDasharray={`${getStrokeDasharray(data.aqi)} 251.2`}
@@ -83,22 +81,30 @@ const Predict2 = () => {
                 transform="rotate(-90 50 50)"
                 className="transition-all duration-500"
               />
-              {/* AQI value inside the circle */}
+              {/* AQI value inside circle */}
               <text
                 x="50"
                 y="55"
                 textAnchor="middle"
                 fontSize="22"
-                fill="black"
+                fill={isdarkMode ? "white" : "black"}
                 fontWeight="bold"
               >
                 {data.aqi}
               </text>
             </svg>
-            <p className="mt-3 text-center text-xl text-gray-500 dark:text-gray-600 font-semibold">
+            <p
+              className={`${
+                isdarkMode ? "text-white" : "text-gray-500"
+              } mt-3 text-center text-xl font-semibold`}
+            >
               {data.category} Air
             </p>
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            <p
+              className={`${
+                isdarkMode ? "text-white" : "text-gray-500"
+              } mt-2 text-sm`}
+            >
               {data.date}
             </p>
           </div>

@@ -10,14 +10,13 @@ import LIveLocation from "./LIveLocation"
 import { Link } from 'react-router-dom';
 
 const getColorFromAQI = (aqiValue) => {
-  if (aqiValue <= 50) return "rgb(76, 175, 80)";
-  if (aqiValue <= 100) return "rgb(255, 235, 59)";
-  if (aqiValue <= 150) return "rgb(255, 152, 0)";
-  if (aqiValue <= 200) return "rgb(244, 67, 54)";
-  if (aqiValue <= 300) return "rgb(156, 39, 176)";
-  return "rgb(139, 0, 0)";
+  if (aqiValue <= 50) return '#00b050';
+  if (aqiValue <= 100) return '#92d050';
+  if (aqiValue <= 200) return '#ffff00';
+  if (aqiValue <= 300) return '#ff9900';
+  if (aqiValue <= 400) return '#ff0000';
+   return '#c00000';
 };
-
 const createCustomIconWithD3 = (aqiValue, backgroundColor, Color, size = 44) => {
   const width = size;
   const height = size * 1.5; // Adjust height proportionally
@@ -153,7 +152,7 @@ const Leafletmap = () => {
         popup: "Vehicle is here",
         aqiValue: data.aqi,
         backgroundColor: getColorFromAQI(data.aqi),
-        Color: data.aqi <= 100 && data.aqi >= 50 ? "#000000" : "#ffffff",
+        Color: data.aqi <= 200 && data.aqi >= 101 ? "#000000" : "#ffffff",
       }));
   
       setMarkers(updatedMarkers);
@@ -185,15 +184,15 @@ const intervelFun = ()=>{
   return (
     <Link to="/Leaf-map" >
 
-    <div className="flex w-full">
+    <div className="flex w-full ">
     <MapContainer
-      className="h-[60vh] sm:h-[70vh] lg:h-[100vh] md:h-[80vh] w-full rounded-[5%] z-50"
+      className="h-[60vh] sm:h-[70vh] lg:h-[80vh] md:h-[80vh] w-full rounded-[4%] z-50"
       center={[18.5913, 73.7389]}
       zoom={13}
-      // zoomControl={false}
-      // scrollWheelZoom={false}
-      // doubleClickZoom={false}
-      // dragging={false}
+      zoomControl={false}
+      scrollWheelZoom={false}
+      doubleClickZoom={false}
+      dragging={false}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

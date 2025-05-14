@@ -32,18 +32,18 @@ const GasesTable = ({ isDarkMode }) => {
   const gasData = [
     // { title: "Humidity", value: value.humidity},
     // { title: "Temperature", value: value.temperature },
-    { title: "CO(Carbon Monoxide)", value: value.mq7   },
-    { title: "O₃(Ozone)", value: value.mq131  },
-    { title: "PM2.5(Micro dust)", value: value.pm25  },
-    { title: "PM10(Particular Matter)", value: value.pm10 },
-    { title: "NH₃(Ammonia)", value: value.nh3  },
-    { title: "NO₂(Nitrogen dioxide)", value: value.no2  },
+    { title: "CO",semititle:"(Carbon Monoxide)", value: value.mq7   },
+    { title: "O₃",semititle:"(Ozone)", value: value.mq131  },
+    { title: "PM2.5",semititle:"(Micro dust)", value: value.pm25  },
+    { title: "PM10",semititle:"(Particular Matter)", value: value.pm10 },
+    { title: "NH₃",semititle:"(Ammonia)", value: value.nh3  },
+    { title: "NO₂",semititle:"(Nitrogen dioxide)", value: value.no2  },
   ];
 
   return (
-    <div className={`cursor-pointer ${isDarkMode ? "bg-gray-800" : "bg-gray-100"} border-[1px] rounded-lg  lg:rounded-[10%]  p-6 md:p-12 gap-4`}>
+    <div className={`cursor-pointer w-[1200px] ${isDarkMode ? "bg-gray-800" : "bg-gray-100"} border-[1px] rounded-lg  lg:rounded-[10%]  p-6 md:p-12 gap-4`}>
     {/* Title */}
-    <div className="flex justify-center items-center text-xl md:text-2xl font-bold my-3">
+    <div className="flex justify-center items-center text-xs lg:text-xl font-bold my-3">
       <h1>Gases Responsible for Air Quality Index</h1>
     </div>
   
@@ -51,31 +51,32 @@ const GasesTable = ({ isDarkMode }) => {
     <div className="container mx-auto">
       <div className="flex flex-col sm:flex-row justify-between items-center my-5 gap-6">
         {/* Humidity */}
-        <div className="flex text-base md:text-lg lg:text-2xl justify-between items-center gap-4">
+        <div className="flex text-base md:text-lg lg:text-xl justify-between items-center gap-4">
           <WiHumidity size={30} className="md:size-[40px]" />
           <span>Humidity</span>
           <div>{value.humidity || '23'}%</div>
         </div>
         {/* Temperature */}
-        <div className="flex text-base md:text-lg lg:text-2xl justify-between items-center gap-4">
-          <FaTemperatureHigh size={30} className="md:size-[40px]" />
+        <div className="flex text-base md:text-lg lg:text-xl justify-between items-center gap-4">
+          <FaTemperatureHigh size={30} className="md:size-[20px]" />
           <span>Temperature</span>
           <div>{value.temperature || '40'}°C</div>
         </div>
       </div>
   
       {/* Horizontal Line */}
-      <div className="w-full h-px bg-gray-400 my-4"></div>
+      <div className="w-full h-px  bg-gray-400 my-4"></div>
   
       {/* Gases Cards */}
       <div
-        className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-4 md:gap-6 mb-10`}
+        className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2  mb-10`}
       >
         {gasData.map((gas, index) => (
           <GasCard
             key={index}
             value={gas.value}
             title={gas.title}
+            semititle={gas.semititle}
             isDarkMode={isDarkMode}
           />
         ))}

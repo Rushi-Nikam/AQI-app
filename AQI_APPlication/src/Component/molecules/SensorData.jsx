@@ -14,7 +14,7 @@ const SensorData = ({ darkmode }) => {
       .then((sensorData) => {
         const selectedData = [];
         // Select every 10th data point for reduced rendering load
-        for (let i = 50; i < sensorData.length; i += 150) {
+        for (let i = 0; i < sensorData.length; i += 120) {
           selectedData.push(sensorData[i]);
         }
 

@@ -1,42 +1,34 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-const GasCard = ({ title, value = 50, maxValue = 500, text = 'Good', isDarkMode = true }) => {
+const GasCard = ({ title, semititle, value = 50, maxValue = 500, isDarkMode = true }) => {
   const svgRef = useRef(null);
 
   // Function to get color based on AQI value
   const getAqiColor = (value) => {
-    if (value <= 50) return { color: 'rgb(76, 175, 80)', text: 'Good' }; 
-    else if (value <= 100) return { color: 'rgb(255, 235, 59)', text: 'Moderate' }; 
-    else if (value <= 200) return { color: 'rgb(255, 152, 0)', text: 'Unhealthy for Sensitive Groups' }; 
-    else if (value <= 300) return { color: 'rgb(244, 67, 54)', text: 'Unhealthy' }; 
-    else if (value <= 400) return { color: 'rgb(156, 39, 176)', text: 'Very Unhealthy' }; 
-    else return { color: 'rgb(139, 0, 0)', text: 'Hazardous' }; 
-  };
-  
-  // Get the color and text
-  const aqiData = getAqiColor(value);
-  
-  // Pass the color to progressColor
-  const progressColor = aqiData.color;
-  text = aqiData.text;
-  // console.log(progressColor); // Outputs the color based on the value
-  
+    if (value <= 50) return { color: '#00b050', text: 'Good' };
+    else if (value <= 100) return { color: '#92d050', text: 'Satisfactory' };
+    else if (value <= 200) return { color: '#ffff00', text: 'Moderate	' };
+    else if (value <= 300) return { color: '#ff9900', text: 'Poor' };
+    else if (value <= 400) return { color: '#ff0000', text: 'Very Poor'};
+    else return { color: '#c00000', text: 'Severe' };
+  }
+  // Get the color and category text
+  const { color: progressColor, text } = getAqiColor(value);
 
   useEffect(() => {
     const svg = d3.select(svgRef.current);
     const width = 120;
     const height = 120;
     const radius = 45;
-    const strokeWidth = 8;
+    const strokeWidth = 20;
     const circumference = 2 * Math.PI * radius;
 
-    // Clear previous SVG elements
+    // Clear previous elements before rendering new ones
     svg.selectAll('*').remove();
 
     // Add background circle
-    svg
-      .append('circle')
+    svg.append('circle')
       .attr('cx', width / 2)
       .attr('cy', height / 2)
       .attr('r', radius)
@@ -44,9 +36,8 @@ const GasCard = ({ title, value = 50, maxValue = 500, text = 'Good', isDarkMode 
       .attr('stroke', isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)')
       .attr('stroke-width', strokeWidth);
 
-    // Add progress circle
-    svg
-      .append('circle')
+    // Add progress circle with animation
+    const progressCircle = svg.append('circle')
       .attr('cx', width / 2)
       .attr('cy', height / 2)
       .attr('r', radius)
@@ -54,12 +45,17 @@ const GasCard = ({ title, value = 50, maxValue = 500, text = 'Good', isDarkMode 
       .attr('stroke', progressColor)
       .attr('stroke-width', strokeWidth)
       .attr('stroke-dasharray', circumference)
-      .attr('stroke-dashoffset', circumference * (1 - value / maxValue))
-      .style('transition', 'stroke-dashoffset 0.5s ease-in-out');
+      .attr('stroke-dashoffset', circumference) // Start with full offset
+      .style('transition', 'stroke 1s ease-in-out');
+
+    // Animate the stroke-dashoffset using D3
+    progressCircle.transition()
+      .duration(1000) // Animation duration (1 second)
+      .ease(d3.easeCubicInOut) // Smooth easing
+      .attr('stroke-dashoffset', circumference * (1 - value / maxValue));
 
     // Add center text (value)
-    svg
-      .append('text')
+    svg.append('text')
       .attr('x', width / 2)
       .attr('y', height / 2 + 5)
       .attr('text-anchor', 'middle')
@@ -70,25 +66,21 @@ const GasCard = ({ title, value = 50, maxValue = 500, text = 'Good', isDarkMode 
   }, [value, maxValue, isDarkMode, progressColor]);
 
   return (
-    <div
-    className={` rounded-lg flex items-center   
-     `}
-  >
-    {/* Left Side: SVG and Title */}
-    <div className="flex flex-col items-center">
-      <svg ref={svgRef} width={120} height={120}></svg>
-    </div>
-  
-    {/* Right Side: Text */}
-    <div className="flex flex-col items-start ml-4">
-      <div
-        className="text-4xl  mb-2" >
-      <div className="text-xl mt-2">{title}</div>
-       <div className='text-[16px] font-bold'>{text}</div> 
+    <div className="rounded-lg flex items-center">
+      {/* Left Side: SVG */}
+      <div className="flex flex-col items-center">
+        <svg ref={svgRef} width={120} height={120}></svg>
+      </div>
+
+      {/* Right Side: Text */}
+      <div className="flex items-start ml-4 gap-5">
+        <div className="text-xl">
+          <div className="text-[16px] mt-2 font-semibold">{title}</div>
+          <div className="text-xs mt-2 font-normal flex">{semititle}</div>
+          <div className="text-[16px] font-bold flex">{text}</div>
+        </div>
       </div>
     </div>
-  </div>
-  
   );
 };
 

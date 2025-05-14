@@ -1,26 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useParams ,useNavigate } from "react-router-dom";
-import GoodImage from "/Images/1.png";
-import ModerateImage from "/Images/2.png";
-import UnhealthyForSensitiveImage from "/Images/3.png";
-import UnhealthyImage from "/Images/4.png";
-import VeryUnhealthyImage from "/Images/5.png";
-import HazardousImage from "/Images/6.png";
-import PageNotFound from "./PageNotFound";
-// import {} from "rea"
+import { useParams, useNavigate } from "react-router-dom";
+import Circle2 from "../molecules/Circle2"; 
+import LeafMap from "../Map/LeafMap";
+import PollutantTable from "../pagesComponents/PollutionTable";
+import LiveMap from "../Map/LiveMap";
+
 const LocalityDetail = ({ isDarkMode }) => {
   const { name } = useParams();
   const [localityData, setLocalityData] = useState(null);
   const [error, setError] = useState(null);
-  const navigator = useNavigate();
-  // const [currentTime, setCurrentTime] = useState(new Date().toLocaleString());
-
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     setCurrentTime(new Date().toLocaleString());
-  //   }, 1000);
-  //   return () => clearInterval(timer);
-  // }, []);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLocalityData = async () => {
@@ -31,99 +20,49 @@ const LocalityDetail = ({ isDarkMode }) => {
         }
         const data = await response.json();
         setLocalityData(data);
+        console.log({data})
       } catch (error) {
-        // setError("found and error",error.message);
-        // setError(<PageNotFound/>)
-        navigator('/')
+        setError(error.message);
+        setTimeout(() => navigate("/"), 2000); // Redirect after 3 seconds
       }
     };
 
     fetchLocalityData();
-  }, [name]);
-
-  const getAQIImage = (aqi) => {
-    if (aqi <= 50) return GoodImage;
-    if (aqi <= 100) return ModerateImage;
-    if (aqi <= 150) return UnhealthyForSensitiveImage;
-    if (aqi <= 200) return UnhealthyImage;
-    if (aqi <= 300) return VeryUnhealthyImage;
-    return HazardousImage;
-  };
-
-  const getAQICategoryText = (aqi) => {
-    if (aqi > 500) return "Hazardous";
-    if (aqi > 300) return "Severe";
-    if (aqi > 200) return "Unhealthy";
-    if (aqi > 100) return "Poor";
-    if (aqi > 50) return "Moderate";
-    return "Good";
-  };
+  }, [name, navigate]);
 
   if (error) {
-    return <p className="text-red-500">Error: {error}</p>;
+    return <p className="text-red-500 text-center mt-6 text-lg">Error: {error}</p>;
   }
 
   if (!localityData) {
-    return <p>Loading...</p>;
+    return <p className="text-center text-lg mt-6">Loading...</p>;
   }
 
-  const { aqi, so2, co, no2, pm25, pm10, o3 } = localityData;
-  const aqiCategoryImage = getAQIImage(aqi);
-  const aqiCategoryText = getAQICategoryText(aqi);
-
-  const PollutantDetail = ({ label, value }) => (
-    <div className={`p-4 ${isDarkMode?'bg-gray-500':'bg-gray-250'} text-center rounded-lg shadow-lg`}>
-      <p className="text-lg font-bold">{label}</p>
-      <p className="text-2xl text-red-500">{value}</p>
-    </div>
-  );
-
   return (
-    <div
-      className={`flex flex-col lg:flex-row mt-8 gap-6 ${
-        isDarkMode ? "text-white" : "text-black "
-      }`}
-    >
-      {/* AQI Section */}
-      <div className={`${isDarkMode?'bg-gray-500':'bg-gray-250'} border-4 shadow-lg p-6 rounded-xl flex-1`}>
-        <h2 className="text-2xl font-bold mb-2">
-          {name}  Air Quality Index (AQI)
-        </h2>
-        <p> PM2.5, PM10 air pollution levels in Maharashtra.</p>
-        <div className="flex  justify-end items-end  mt-6">
-          <div className="flex flex-col text-center">
-            <p className="text-3xl text-red-600 font-bold">{aqi}</p>
-            <p>(AQI-IN)</p>
-          </div>
+    <div className={`flex flex-col gap-6 w-full max-w-[100%] mt-10 px-6 ${isDarkMode ? "text-white" : "text-black"}`}>
+      {/* Top Section: Map and AQI Circle */}
+      <div className="flex flex-col lg:flex-row h-[800px] gap-6">
+        {/* Map Section */}
+        <div className="w-full relative lg:w-[100%] p-5 border-2 shadow-xl rounded-2xl dark:bg-gray-800">
+          <LiveMap />
         </div>
-        <div className="text-center bg-yellow-300 w-52 mx-auto mt-4 px-4 py-2 rounded-full">
-          <p>{aqiCategoryText}</p>
-        </div>
-        <div className="mt-6 text-center">
-          <img
-            src={aqiCategoryImage}
-            alt="AQI Category"
-            className="w-28 h-28 mx-auto"
-          />
-          {/* <p className="text-xl"><span className="text-red-400">Last Updated:</span>  {new Date().toDateString()}</p>   */}
+
+        {/* AQI Circle Section */}
+        <div className={`w-full lg:absolute lg:h-[500px] lg:mt-36    lg:ml-[990px] lg:z-[50]  lg:w-[400px] flex flex-col items-center p-6 border-2 shadow-xl rounded-2xl text-center ${isDarkMode ? "bg-[#374151]" : "bg-gray-100"}`}>
+          <h2 className="text-xl font-bold mb-2">Live Air Quality in {name}</h2>
+          <p className="text-md mb-4">Maharashtra, India</p>
+          <Circle2 aqiValue={localityData.aqi} isDarkMode={isDarkMode} />
         </div>
       </div>
 
-      {/* Pollutant Details Section */}
-      <div
-  className={`${isDarkMode ? "bg-gray-500" : "bg-gray-250"} border-4 border-solid p-6 rounded-xl flex-1`}
->
-  <h2 className="text-2xl font-bold mb-4">{name} Pollutant Details</h2>
-  <div className="grid grid-cols-2 gap-4">
-    <PollutantDetail label="SO₂" value={so2} />
-    <PollutantDetail label="CO" value={co} />
-    <PollutantDetail label="NO₂" value={no2} />
-    <PollutantDetail label="PM2.5" value={pm25} />
-    <PollutantDetail label="PM10" value={pm10} />
-    <PollutantDetail label="O₃" value={o3} />
-  </div>
-</div>
-
+      {/* Pollutants & Gases Tables */}
+      <div className="flex text-xs lg:text-2xl lg:my-12 justify-center  font-bold my-3">
+      <h1>Gases Responsible for Air Quality Index</h1>
+    </div>
+      <div className="flex flex-col items-center lg:flex-row justify-center gap-6">
+        <PollutantTable isDarkMode={isDarkMode} />
+        {/* <GasesTable isDarkMode={isDarkMode} /> */}
+      </div>
     </div>
   );
 };

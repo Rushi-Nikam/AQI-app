@@ -1,33 +1,31 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-const Circle = ({ aqiValue = 50, maxAqi = 500, AQI = "Air Quality Index", isDarkMode }) => {
+const Circle = ({ aqiValue = 100, maxAqi = 500, AQI = "Air Quality Index", isDarkMode }) => {
   const svgRef = useRef(null);
 
   const validAqiValue = isNaN(aqiValue) ? 0 : aqiValue;
   const validMaxAqi = isNaN(maxAqi) || maxAqi === 0 ? 500 : maxAqi;
 
   const getStrokeColorAndText = (aqi) => {
-    if (aqi <= 50) return { color: 'rgb(76, 175, 80)', text: 'Good' };
-    else if (aqi <= 100) return { color: 'rgb(255, 235, 59)', text: 'Moderate' };
-    else if (aqi <= 200) return { color: 'rgb(255, 152, 0)', text: 'Unhealthy for Sensitive Groups' };
-    else if (aqi <= 300) return { color: 'rgb(244, 67, 54)', text: 'Unhealthy' };
-    else if (aqi <= 400) return { color: 'rgb(156, 39, 176)', text: 'Very Unhealthy' };
-    else return { color: 'rgb(139, 0, 0)', text: 'Hazardous' };
+    if (aqi <= 50) return { color: '#00b050', text: 'Good' };
+    else if (aqi <= 100) return { color: '#92d050', text: 'Satisfactory' };
+    else if (aqi <= 200) return { color: '#ffff00', text: 'Moderate	' };
+    else if (aqi <= 300) return { color: '#ff9900', text: 'Poor' };
+    else if (aqi <= 400) return { color: '#ff0000', text: 'Very Poor'};
+    else return { color: '#c00000', text: 'Severe' };
   };
-
   const { color, text } = getStrokeColorAndText(validAqiValue);
 
-  // Increased radius and stroke width
   const radius = 130;
-  const strokeWidth = 50; // Adjusted stroke width
+  const strokeWidth = 50;
 
   useEffect(() => {
     const svg = d3.select(svgRef.current);
-
-    const width = radius * 2 + strokeWidth; // Added strokeWidth to width
-    const height = radius * 2 + strokeWidth; // Added strokeWidth to height
+    const width = radius * 2 + strokeWidth;
+    const height = radius * 2 + strokeWidth;
     const circumference = 2 * Math.PI * radius;
+    const progressValue = circumference * (1 - validAqiValue / validMaxAqi);
 
     // Clear previous SVG elements
     svg.selectAll('*').remove();
@@ -42,8 +40,8 @@ const Circle = ({ aqiValue = 50, maxAqi = 500, AQI = "Air Quality Index", isDark
       .attr('stroke', isDarkMode ? 'rgba(255, 255, 255, 0.25)' : 'rgba(69, 63, 63, 0.25)')
       .attr('stroke-width', strokeWidth);
 
-    // Add progress circle
-    svg
+    // Add progress circle with animation
+    const progressCircle = svg
       .append('circle')
       .attr('cx', width / 2)
       .attr('cy', height / 2)
@@ -52,31 +50,37 @@ const Circle = ({ aqiValue = 50, maxAqi = 500, AQI = "Air Quality Index", isDark
       .attr('stroke', color)
       .attr('stroke-width', strokeWidth)
       .attr('stroke-dasharray', circumference)
-      .attr('stroke-dashoffset', circumference * (1 - validAqiValue / validMaxAqi))
-      .style('transition', 'stroke-dashoffset 0.5s ease-in-out');
+      .attr('stroke-dashoffset', circumference)
+      .attr('stroke-linecap', 'round') // Smooth stroke edges
+      .style('transition', 'stroke-dashoffset 0.1s ease-in-out');
+
+    // Animate stroke
+    progressCircle
+      .transition()
+      .duration(1000)
+      .ease(d3.easeCubicInOut)
+      .attr('stroke-dashoffset', progressValue);
 
     // Add AQI text inside the circle
     svg
-  .append('text')
-  .attr('x', width / 2) // Horizontal center
-  .attr('y', height / 2 +15) // Start from center with a gap from top
-  .attr('text-anchor', 'middle')
-  .attr('fill', color)
-  .style('font-size', '80px') // Adjusted font size for AQI value
-  .style('font-weight', 'bold')
-  .text(validAqiValue)
-  .style('dominant-baseline', 'middle'); // Centers the text vertically with respect to its 'y' position
-
-  
+      .append('text')
+      .attr('x', width / 2)
+      .attr('y', height / 2 + 15)
+      .attr('text-anchor', 'middle')
+      .attr('fill', color)
+      .style('font-size', '80px')
+      .style('font-weight', 'bold')
+      .text(validAqiValue)
+      .style('dominant-baseline', 'middle');
 
     // Add category text inside the circle
     svg
       .append('text')
       .attr('x', width / 2)
-      .attr('y', height / 2 + 70) // Adjusted to position category text below AQI value
+      .attr('y', height / 2 + 70)
       .attr('text-anchor', 'middle')
       .attr('fill', isDarkMode ? 'white' : '#111830')
-      .style('font-size', '18px') // Adjusted font size for category text
+      .style('font-size', '18px')
       .style('font-weight', 'normal')
       .text(text);
 
@@ -84,10 +88,10 @@ const Circle = ({ aqiValue = 50, maxAqi = 500, AQI = "Air Quality Index", isDark
     svg
       .append('text')
       .attr('x', width / 2)
-      .attr('y', height / 2 - 40) // Adjusted to position AQI label text above AQI value
+      .attr('y', height / 2 - 40)
       .attr('text-anchor', 'middle')
       .attr('fill', isDarkMode ? 'white' : '#111830')
-      .style('font-size', '20px') // Adjusted font size for AQI label
+      .style('font-size', '20px')
       .style('font-weight', 'bold')
       .text(AQI);
   }, [validAqiValue, validMaxAqi, color, isDarkMode]);

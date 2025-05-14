@@ -11,7 +11,7 @@ import "leaflet-control-geocoder";
 import "leaflet-control-geocoder/dist/Control.Geocoder.css";
 import * as d3 from "d3";
 import LiveLocation from "./LIveLocation";
-
+import { useMapContext } from "../../Context/MapContext";
 
 const getColorFromAQI = (aqiValue) => {
   if (aqiValue <= 50) return '#00b050';
@@ -123,13 +123,13 @@ const SearchControl = () => {
   return null;
 };
 
-const LeafMap = () => {
+const LiveMap = () => {
   const [fromLocation, setFromLocation] = useState("");
   const [toLocation, setToLocation] = useState("");
   const mapRef = useRef(null);
   const routeControlRef = useRef(null);
   const [markers, setMarkers] = useState([]);
-  // const { radius, setRadius } = useMapContext();
+  const { radius, setRadius } = useMapContext();
   const startMarkerRef = useRef(null);
   const endMarkerRef = useRef(null);
   // const routeControlRef = useRef(null);
@@ -241,23 +241,8 @@ const LeafMap = () => {
 
   return (
     <div className="flex flex-col w-full h-[100vh]">
-      <div className="mb-4 flex flex-col sm:flex-row items-center gap-4 bg-white p-4 shadow-md rounded-lg">
-        <input
-          type="text"
-          placeholder="From Location"
-          value={fromLocation}
-          onChange={(e) => setFromLocation(e.target.value)}
-          className="w-full sm:w-1/3 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-        />
-
-        <input
-          type="text"
-          placeholder="To Location"
-          value={toLocation}
-          onChange={(e) => setToLocation(e.target.value)}
-          className="w-full sm:w-1/3 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-        />
-        {/* <select
+      <div className="mb-4 flex flex-col justify-end sm:flex-row items-center gap-4  p-4  rounded-lg">
+        <select
           name="Selection"
           id="select"
           value={parseInt(radius)}
@@ -267,14 +252,7 @@ const LeafMap = () => {
           <option value="500">500(Meter)</option>
           <option value="1000">1000(Meter)</option>
           <option value="1500">1500(Meter)</option>
-        </select> */}
-
-        <button
-          onClick={getRoute}
-          className="w-full sm:w-auto bg-blue-500 text-white px-5 py-3 rounded-lg shadow-md hover:bg-blue-600 transition active:scale-95"
-        >
-          Get Route 🚀
-        </button>
+        </select>
       </div>
 
       <MapContainer
@@ -307,4 +285,4 @@ const LeafMap = () => {
   );
 };
 
-export default LeafMap;
+export default LiveMap;

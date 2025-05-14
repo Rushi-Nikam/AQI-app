@@ -68,12 +68,12 @@ const Pre = () => {
             </ul>
             
             {/* Link to detailed precautions page */}
-            {/* <Link
+            <Link
               to={`/detailed-precautions/${levelData.level}`} // Modify the URL as needed
               className="text-xs mt-2 underline text-white focus:outline-none cursor-pointer"
             >
               View More
-            </Link> */}
+            </Link>
           </div>
         ))}
       </div>

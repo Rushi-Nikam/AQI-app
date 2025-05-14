@@ -70,9 +70,9 @@ const handler  = ()=>{
         isDarkMode ? "text-white" : "text-[#111830]"
       }`}
     >
-  <h1 className="text-2xl font-bold">Live Air Quality of the {location} City</h1>
+  <h1 className="text-xl font-extrabold">Live Air Quality of the {location} City</h1>
       {/* <p className="text-2xl font-bold">{location} City</p> */}
-      <p className="text-md m-4 ">Maharashtra, India</p>
+      <p className="text-md m-4">Maharashtra, India</p>
     </div>
   
     {/* Content Section */}
