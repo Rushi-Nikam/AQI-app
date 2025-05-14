@@ -94,7 +94,7 @@ const SensorData = ({ darkmode }) => {
       svg
         .append("text")
         .attr("x", width / 2)
-        .attr("y", height - 10)
+        .attr("y", height - 5)
         .attr("text-anchor", "middle")
         .style("font-size", "16px")
         .style("fill", darkmode ? "#fff" : "#000")
@@ -190,7 +190,7 @@ const SensorData = ({ darkmode }) => {
           .append("circle")
           .attr("cx", (d) => xScale(d.originalTimestamp))
           .attr("cy", (d) => yScale(d[metric]))
-          .attr("r", 3)
+          .attr("r", 2)
           .style("cursor", "pointer")
           .attr("fill", dotColor(metric))
           .attr("opacity", 0.7)
@@ -223,116 +223,110 @@ const SensorData = ({ darkmode }) => {
   ]; // List of metrics
 
   return (
-    <div className=" mt-5">
-      {/* Title */}
-      <h1
-        className={`text-3xl font-semibold mb-6  text-gray-800 ${
-          darkmode ? "text-white" : "text-black"
-        }`}
-      >
-   Historical Overview of Air Quality Data
-      </h1>
+    <div className="mt-5 px-4">
+  {/* Title */}
+  <h2
+    className={`text-2xl lg:text-5xl font-semibold mt-20 mb-10  ${
+      darkmode ? "text-white" : "text-black"
+    }`}
+  >
+    Historical Air Quality Values
+  </h2>
 
-      {/* Metric selection buttons */}
+  {/* Metric selection buttons */}
+  <div
+    className={`flex flex-wrap justify-center gap-3 p-4 rounded-2xl mb-6 
+      ${darkmode ? "bg-gray-600 text-gray-100 border border-gray-500" : "bg-gray-200 text-gray-900 border border-gray-300"}
+      shadow-md`}
+  >
+    {metrics.map((metric) => (
+      <button
+        key={metric}
+        onClick={() => setSelectedMetric(metric)}
+        className={`px-3 py-2 text-sm sm:text-base lg:text-md rounded-2xl transition-all duration-300 min-w-[70px] sm:min-w-[90px] md:min-w-[110px] lg:min-w-[140px]
+          ${
+            selectedMetric === metric
+              ? "bg-blue-700 text-white shadow-lg"
+              : darkmode
+              ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+              : "bg-gray-400 text-gray-800 hover:bg-gray-300"
+          }`}
+      >
+        {metric}
+      </button>
+    ))}
+  </div>
+
+  {/* Chart and legend layout */}
+  <div className="flex flex-col lg:flex-row gap-8 items-start">
+    {/* Chart container with scrollbars */}
+    <div className="w-full lg:w-3/4 border rounded-xl shadow-xl bg-white dark:bg-gray-800 p-4 relative overflow-hidden">
+  <div className="max-h-100 overflow-y-auto
+  [&::-webkit-scrollbar]:w-2
+  [&::-webkit-scrollbar-track]:rounded-full
+  [&::-webkit-scrollbar-track]:bg-gray-100
+  [&::-webkit-scrollbar-thumb]:rounded-full
+  [&::-webkit-scrollbar-thumb]:bg-gray-300
+  dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+  dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 max-h-[500px]">
+    <svg
+      ref={svgRef}
+      width={1250}
+      height={500}
+      className="block"
+      style={{ minWidth: "1000px", minHeight: "400px" }}
+    ></svg>
+  </div>
+
+
+      {/* Tooltip */}
       <div
-        className={`flex p-2 justify-center ${
-          darkmode ? "bg-gray-500 text-gray-200" : "bg-gray-300 text-gray-800"
-        } gap-4 sm:gap-2 md:gap-8 lg:gap-[20px] text-xs text-wrap lg:text-2xl sm:text-[2px] lg:px-10 rounded-2xl items-center mb-6`}
-      >
-        {metrics.map((metric) => (
-          <button
-            key={metric}
-            onClick={() => setSelectedMetric(metric)}
-            className={`px-4 py-2 text-xs lg:text-xl cursor-pointer rounded-2xl w-[60px] lg:w-[160px] md:w-[120px] sm:w-[20px] ${
-              selectedMetric === metric
-                ? "bg-blue-700 text-white"
-                : darkmode
-                ? "bg-gray-700 text-gray-200"
-                : "bg-gray-400 text-gray-800"
-              }`}
-            >
-              {metric}
-            </button>
-          ))}
-        </div>
-  
-        {/* SVG container for D3 chart */}
-        <div className="flex">
+        ref={tooltipRef}
+        style={{
+          position: "absolute",
+          background: "rgba(0, 0, 0, 0.7)",
+          color: "#fff",
+          padding: "4px",
+          borderRadius: "3px",
+          visibility: "hidden",
+          pointerEvents: "none",
+          zIndex: 10,
+        }}
+      ></div>
+    </div>
 
-      
-        <svg ref={svgRef} width="1200" height="500" className="mx-auto"></svg>
-  
-        {/* Tooltip for hover interactions */}
-        <div
-          ref={tooltipRef}
-          style={{
-            position: "absolute",
-            background: "rgba(0, 0, 0, 0.7)",
-            color: "#fff",
-            padding: "5px",
-            borderRadius: "3px",
-            visibility: "hidden",
-            pointerEvents: "none",
-          }}
-        ></div>
-         <div
-        className={` my-2 text-xl ${
-          darkmode ? "text-white" : "text-black"
-        }`}
-        
-      >
-       
-        <table className="table-auto text-center">
-  <thead>
-    <tr>
-      <th>Color</th>
-      <th>Value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style={{ color: "yellow" }}>■</td>
-      <td>Temperature</td>
-    </tr>
-    <tr>
-      <td style={{ color: "pink" }}>■</td>
-      <td>Humidity</td>
-    </tr>
-    <tr>
-      <td style={{ color: "black" }}>■</td>
-      <td>MQ7</td>
-    </tr>
-    <tr>
-      <td style={{ color: "purple" }}>■</td>
-      <td>MQ131</td>
-    </tr>
-    <tr>
-      <td style={{ color: "green" }}>■</td>
-      <td>NO2</td>
-    </tr>
-    <tr>
-      <td style={{ color: "orange" }}>■</td>
-      <td>NH3</td>
-    </tr>
-    <tr>
-      <td style={{ color: "gold" }}>■</td>
-      <td>PM2.5</td>
-    </tr>
-    <tr>
-      <td style={{ color: "red" }}>■</td>
-      <td>/ PM10</td>
-    </tr>
-    <tr>
-      <td style={{ color: "violet" }}>■</td>
-      <td>AQI</td>
-    </tr>
-  </tbody>
-</table>
+    {/* Legend */}
+    <div
+      className={`w-full lg:w-1/4 text-sm sm:text-base lg:text-lg border rounded-xl shadow-md p-4 
+        ${darkmode ? "text-white bg-gray-800 border-gray-600" : "text-black bg-white border-gray-300"}`}
+    >
+      <table className="table-auto w-full text-center">
+        <thead>
+          <tr>
+            <th className="py-2">Color</th>
+            <th className="py-2">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style={{ color: "yellow" }}>■</td><td>Temperature</td></tr>
+          <tr><td style={{ color: "pink" }}>■</td><td>Humidity</td></tr>
+          <tr><td style={{ color: "black" }}>■</td><td>MQ7</td></tr>
+          <tr><td style={{ color: "purple" }}>■</td><td>MQ131</td></tr>
+          <tr><td style={{ color: "green" }}>■</td><td>NO2</td></tr>
+          <tr><td style={{ color: "orange" }}>■</td><td>NH3</td></tr>
+          <tr><td style={{ color: "gold" }}>■</td><td>PM2.5</td></tr>
+          <tr><td style={{ color: "red" }}>■</td><td>PM10</td></tr>
+          <tr><td style={{ color: "violet" }}>■</td><td>AQI</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
 
-      </div>
-      </div>
-      </div>
+
+
+
     );
   };
   

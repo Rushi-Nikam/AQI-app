@@ -83,12 +83,12 @@ const endIcon = new Icon({
   iconSize: [35, 45],
 });
 
-const SearchControl = () => {
+const SearchControl = ({ isDarkMode }) => {
   const map = useMap();
+
   useEffect(() => {
     if (!map) return;
 
-    // Geocoder integration
     const geocoder = L.Control.Geocoder.nominatim();
     const geocoderControl = L.Control.geocoder({
       position: "topright",
@@ -98,35 +98,50 @@ const SearchControl = () => {
       .on("markgeocode", (e) => {
         const { center } = e.geocode;
 
-        // Remove any existing circles
         if (map._searchCircle) {
           map.removeLayer(map._searchCircle);
         }
 
-        // Add a circle of radius 1km (1000 meters)
         map._searchCircle = L.circle(center, {
-          radius: 1000, // Set radius in meters
-          color: "#339abe", // Circle border color
-          fillColor: "lightblue", // Fill color
-          fillOpacity: 0.5, // Transparency level
+          radius: 1000,
+          color: "#339abe",
+          fillColor: "lightblue",
+          fillOpacity: 0.5,
         }).addTo(map);
 
         L.marker(center).addTo(map).bindPopup(e.geocode.name).openPopup();
-
         map.setView(center, 13);
       })
       .addTo(map);
 
+    // Apply dark mode styles to the geocoder input
+    const geocoderElement = document.querySelector('.leaflet-control-geocoder');
+    if (geocoderElement) {
+      const input = geocoderElement.querySelector('input');
+      if (isDarkMode) {
+        geocoderElement.classList.add('bg-gray-800', 'text-white');
+        input.classList.add('bg-gray-700', 'text-white', 'placeholder-gray-400');
+      } else {
+        geocoderElement.classList.remove('bg-gray-800', 'text-white');
+        input.classList.remove('bg-gray-700', 'text-white', 'placeholder-gray-400');
+      }
+    }
+
     return () => map.removeControl(geocoderControl);
-  }, [map]);
+  }, [map, isDarkMode]);
 
   return null;
 };
 
-const LeafMap = () => {
+const LeafMap = ({darkMode}) => {
   const [fromLocation, setFromLocation] = useState("");
   const [toLocation, setToLocation] = useState("");
   const mapRef = useRef(null);
+   const [data, setData] = useState({
+      aqi:"",
+      latitude:"",
+      longitude:"",
+    });
   const routeControlRef = useRef(null);
   const [markers, setMarkers] = useState([]);
   // const { radius, setRadius } = useMapContext();
@@ -134,6 +149,21 @@ const LeafMap = () => {
   const endMarkerRef = useRef(null);
   // const routeControlRef = useRef(null);
   // Function to update markers
+  const fetchData = async () => {
+      try {
+        const response = await fetch(`aqi_values/get-data/`);
+        const sensors = await response.json();
+        // const data = sensors.Bus_data;
+        setData(sensors.Bus_data);
+        // console.log({data});
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+  
+    useEffect(() => {
+      fetchData();
+    }, []);
   const updateMarkers = useCallback(() => {
     const newMarkers = [
       // { aqi: 12, latitude: 18.6011, longitude: 73.7641 },
@@ -240,70 +270,80 @@ const LeafMap = () => {
   }, [updateMarkers]);
 
   return (
-    <div className="flex flex-col w-full h-[100vh]">
-      <div className="mb-4 flex flex-col sm:flex-row items-center gap-4 bg-white p-4 shadow-md rounded-lg">
-        <input
-          type="text"
-          placeholder="From Location"
-          value={fromLocation}
-          onChange={(e) => setFromLocation(e.target.value)}
-          className="w-full sm:w-1/3 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-        />
+  <div className={`flex flex-col w-full h-[100vh] ${darkMode ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
+  {/* Input and Button Section */}
+  <div
+    className={`mb-4 flex flex-col sm:flex-row items-center gap-4 p-4 shadow-md rounded-lg ${
+      darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
+    }`}
+  >
+    <input
+      type="text"
+      placeholder="From Location"
+      value={fromLocation}
+      onChange={(e) => setFromLocation(e.target.value)}
+      className={`w-full sm:w-1/3 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition ${
+        darkMode ? "bg-gray-700 text-white border-gray-600" : "border-gray-300"
+      }`}
+    />
 
-        <input
-          type="text"
-          placeholder="To Location"
-          value={toLocation}
-          onChange={(e) => setToLocation(e.target.value)}
-          className="w-full sm:w-1/3 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-        />
-        {/* <select
-          name="Selection"
-          id="select"
-          value={parseInt(radius)}
-          onChange={(e) => setRadius(parseInt(e.target.value))}
-          className="p-3 border border-gray-300 rounded-lg focus:outline-none"
-        >
-          <option value="500">500(Meter)</option>
-          <option value="1000">1000(Meter)</option>
-          <option value="1500">1500(Meter)</option>
-        </select> */}
+    <input
+      type="text"
+      placeholder="To Location"
+      value={toLocation}
+      onChange={(e) => setToLocation(e.target.value)}
+      className={`w-full sm:w-1/3 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition ${
+        darkMode ? "bg-gray-700 text-white border-gray-600" : "border-gray-300"
+      }`}
+    />
 
-        <button
-          onClick={getRoute}
-          className="w-full sm:w-auto bg-blue-500 text-white px-5 py-3 rounded-lg shadow-md hover:bg-blue-600 transition active:scale-95"
-        >
-          Get Route 🚀
-        </button>
-      </div>
+    <button
+      onClick={getRoute}
+      className={`w-full sm:w-auto px-5 py-3 rounded-lg shadow-md transition active:scale-95 ${
+        darkMode
+          ? "bg-gray-700 text-white hover:bg-blue-600"
+          : "bg-gray-500 text-white hover:bg-blue-600"
+      }`}
+    >
+      Get Route 🚀
+    </button>
+  </div>
 
-      <MapContainer
-        className="h-[80vh] w-full z-50"
-        center={[18.5913, 73.7389]}
-        zoom={14}
-        // whenCreated={(map)=>{mapRef.current=map}}
-        ref={mapRef}
-        // whenCreated={(map) => (mapRef.current = map)}
+  {/* Map Container */}
+  <MapContainer
+    className="h-[80vh] w-full z-50 rounded-lg overflow-hidden"
+    center={[18.5913, 73.7389]}
+    zoom={14}
+    ref={mapRef}
+  >
+    {/* Use dark tiles if dark mode is enabled */}
+    <TileLayer
+      url=    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      
+      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    />
+    
+    <SearchControl  isDarkMode={darkMode}/>
+    <LiveLocation />
+    
+    {markers.map((marker, index) => (
+      <Marker
+        key={index}
+        position={marker.geocode}
+        icon={createCustomIconWithD3(
+          marker.aqiValue,
+          marker.backgroundColor,
+          marker.textColor,
+          48
+        )}
       >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <SearchControl />
-        <LiveLocation />
-        {markers.map((marker, index) => (
-          <Marker
-            key={index}
-            position={marker.geocode}
-            icon={createCustomIconWithD3(
-              marker.aqiValue,
-              marker.backgroundColor,
-              marker.textColor,
-              48
-            )}
-          >
-            <Popup>{marker.popup}</Popup>
-          </Marker>
-        ))}
-      </MapContainer>
-    </div>
+        <Popup>{marker.popup}</Popup>
+      </Marker>
+    ))}
+  </MapContainer>
+</div>
+
+
   );
 };
 

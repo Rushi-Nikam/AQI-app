@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "./Component/Navbars/Navbar";
 import Routers from "./Route/Routers";
 import { BrowserRouter } from "react-router-dom"; // Import BrowserRouter
@@ -19,7 +19,8 @@ function App() {
   return (
 
 
-   <MapProvider> <BrowserRouter > {/* Wrap your components with BrowserRouter */}
+   <MapProvider> 
+  <BrowserRouter > {/* Wrap your components with BrowserRouter */}
    <div className={`flex flex-col min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-black'}`}>
      <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
      <main className="flex-grow relative p-4">

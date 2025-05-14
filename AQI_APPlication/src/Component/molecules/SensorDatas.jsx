@@ -181,38 +181,50 @@ const SensorDatas = ({ darkMode }) => {
   };
 
   return (
-    <div
-      className={`text-center mt-5 ${darkMode ? "bg-gray-900 text-white" : "bg-white text-black"}`} // Apply dark mode classes
-    >
-   <h2 className="text-3xl font-semibold mb-6 text-center text-gray-800 dark:text-white">
-  Air Quality Data Over Time
-</h2>
+   <div className="px-4 sm:px-8 lg:px-16 py-8">
+  <h2 className="text-2xl lg:text-5xl font-semibold mt-20 mb-10 text-gray-800 dark:text-white">
+    Past Air Quality Values
+  </h2>
 
-      {/* Dropdown for selecting the date */}
-      <div className="mb-5">
-        <select
-          value={selectedDate}
-          onChange={handleDateChange}
-          className={`${darkMode?"bg-black text-white":"bg-white text-black"}border p-2 rounded`}
-        >
-          <option className={`${darkMode?"bg-black text-white":"bg-white text-black"}`} value="">Select a Date</option> {/* Empty option to clear the selection */}
-          {groupedData.map((data) => (
-            <option key={data.date} value={data.date}>
-              {data.date}
-            </option>
-          ))}
-        </select>
-      </div>
+  <div
+    className={`text-center mt-5 rounded-xl shadow-lg border transition-all duration-300 
+      ${darkMode ? "bg-gray-900 text-white border-gray-700" : "bg-white text-black border-gray-300"}`}
+  >
+    {/* Dropdown for selecting the date */}
+    <div className="mb-5 p-4">
+      <select
+        value={selectedDate}
+        onChange={handleDateChange}
+        className={`p-2 rounded border focus:outline-none focus:ring-2 focus:ring-blue-400 
+          ${darkMode ? "bg-slate-700 text-white border-gray-600" : "bg-white text-black border-gray-400"}`}
+      >
+        <option
+          className={darkMode ? "bg-slate-700 text-white" : "bg-white text-black"}
+          value=""
+        ></option>
+        {groupedData.map((data) => (
+          <option key={data.date} value={data.date}>
+            {data.date}
+          </option>
+        ))}
+      </select>
+    </div>
 
+    <hr className="border-t border-gray-300 dark:border-gray-600 mb-10 mx-4" />
+
+    <div className="overflow-x-auto px-2">
       <svg
         ref={svgRef}
         width="100%"
-        height="500"
+        height="600"
         viewBox="0 0 800 500"
         preserveAspectRatio="xMidYMid meet"
-        className="border border-gray-400 mt-5"
+        className="mt-5"
       ></svg>
     </div>
+  </div>
+</div>
+
   );
 };
 

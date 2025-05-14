@@ -40,3 +40,27 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 12px; /* Vertical scrollbar */
+  height: 12px; /* Horizontal scrollbar */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Light background for the track */
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #888; /* Darker thumb */
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Darker thumb on hover */
+}
+
+.custom-scrollbar::-webkit-scrollbar-corner {
+  background: #f1f1f1; /* Bottom-right corner */
+}

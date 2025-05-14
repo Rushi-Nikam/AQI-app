@@ -52,94 +52,93 @@ export default function PollutantInfo({darkMode}) {
 
 
   return (
-    <div className={`${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} min-h-screen flex flex-col items-center p-6 space-y-8 transition-all`}>
-      
-    
+  <div>
+  <h2
+    className={`text-2xl lg:text-5xl font-bold my-12 text-center ${
+      darkMode ? "text-white" : "text-gray-800"
+    }`}
+  >
+    Air Quality Relevant Information
+  </h2>
 
-      {/* Buttons */}
-      <div className="flex space-x-4">
-        {Object.keys(pollutants).map((key) => (
-          <motion.button
-            key={key}
-            onClick={() => setSelected(key)}
-            className={`relative px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${
-              selected === key 
-                ? "bg-blue-600 text-white" 
-                : darkMode 
-                  ? "bg-gray-700 text-gray-300" 
-                  : "bg-gray-200 text-gray-800"
-            }`}
-            whileHover={{ scale: 1.1 }}
-          >
-            {key}
-            {selected === key && (
-              <motion.div
-                className="absolute left-1/2 top-full h-16 w-1 bg-blue-600"
-                initial={{ height: 0 }}
-                animate={{ height: 30 }}
-                transition={{ duration: 0.5 }}
-              />
-            )}
-          </motion.button>
-        ))}
-      </div>
-
-      
-      {/* Information Box */}
-      <motion.div 
-            key={`overview-${selected}`} 
-            className={`p-6 w-[50%] border rounded-lg shadow-lg ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300"}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-xl w-[50%] font-bold mb-2">Overview</h2>
-            <p className={`${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-              {pollutants[selected].description}
-            </p>
-          </motion.div>
-
-          {/* Why It Spikes */}
-          <motion.div 
-            key={`causes-${selected}`} 
-            className={`p-6 border w-[50%] rounded-lg shadow-lg ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300"}`}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <h2 className="text-xl w-[50%] font-bold mb-2">Why It Spikes?</h2>
-            <p className={`${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-              {pollutants[selected].causes}
-            </p>
-          </motion.div>
-
-          {/* Health Effects */}
-          <motion.div 
-            key={`effects-${selected}`} 
-            className={`p-6 border  w-[50%] rounded-lg shadow-lg ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300"}`}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <h2 className="text-xl w-[50%] font-bold mb-2">Health Effects</h2>
-            <p className={`${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-              {pollutants[selected].effects}
-            </p>
-          </motion.div>
-
-          {/* How to Stay Safe */}
-          <motion.div 
-            key={`precautions-${selected}`} 
-            className={`p-6 border rounded-lg w-[50%] shadow-lg ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300"}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-          >
-            <h2 className="text-xl font-bold w-[50%] mb-2">How to Stay Safe?</h2>
-            <p className={`${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-              {pollutants[selected].precautions}
-            </p>
-          </motion.div>
+  <div
+    className={`min-h-screen flex flex-col items-center px-4 py-10 space-y-12 transition-all duration-500 ${
+      darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"
+    }`}
+  >
+    {/* Pollutant Selection Buttons */}
+    <div className="flex flex-wrap justify-center gap-4">
+      {Object.keys(pollutants).map((key) => (
+        <motion.button
+          key={key}
+          onClick={() => setSelected(key)}
+          whileHover={{ scale: 1.05 }}
+          className={`relative px-5 py-2 rounded-full font-medium transition-all duration-300 border ${
+            selected === key
+              ? "bg-blue-600 text-white shadow-md"
+              : darkMode
+              ? "bg-gray-700 text-gray-200 border-gray-600 hover:bg-gray-600"
+              : "bg-white text-gray-800 border-gray-300 hover:bg-gray-200"
+          }`}
+        >
+          {key}
+          {selected === key && (
+            <motion.div
+              className="absolute bottom-[-8px] left-1/2 transform -translate-x-1/2 h-[6px] w-[6px] bg-blue-500 rounded-full"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.3 }}
+            />
+          )}
+        </motion.button>
+      ))}
     </div>
+
+    {/* Info Boxes Grid */}
+    <div className="grid gap-6 w-full max-w-7xl grid-cols-1 ">
+      {[
+        {
+          key: "overview",
+          title: "Overview",
+          content: pollutants[selected].description,
+        },
+        {
+          key: "causes",
+          title: "Why It Spikes?",
+          content: pollutants[selected].causes,
+        },
+        {
+          key: "effects",
+          title: "Health Effects",
+          content: pollutants[selected].effects,
+        },
+        {
+          key: "precautions",
+          title: "How to Stay Safe?",
+          content: pollutants[selected].precautions,
+        },
+      ].map((item, idx) => (
+        <motion.div
+          key={`${item.key}-${selected}`}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: idx * 0.1 }}
+          whileHover={{ scale: 1.02 }}
+          className={`p-6 rounded-2xl border shadow-md transition-all duration-300 ${
+            darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300"
+          }`}
+        >
+          <h3 className="text-lg lg:text-xl font-semibold mb-2">{item.title}</h3>
+          <p className={darkMode ? "text-gray-300" : "text-gray-700"}>
+            {item.content}
+          </p>
+        </motion.div>
+      ))}
+    </div>
+  </div>
+</div>
+
+
+
   );
 }

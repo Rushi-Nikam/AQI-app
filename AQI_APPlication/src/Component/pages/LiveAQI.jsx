@@ -26,7 +26,7 @@
 //     const fetchHourlyAQI = async () => {
 //       try {
 //         const response = await fetch(
-//           `http://34.30.30.232:8000/aqi_values/24_hours/` // Updated API endpoint
+//            // Updated API endpoint
 //         );
 //         if (!response.ok) {
 //           throw new Error(`Failed to fetch live AQI data: ${response.status}`);
@@ -118,34 +118,32 @@
 
 // export default LiveAQI;
 import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-// Function to get color based on AQI value
-const getAqiColor = (value) => {
-  if (value <= 50) return '#00b050';
-  if (value <= 100) return '#92d050';
-  if (value <= 200) return '#ffff00';
-  if (value <= 300) return '#ff9900';
-  if (value <= 400) return '#ff0000';
-  return '#c00000';
+const getAqiColor = (aqi) => {
+  if (aqi <= 50) return "#00e400";
+  if (aqi <= 100) return "#ffff00";
+  if (aqi <= 200) return "#ff7e00";
+  if (aqi <= 300) return "#ff0000";
+  if (aqi <= 400) return "#8f3f97";
+  return "#7e0023";
 };
 
 const LiveAQI = ({ isdarkMode }) => {
   const [hourlyAQI, setHourlyAQI] = useState(null);
 
-  // Dummy data for fallback (24 hours of AQI data for Pune)
+  // Dummy fallback data
   const dummyData = Array.from({ length: 24 }, (_, index) => ({
-    aqi: Math.floor(Math.random() * 150) + 50, // Random AQI between 50 and 200
+    AQI: Math.floor(Math.random() * 150) + 50,
     location: "Pune",
-    timestamp: new Date(Date.now() - index * 3600000).toISOString(), // Each entry is 1 hour apart
-  })).reverse(); // Oldest first, latest last
+    TimestampDays: new Date(Date.now() - index * 3600000).toISOString(),
+  })).reverse();
 
   useEffect(() => {
-    // Fetching live AQI data (API call)
     const fetchHourlyAQI = async () => {
       try {
         const response = await fetch(
-          `http://34.30.30.232:8000/aqi_values/24_hours/` // API endpoint for 24-hour data
+          `http://34.30.30.232:8000/aqi_values/predict_next_5_days/`
         );
         if (!response.ok) {
           throw new Error(`Failed to fetch live AQI data: ${response.status}`);
@@ -154,7 +152,6 @@ const LiveAQI = ({ isdarkMode }) => {
         setHourlyAQI(data);
       } catch (error) {
         console.error("Error fetching live AQI:", error);
-        // Fallback to dummy data in case of an error
         setHourlyAQI(dummyData);
       }
     };
@@ -167,74 +164,76 @@ const LiveAQI = ({ isdarkMode }) => {
   }
 
   return (
-    <div className="p-6 dark:bg-gray-900">
-      <h2 className="text-3xl font-semibold mb-6 text-center text-gray-800 dark:text-white">
-        Predicted AQI Levels for Next 24 Hours
+    <div className="p-2 dark:bg-gray-900">
+      <h2 className="text-2xl lg:text-5xl mb-10 font-semibold text-gray-800 dark:text-white">
+        Air quality forecast: 24 Hours prediction
       </h2>
 
-      {/* Horizontal scroll container with snapping and custom scrollbar */}
-      <div className="overflow-x-auto flex space-x-6 p-2 scroll-smooth snap-x snap-mandatory overflow-y-hidden [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400 dark:[&::-webkit-scrollbar-thumb]:bg-gray-600 [&::-webkit-scrollbar-track]:bg-gray-200 dark:[&::-webkit-scrollbar-track]:bg-gray-800 rounded-md">
+      <div className="overflow-x-auto flex space-x-6 p-2 scroll-smooth snap-x snap-mandatory overflow-y-hidden 
+                      [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-full 
+                      [&::-webkit-scrollbar-thumb]:bg-gray-400 dark:[&::-webkit-scrollbar-thumb]:bg-gray-600 
+                      [&::-webkit-scrollbar-track]:bg-gray-200 dark:[&::-webkit-scrollbar-track]:bg-gray-800 
+                      rounded-md">
         {hourlyAQI.map((data, index) => (
-          <div
-            key={index}
-            className="flex-shrink-0 snap-center flex flex-col items-center p-6 bg-gradient-to-r shadow-2xl rounded-xl w-52 transform transition-transform duration-300 hover:scale-105"
-          >
-            {/* Circular AQI Indicator with Progress */}
-            <svg width="90" height="90" viewBox="0 0 100 100">
-              {/* Background circle */}
-              <circle
-                cx="50"
-                cy="50"
-                r="40"
-                stroke="gray"
-                strokeWidth="5"
-                fill="none"
-                opacity="0.3"
-              />
-              {/* Progress circle */}
-              <circle
-                cx="50"
-                cy="50"
-                r="40"
-                stroke={getAqiColor(data.aqi)}
-                strokeWidth="5"
-                fill="none"
-                strokeDasharray="251.2"
-                strokeDashoffset={251.2 - (data.aqi / 500) * 251.2}
-                transform="rotate(-90 50 50)"
-                className="transition-all duration-500"
-              />
-              {/* AQI value inside the circle */}
-              <text
-                x="50"
-                y="55"
-                textAnchor="middle"
-                fontSize="22"
-                fill={isdarkMode ? "white" : "black"}
-                fontWeight="bold"
-              >
-                {Math.round(data.aqi)}
-              </text>
-            </svg>
+          <Link to={`/aqi-detail/${index}`} state={{ aqiData: data }} key={index}>
+            <div
+              className="flex-shrink-0 snap-center flex flex-col items-center p-6 bg-gradient-to-br from-white to-gray-100 dark:from-gray-800 dark:to-gray-700 
+                         shadow-2xl border border-gray-300 dark:border-gray-600 rounded-xl w-52 
+                         transform transition-transform duration-300 hover:scale-105 hover:shadow-xl cursor-pointer"
+            >
+              <svg width="90" height="90" viewBox="0 0 100 100">
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  stroke="gray"
+                  strokeWidth="5"
+                  fill="none"
+                  opacity="0.3"
+                />
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  stroke={getAqiColor(data.AQI)}
+                  strokeWidth="5"
+                  fill="none"
+                  strokeDasharray="251.2"
+                  strokeDashoffset={251.2 - (data.AQI / 500) * 251.2}
+                  transform="rotate(-90 50 50)"
+                  className="transition-all duration-500"
+                />
+                <text
+                  x="50"
+                  y="55"
+                  textAnchor="middle"
+                  fontSize="22"
+                  fill={isdarkMode ? "white" : "black"}
+                  fontWeight="bold"
+                >
+                  {Math.round(data.AQI)}
+                </text>
+              </svg>
 
-            {/* Time and AQI category */}
-            <p className={`${isdarkMode ? "text-white" : "text-gray-500"} mt-3 text-center text-xl font-semibold`}>
-              {`${new Date(data.timestamp).getHours()}:00`}
-            </p>
-            <p className={`mt-2 ${isdarkMode ? "text-white" : "text-gray-500"} text-center text-sm`}>
-              {data.aqi <= 50
-                ? "Good"
-                : data.aqi <= 100
-                ? "Satisfactory"
-                : data.aqi <= 200
-                ? "Moderate"
-                : data.aqi <= 300
-                ? "Poor"
-                : data.aqi <= 400
-                ? "Very Poor"
-                : "Severe"}
-            </p>
-          </div>
+         <p className={`${isdarkMode ? "text-white" : "text-gray-800"} mt-3 text-center text-xl font-semibold`}>
+  {new Date(data.TimestampDays).toISOString().split('T')[0]} {new Date(data.TimestampDays).toTimeString().split(' ')[0].slice(0, 5)}
+</p>
+
+              <p className={`mt-2 ${isdarkMode ? "text-gray-300" : "text-gray-600"} text-center text-sm`}>
+                {data.AQI <= 50
+                  ? "Good"
+                  : data.AQI <= 100
+                  ? "Satisfactory"
+                  : data.AQI <= 200
+                  ? "Moderate"
+                  : data.AQI <= 300
+                  ? "Poor"
+                  : data.AQI <= 400
+                  ? "Very Poor"
+                  : "Severe"}
+              </p>
+            </div>
+          </Link>
         ))}
       </div>
     </div>
@@ -242,5 +241,3 @@ const LiveAQI = ({ isdarkMode }) => {
 };
 
 export default LiveAQI;
-
-

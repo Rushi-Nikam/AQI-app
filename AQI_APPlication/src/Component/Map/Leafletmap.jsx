@@ -8,6 +8,7 @@ import 'leaflet-control-geocoder';
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css'; 
 import LIveLocation from "./LIveLocation"
 import { Link } from 'react-router-dom';
+import LiveLocation from './LIveLocation';
 
 const getColorFromAQI = (aqiValue) => {
   if (aqiValue <= 50) return '#00b050';
@@ -48,10 +49,12 @@ const createCustomIconWithD3 = (aqiValue, backgroundColor, Color, size = 44) => 
   });
 };
 
-const SearchControl = () => {
+const SearchControl = ({ isDarkMode }) => {
   const map = useMap();
+
   useEffect(() => {
     if (!map) return;
+
     const geocoder = L.Control.Geocoder.nominatim();
     const geocoderControl = L.Control.geocoder({
       position: 'topright',
@@ -67,12 +70,27 @@ const SearchControl = () => {
         map.setView(center, 20);
       })
       .addTo(map);
+
+    // Get the geocoder element and apply dark mode or light mode classes
+    const geocoderElement = document.querySelector('.leaflet-control-geocoder');
+    if (geocoderElement) {
+      if (isDarkMode) {
+        geocoderElement.classList.add('bg-gray-800', 'text-white');
+        geocoderElement.querySelector('input').classList.add('bg-gray-700', 'text-white');
+      } else {
+        geocoderElement.classList.remove('bg-gray-800', 'text-white');
+        geocoderElement.querySelector('input').classList.remove('bg-gray-700', 'text-white');
+      }
+    }
+
     return () => map.removeControl(geocoderControl);
-  }, [map]);
+  }, [map, isDarkMode]);
+
   return null;
 };
 
-const Leafletmap = () => {
+
+const Leafletmap = ({darkMode}) => {
   const [data, setData] = useState({
     aqi:"",
     latitude:"",
@@ -98,9 +116,9 @@ const Leafletmap = () => {
     }
   };
 
-  // useEffect(() => {
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   // const updateMarkers = useCallback(async () => {
     
@@ -184,44 +202,52 @@ const intervelFun = ()=>{
   return (
     <Link to="/Leaf-map" >
 
-    <div className="flex w-full ">
-    <MapContainer
-      className="h-[60vh] sm:h-[70vh] lg:h-[80vh] md:h-[80vh] w-full rounded-[4%] z-50"
-      center={[18.5913, 73.7389]}
-      zoom={13}
-      zoomControl={false}
-      scrollWheelZoom={false}
-      doubleClickZoom={false}
-      dragging={false}
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <SearchControl />
-      <LIveLocation />
+   <div className="flex w-full">
+  <MapContainer
+    className={`h-[60vh] sm:h-[70vh] lg:h-[80vh] md:h-[80vh] w-full rounded-[4%] z-50 ${
+      darkMode ? "bg-gray-900" : "bg-white"
+    }`}
+    center={[18.5913, 73.7389]}
+    zoom={13}
+    zoomControl={false}
+    scrollWheelZoom={false}
+    doubleClickZoom={false}
+    dragging={false}
+  >
+    <TileLayer
+      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    //  url={
+    //     darkMode
+    //       ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+    //       : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    //   }
+      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+    />
+    <SearchControl />
+    <LiveLocation />
 
-      {/* Display dynamic markers */}
-      {markers.map((marker, index) => (
-        <Marker
-          key={index}
-          position={marker.geocode}
-          icon={createCustomIconWithD3(marker.aqiValue, marker.backgroundColor, marker.Color, 40)}
-        >
-          <Popup>{`${marker.popup}, Maharashtra`}</Popup>
-        </Marker>
-      ))}
-    </MapContainer>
+    {/* Display dynamic markers */}
+    {markers.map((marker, index) => (
+      <Marker
+        key={index}
+        position={marker.geocode}
+        icon={createCustomIconWithD3(marker.aqiValue, marker.backgroundColor, marker.Color, 40)}
+      >
+        <Popup>{`${marker.popup}, Maharashtra`}</Popup>
+      </Marker>
+    ))}
+  </MapContainer>
 
-    {/* Add Link for navigation */}
-    {/* <div className="absolute top-[170px] right-20 z-50">
-      <Link to="/map-aqi">
-        <button className="px-8 py-2 bg-gray-500 text-white rounded-lg shadow-md hover:bg-transparent hover:text-black border-2 border-green-300 ">
-           Map
-        </button>
-      </Link>
-    </div> */}
-  </div>
+  {/* Optional Link for navigation */}
+  {/* <div className="absolute top-[170px] right-20 z-50">
+    <Link to="/map-aqi">
+      <button className="px-8 py-2 bg-gray-500 text-white rounded-lg shadow-md hover:bg-transparent hover:text-black border-2 border-green-300">
+         Map
+      </button>
+    </Link>
+  </div> */}
+</div>
+
   </Link>
   );
 };

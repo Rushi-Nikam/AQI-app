@@ -43,20 +43,21 @@ const Navbar = ({ isDarkMode=true, setIsDarkMode }) => {
           AQI
         </Link>
 
-        {/* Existing Map Links */}
-        <div className="hidden sm:flex gap-10 lg:mr-[200px] justify-center items-center text-center">
-          <div>
-            <Link to="/Leaf-map" className="flex justify-center items-center gap-1">
-              Map {location.pathname === '/Leaf-map' ? <FaChevronUp /> : <FaChevronDown />}
-            </Link>
-          </div>
-          {/* <div>
-            <Link to='/Bar_chart' className='flex justify-center items-center gap-1'>BarChart {location.pathname==='/Bar_chart' ? <FaChevronUp />:<FaChevronDown />} </Link>
-          </div> */}
-          {/* <div>
-            <Link to='/new_page' className='flex justify-center items-center gap-1'>scatter{location.pathname==='/new_page' ? <FaChevronUp />:<FaChevronDown />}</Link>
-          </div> */}
-        </div> 
+      {/* Existing Map Links */}
+<div className="hidden lg:flex gap-10 justify-center items-center text-center">
+  <div>
+    <Link to="/Leaf-map" className="flex justify-center items-center gap-1">
+      Map {location.pathname === '/Leaf-map' ? <FaChevronUp /> : <FaChevronDown />}
+    </Link>
+  </div>
+  {/* <div>
+    <Link to='/Bar_chart' className='flex justify-center items-center gap-1'>BarChart {location.pathname==='/Bar_chart' ? <FaChevronUp />:<FaChevronDown />} </Link>
+  </div> */}
+  {/* <div>
+    <Link to='/new_page' className='flex justify-center items-center gap-1'>scatter{location.pathname==='/new_page' ? <FaChevronUp />:<FaChevronDown />}</Link>
+  </div> */}
+</div>
+
 
         {/* Mobile Menu Button */}
         <div className="block lg:hidden">
@@ -100,8 +101,8 @@ const Navbar = ({ isDarkMode=true, setIsDarkMode }) => {
           <Link to="/" className="text-3xl">
             {/* <IoIosNotificationsOutline /> */}
           </Link>
-          <Link to='/map-aqi' className='flex justify-center items-center gap-1'>
-            Map {location.pathname === '/map-aqi' ? <FaChevronUp /> : <FaChevronDown />}
+          <Link to='/Leaf-map' className='flex justify-center items-center gap-1'>
+            Map {location.pathname === '/Leaf-map' ? <FaChevronUp /> : <FaChevronDown />}
           </Link>
           <div onClick={() => setIsDarkMode(!isDarkMode)} className="text-2xl text-black cursor-pointer">
             {isDarkMode ? <FaRegMoon /> : <IoSunnyOutline />}

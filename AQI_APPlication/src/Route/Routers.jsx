@@ -32,6 +32,8 @@ import LeafMap from "../Component/Map/LeafMap";
 import Maplibre from "../Component/Map/Maplibre";
 import Demo from "../Component/Map/Demo";
 import Deomse from "../Component/Map/Deomse";
+import AQIDetail from '../Component/pages/AQIDetail';
+import LiveMap from '../Component/Map/LiveMap';
 
 
 const Routers = ({ isDarkMode }) => {
@@ -41,7 +43,7 @@ const Routers = ({ isDarkMode }) => {
         <Route path="/" element={<HomePage isDarkMode={isDarkMode} />} />
         <Route path="/about" element={<About isDarkMode={isDarkMode} />} />
         <Route path="/new_page" element={<DemoPage />} />
-
+<Route path='/data' element={<LiveMap darkMode={isDarkMode}/>}/>
         {/* AQI Data Routes */}
         <Route path="/aqi-info" element={<AQIdata isDarkMode={isDarkMode} />} />
         <Route path="/aqi-table" element={<AQITable isDarkMode={isDarkMode} />} />
@@ -49,14 +51,15 @@ const Routers = ({ isDarkMode }) => {
         <Route path="/locality/:name" element={<LocalityDetail isDarkMode={isDarkMode} />} />
         <Route path="/live-aqi" element={<LiveAQI />} />
         <Route path="/detail/:AQI" element={<PredictDetails />} />
+         <Route path="/aqi-detail/:index" element={<AQIDetail />} />
 
         {/* Map Routes */}
         <Route path="/map" element={<MapII isDarkMode={isDarkMode} />} />
         <Route path="/map-aqi" element={<MapwithAQI />} />
         <Route path="/map-choro" element={<Choropath />} />
         <Route path="/aqi-map" element={<AQIMap isDarkMode={isDarkMode} />} />
-        <Route path="/leaflet-map" element={<Leafletmap isDarkMode={isDarkMode} />} />
-        <Route path="/leaf-map" element={<LeafMap isDarkMode={isDarkMode} />} />
+        <Route path="/leaflet-map" element={<Leafletmap darkMode={isDarkMode} />} />
+        <Route path="/leaf-map" element={<LeafMap darkMode={isDarkMode} />} />
         <Route path="/map-demo" element={<Demo />} />
         <Route path="/map-libre" element={<Maplibre />} />
         <Route path="/go-one" element={<Deomse />} />

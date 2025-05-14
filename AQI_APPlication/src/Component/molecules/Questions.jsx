@@ -22,9 +22,9 @@ const Questions = ({isDarkMode}) => {
   };
 
   return (
-    <div className={`flex flex-col items-start mx-auto p-4 max-w-5xl ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
+  <div className={`flex flex-col items-start mx-auto mt-16 p-4 max-w-5xl ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
   <div className={`text-4xl flex mx-auto mb-10`}>
-    <h1>FAQ</h1>
+    <h2>Frequently Asked Questions</h2>
   </div>
   {aqiQA.map((item, index) => (
     <div key={index} className="w-full mb-4">
